@@ -35,6 +35,7 @@ setup(
     #   py_modules=["my_module"],
     #
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
+    namespace_packages=['core', 'core.backend'],
 
     install_requires=[],
 
