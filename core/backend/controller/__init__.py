@@ -13,20 +13,20 @@
 # ----------- END: Native Imports ---------- #
 
 # ----------- START: Third Party Imports ---------- #
-from core.deps import bottle
+from core.backend.deps import bottle
 app = bottle.Bottle()
 # ----------- END: Third Party Imports ---------- #
 
 # ----------- START: In-App Imports ---------- #
-from core.controller.static import (
+from core.backend.controller.static import (
     views, javascripts, stylesheets, images
 )
 
-from core.controller.configs import (
+from core.backend.controller.configs import (
     modify_client_config,
     view_client_config
 )
-from core.controller.user_interface import authenticate_user
+from core.backend.controller.user_interface import authenticate_user
 # ----------- END: In-App Imports ---------- #
 
 

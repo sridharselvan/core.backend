@@ -14,14 +14,14 @@
 # ----------- END: Native Imports ---------- #
 
 # ----------- START: Third Party Imports ---------- #
-from core.deps.bottle import request as brequest
+from core.backend.deps.bottle import request as brequest
 # ----------- END: Third Party Imports ---------- #
 
 # ----------- START: In-App Imports ---------- #
-from core.utils.butils import decode_form_data
-from core.controller import app, bottle
+from core.backend.utils.butils import decode_form_data
+from core.backend.controller import app, bottle
 
-from core.config import (
+from core.backend.config import (
     generate_client_config, update_client_config, view_client_config
 )
 

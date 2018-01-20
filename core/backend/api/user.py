@@ -18,13 +18,13 @@ from sqlalchemy.exc import SQLAlchemyError
 # ----------- END: Third Party Imports ---------- #
 
 # ----------- START: In-App Imports ---------- #
-from core.db import create_session
+from core.backend.db import create_session
 
-from core.db.model import UserModel
+from core.backend.db.model import UserModel
 
-from core.utils.butils import decode_form_data
-from core.deps.bottle import request as brequest
-from core.controller.configs import (
+from core.backend.utils.butils import decode_form_data
+from core.backend.deps.bottle import request as brequest
+from core.backend.controller.configs import (
     view_client_config
 )
 # ----------- END: In-App Imports ---------- #

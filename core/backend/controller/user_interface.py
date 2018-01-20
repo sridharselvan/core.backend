@@ -17,9 +17,9 @@
 # ----------- END: Third Party Imports ---------- #
 
 # ----------- START: In-App Imports ---------- #
-from core.controller import app, bottle
+from core.backend.controller import app, bottle
 
-from core.api.user import authenticate_user, create_user
+from core.backend.api.user import authenticate_user, create_user
 # ----------- END: In-App Imports ---------- #
  
 @app.get('/loginvalidation', method='POST')

@@ -17,8 +17,8 @@
 # ----------- END: Third Party Imports ---------- #
 
 # ----------- START: In-App Imports ---------- #
-from core.db.saorm import SqlAlchemyORM
-from core.db.entity import UserEntity
+from core.backend.db.saorm import SqlAlchemyORM
+from core.backend.db.entity import UserEntity
 # ----------- END: In-App Imports ---------- #
 
 __all__ = [

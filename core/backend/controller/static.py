@@ -17,9 +17,9 @@
 # ----------- END: Third Party Imports ---------- #
 
 # ----------- START: In-App Imports ---------- #
-from core.controller import app, bottle
+from core.backend.controller import app, bottle
 
-from core.constants import (
+from core.backend.constants import (
     STATIC_JS_FILE_PATH, STATIC_CSS_FILE_PATH, STATIC_VIEW_FILE_PATH, STATIC_IMAGE_FILE_PATH
 )
 # ----------- END: In-App Imports ---------- #

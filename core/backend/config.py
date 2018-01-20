@@ -20,11 +20,11 @@ from ConfigParser import SafeConfigParser
 # ----------- END: Native Imports ---------- #
 
 # ----------- START: Third Party Imports ---------- #
-from core.deps.bottle import request
+from core.backend.deps.bottle import request
 # ----------- END: Third Party Imports ---------- #
 
 # ----------- START: In-App Imports ---------- #
-from core.constants import (
+from core.backend.constants import (
     RULES_CONFIG_FILE,
     MASTER_CONFIG_FILE,
     CLIENT_CONFIG_FILE,
