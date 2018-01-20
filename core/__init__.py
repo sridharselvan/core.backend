@@ -22,6 +22,8 @@ __all__ = [
     # All public symbols go here.
 ]
 
+__import__('pkg_resources').declare_namespace(__name__)
+
 
 if __name__ == '__main__':
     """This Bolck is used for Unit Test.
