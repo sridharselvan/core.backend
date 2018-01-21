@@ -20,8 +20,9 @@ from sqlalchemy.exc import SQLAlchemyError
 # ----------- START: In-App Imports ---------- #
 from core.backend.db import create_session
 
-from core.backend.db.model import UserModel
-
+from core.backend.db.model import (
+    UserModel, UserSessionModel, CodeStatusEntity
+)
 from core.backend.utils.butils import decode_form_data
 from core.backend.deps.bottle import request as brequest
 from core.backend.controller.configs import (
@@ -63,16 +64,29 @@ def authenticate_user(session, *args, **kwargs):
     uname = form_data.get('username')
     passwd = form_data.get('password')
 
-    _response_dict = {'result': False, 'data': None}
+    _response_dict = {'result': False, 'data': None, 'alert_type': None, 'alert_what': None, 'msg': None}
 
     if not uname:
+        _response_dict['msg'] = 'Invalid username/password'
         return json.dumps(_response_dict)
 
     user_data = UserModel.fetch_user_data(session, mode='one', user_name=uname)
 
     if not user_data:
+        _response_dict['msg'] = 'Invalid username/password'
         return json.dumps(_response_dict)
 
+    _user_session_details = dict()
+    _user_session_details['user_idn'] = user_data.user_idn
+    _user_session_details['client_ip'] = brequest.remote_addr
+    _user_session_details['browser_name'] = brequest.environ.get('HTTP_USER_AGENT')
+    code_status_data = CodeStatusEntity.fetch_status_idn(session, status='loggedin')
+    _user_session_details['status_idn'] = code_status_data.status_idn
+
+    # Inserting user session details
+    _user_session = UserSessionModel.create_user_session(session, **_user_session_details)
+
+    # Authenticate user credentials
     if user_data.hash1 == passwd:
         _response_dict['result'] = True
         return json.dumps(_response_dict)
