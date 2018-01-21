@@ -50,7 +50,7 @@ class UserModel(SqlAlchemyORM):
     def create_new_user(cls, session, **kwargs):
         return cls.insert(session, **kwargs)
 
-class CodeStatusEntity(SqlAlchemyORM):
+class CodeStatusModel(SqlAlchemyORM):
     table = CodeStatusEntity
 
     @classmethod

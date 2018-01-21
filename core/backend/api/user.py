@@ -21,7 +21,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from core.backend.db import create_session
 
 from core.backend.db.model import (
-    UserModel, UserSessionModel, CodeStatusEntity
+    UserModel, UserSessionModel, CodeStatusModel
 )
 from core.backend.utils.butils import decode_form_data
 from core.backend.deps.bottle import request as brequest
@@ -80,7 +80,7 @@ def authenticate_user(session, *args, **kwargs):
     _user_session_details['user_idn'] = user_data.user_idn
     _user_session_details['client_ip'] = brequest.remote_addr
     _user_session_details['browser_name'] = brequest.environ.get('HTTP_USER_AGENT')
-    code_status_data = CodeStatusEntity.fetch_status_idn(session, status='loggedin')
+    code_status_data = CodeStatusModel.fetch_status_idn(session, status='loggedin')
     _user_session_details['status_idn'] = code_status_data.status_idn
 
     # Inserting user session details
