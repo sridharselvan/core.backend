@@ -1,6 +1,7 @@
 
 var app = angular.module("configuration", ['ui.router']);
 
+
 //Start: controller: LoginPageController
 app.controller('loginController', function($scope, $http, $state, $stateParams){
 
@@ -11,7 +12,7 @@ app.controller('loginController', function($scope, $http, $state, $stateParams){
       .post('/loginvalidation', {'formObj' : $scope.logindata})
       .then(function(response) {
         if(response.data.result){
-          $state.transitionTo('configuration');
+          $state.transitionTo('home.dashboard');
         }else{
           $scope.errorMsg = 'Invalid username/password';
         }
@@ -56,12 +57,12 @@ app.controller("clientConfigController", function($scope, $http) {
     //Update the form data to client ini fiile
     $scope.saveConfig = function () {
         $http
-            .post(
-                '/modifyclientconfig',
-                {formObj: $scope.serverData}
-            ).then(function(response) {
-                alert(response.data);
-            });
+          .post(
+              '/modifyclientconfig',
+              {formObj: $scope.serverData}
+          ).then(function(response) {
+              alert(response.data.msg);
+          });
     }
 
     /** Runs during page load.*/
@@ -86,21 +87,55 @@ app.config(function($stateProvider, $urlRouterProvider) {
     url: '/signup',
     templateUrl: '/signup_page.html'
   }
-
-  var configState = {
-    name: 'configuration',
-    url: '/viewclientconfig',
-    templateUrl: '/config_page.html',
-    controller: 'clientConfigController'
-  }
-
+  
   $stateProvider.state(loginState);
-  $stateProvider.state(configState);
   $stateProvider.state(signUpState);
 
-  // Set Home Page as default
-  $urlRouterProvider.when('', '/')
+  $stateProvider
+    .state('home', {
+      abstract: true,
+      templateUrl: 'home_page.html',
+  })
+
+  .state('home.dashboard', {
+    url: '/dashboard',
+    views: {
+      'mainPage': {
+        templateUrl: "dashboard_page.html"
+      }
+    },
+    name: 'Home'
+  })
+
+  .state('home.configuration', {
+    url: '/configuration',
+    views: {
+      'subPage': {
+        templateUrl: "config_page.html"
+      }
+    },
+    name: 'Configuration'
+  })
+
+  .state('home.log', {
+    url: '/log',
+    views: {
+      'subPage': {
+        templateUrl: "log_page.html"
+      }
+    },
+    name: 'Log'
+  })
+  
 
   // Route to Home Page if any wrong url is given
-  $urlRouterProvider.otherwise('/')
+  $urlRouterProvider.otherwise('/');
+
+  //
+
+  app.run(['$rootScope', function($rootScope) {
+    $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
+        $rootScope.title = current.$$route.name;
+    });
+  }]);
 });

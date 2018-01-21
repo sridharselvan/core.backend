@@ -42,6 +42,7 @@ class use_transaction(object):
 
         form_data = decode_form_data(brequest.forms)
         session = create_session()
+        _response = None
 
         if form_data:
             kwargs['form_data'] = form_data

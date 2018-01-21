@@ -120,7 +120,6 @@ class SqlAlchemyORM(object):
         Returns:
             object : returns current object of inserted row
         """
-        import pdb;pdb.set_trace()
         ins_obj = cls.table(**kwargs)
         session.add(ins_obj)
         session.flush()

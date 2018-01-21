@@ -113,7 +113,25 @@ def generate_client_config():
 
 
 def update_client_config(form_data):
-    return "" #view_client_config()
+    # Setup a client config parser
+    cparser = SafeConfigParser()
+    cparser.read(CLIENT_CONFIG_FILE)
+
+    _response_dict = {'result': False, 'data': None, 'alert_type': None, 'alert_what': None, 'msg': None}
+
+    for each_section, each_data in form_data.items():
+        for option, value in each_data.items():
+            cparser.set(each_section, option, str(value))
+
+    with open(CLIENT_CONFIG_FILE, 'w') as configfile:
+        cparser.write(configfile)
+
+    _response_dict['result'] = True
+    _response_dict['alert_type'] = 'push_msg'
+    _response_dict['alert_what'] = 'msg'
+    _response_dict['msg'] = "Data added successfully" 
+
+    return json.dumps(_response_dict)
 
 
 def view_client_config(out_type='json'):

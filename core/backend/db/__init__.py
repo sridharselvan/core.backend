@@ -39,8 +39,6 @@ def create_session():
     #c.execute('''insert into user (id, username, password) values (1, 'admin', 'admin')''')
     #ss = c.execute('''select * from user''')
 
-    #import pdb; pdb.set_trace() ## XXX: Remove This
-
     # ... later
     engine = create_engine('sqlite:///example.db')
     Session.configure(bind=engine)
