@@ -14,7 +14,7 @@ app.controller('loginController', function($scope, $http, $state, $stateParams){
         if(response.data.result){
           $state.transitionTo('home.dashboard');
         }else{
-          $scope.errorMsg = 'Invalid username/password';
+          $scope.errorMsg = response.data.msg;
         }
     });
   }

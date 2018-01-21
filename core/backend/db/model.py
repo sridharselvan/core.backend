@@ -18,7 +18,9 @@
 
 # ----------- START: In-App Imports ---------- #
 from core.backend.db.saorm import SqlAlchemyORM
-from core.backend.db.entity import UserEntity
+from core.backend.db.entity import (
+    UserEntity, UserSessionEntity, CodeStatusEntity
+)
 # ----------- END: In-App Imports ---------- #
 
 __all__ = [
@@ -47,3 +49,18 @@ class UserModel(SqlAlchemyORM):
     @classmethod
     def create_new_user(cls, session, **kwargs):
         return cls.insert(session, **kwargs)
+
+class CodeStatusModel(SqlAlchemyORM):
+    table = CodeStatusEntity
+
+    @classmethod
+    def fetch_status_idn(cls, session, **kwargs):
+        return cls.fetch_one(session, **kwargs)
+
+class UserSessionModel(SqlAlchemyORM):
+    table = UserSessionEntity
+
+    @classmethod
+    def create_user_session(cls, session, **kwargs):
+        return cls.insert(session, **kwargs)
+
