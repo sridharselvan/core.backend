@@ -114,7 +114,6 @@ def generate_client_config():
 
 def update_client_config(form_data):
     # Setup a client config parser
-    import pdb;pdb.set_trace()
     cparser = SafeConfigParser()
     cparser.read(CLIENT_CONFIG_FILE)
 
