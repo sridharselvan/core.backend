@@ -22,7 +22,7 @@
 
 PROJECT_HOME = 'core'
 
-STATIC_FILE_ROOT_PATH = "{}/static".format(PROJECT_HOME)
+STATIC_FILE_ROOT_PATH = "src/core.backend/core/backend/static"
 
 STATIC_JS_FILE_PATH = "{}/js".format(STATIC_FILE_ROOT_PATH)
 STATIC_CSS_FILE_PATH = "{}/css".format(STATIC_FILE_ROOT_PATH)
@@ -30,7 +30,7 @@ STATIC_VIEW_FILE_PATH = "{}/htmls".format(STATIC_FILE_ROOT_PATH)
 STATIC_IMAGE_FILE_PATH = "{}/images".format(STATIC_FILE_ROOT_PATH)
 
 
-CONFIG_FILE_ROOT_PATH = "{}/configs".format(PROJECT_HOME)
+CONFIG_FILE_ROOT_PATH = "src/core.backend/core/backend/configs"
 
 RULES_CONFIG_FILE = "{}/rules.ini".format(CONFIG_FILE_ROOT_PATH)
 MASTER_CONFIG_FILE = "{}/master.ini".format(CONFIG_FILE_ROOT_PATH)

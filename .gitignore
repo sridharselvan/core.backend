@@ -1,2 +1,4 @@
 *.pyc
 *.pyo
+
+core.backend.egg-info/
