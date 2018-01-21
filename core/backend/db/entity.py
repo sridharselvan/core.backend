@@ -43,8 +43,8 @@ class UserEntity(Base):
     phone_no1 = Column(String, nullable=False)
     phone_no2 = Column(String, nullable=True)
     email_id = Column(String, nullable=True)
-    crt_dt = Column(String, nullable=True)
-    upd_dt = Column(String, nullable=True)
+    crt_dt = Column(DateTime, default=datetime.datetime.utcnow)
+    upd_dt = Column(DateTime, default=datetime.datetime.utcnow)
     is_active = Column(Integer, nullable=True)
     email_id = Column(String, nullable=True)
 
