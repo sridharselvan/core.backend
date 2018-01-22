@@ -21,7 +21,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 # ----------- START: In-App Imports ---------- #
 from core.backend.db.model import (
-    UserActivityModel
+    UserSessionModel, UserActivityModel
 )
 from core.backend.utils.butils import decode_form_data
 from core.backend.db import create_session
@@ -57,7 +57,7 @@ class common_route(object):
 
     def __call__(self, *args, **kwargs):
 
-        user_name = 'admin'
+        user_name = 'YWRtaW4='
         session_cd = '64d992fd-84de-47c5-978e-9a846abe4319'
 
         with AutoSession() as auto_session:
@@ -65,6 +65,7 @@ class common_route(object):
             user_session_detail = UserSessionModel.fetch_active_user_session(
                 auto_session, user_name=user_name
             )
+            import pdb;pdb.set_trace()
 
             if user_session_detail.uniqe_session_cd == session_cd:
                 call = True

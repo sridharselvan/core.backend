@@ -3,21 +3,20 @@
 
 # ----------- START: Native Imports ---------- #
 from decimal import Decimal
+from collections import namedtuple
 # ----------- END: Native Imports ---------- #
 
-# ----------- START: Local SRE imports ---------- #
-# ----------- END: Local SRE Imports ---------- #
+# ----------- START: Third Party Imports ---------- #
+# ----------- END: Third Party Imports ---------- #
 
 # ----------- START: Python Third Party Imports ---------- #
-from sqlalchemy import and_
 from sqlalchemy.sql.functions import Function
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from sqlalchemy.orm.attributes import QueryableAttribute
-from sqlalchemy.orm import contains_eager, joinedload
 # ----------- END: Python Third Party Imports ---------- #
 
-# ----------- START: JIVA Imports ---------- #
-# ----------- END: JIVA Imports ---------- #
+# ----------- START: In-App Imports ---------- #
+# ----------- END: In-App Imports ---------- #
 
 
 __all__ = [
@@ -36,6 +35,282 @@ class SqlAlchemyORM(object):
         'count': 'count',
     }
 
+    # A customized python ``collections.namedtuple`` for the join tables.
+    #
+    # The second argument ``'table_model, join_on, where_condition'`` is the
+    # sequence of variables or attributes to be defined under ``JoinTables``
+    # class.
+    JoinTables = namedtuple('JoinTables', 'table_model, join_on, where_condition')
+
+    @classmethod
+    def join_construct(cls, table_model=None, join_on=None, where_condition=None):
+
+        """Customized namedtuple interface method, which provides the flexilibility
+        of creating a named tuple to join the tables with the primary/base tables,
+        and this applies the default values to the namedtuples, in case if they
+        are not mentioned.
+
+        Note:
+            The argument ``join_on`` can take up either primary-foreign key based
+            join argument or non primary-foreign key based arguments for example,
+
+            The Argument ``where_condition`` will be applied at the SQL WHERE clause.
+
+            Any multiple join condiotins to be specified as part of the argument ``join_on`` as mentioned below.
+
+        Args:
+            table_model (object): object of any SQLAlchemy table model.
+
+            join_on (str | object): SQLAlchemy's ``primary_join`` string or
+                column object, on which primary-foreign key relationship exists.
+
+            where_condition (Optional[dict]): dictionary of key-value restrictions.
+
+        Raises:
+            ``VoidError`` if invalid arguments are supplied.
+
+        Returns:
+            Customized ``collections.namedtuple`` object.
+
+        """
+        #
+        # make ``where_condition`` as optional, if it's not been passed.
+        if where_condition is None:
+            where_condition = dict()
+
+        return cls.JoinTables(
+            table_model=table_model, join_on=join_on, where_condition=where_condition
+        )
+
+    @classmethod
+    def fetch_filter_conditions(cls, **kwargs):
+        """Appends filter conditions for given cls
+
+        Args:
+            \*\*kwargs (dict): contains 'entity active', 'event name' etc.
+
+        Returns:
+            list of filter conditions associated with current class
+
+        Raises:
+            ``Exception`` if column is not present in the table.
+
+            ``Exception`` if more than a value given for 'not equal to' operator.
+
+            ``UnSupportedError`` if an invalid operator is received as filter.
+
+        Note: In cases where filter condition required is 'IS NULL', it can be
+        achieved with 'is' operator (ex:field = ('is', None))
+
+        """
+
+        # Declares list of any item that has to be excluded while framing the filter conditions.
+        _exclusion_list = ['', ]
+
+        filter_list = list()
+
+        for field, value in kwargs.items():
+
+            if value in _exclusion_list:
+                # Skip if any invalid value is supplied.
+                #
+                # NOTE: ``None`` should not be excluded from here, as ``None``
+                # can be a part of valid expression.
+                continue
+
+            field_obj = getattr(cls.table, field, None)
+
+            if not field_obj:
+                _msg = "Table {} has no column {}"
+                raise Exception(_msg.format(cls.table.__tablename__, field))
+
+            if isinstance(value, (tuple, list)):
+                #
+                # Any duplicates from the ``attrs`` to be eliminated,
+                # as these duplicates will be applied on the query as well.
+                operator, attrs = value[0], list(set(value[1:]))
+
+                #
+                # Exclude the unwanted items from ``attrs``.  Python
+                # ``None`` should not be excluded, as it might have
+                # been added purposefully``
+                attrs = [item for item in attrs if item not in _exclusion_list]
+
+                if not attrs:
+                    _msg = "Invalid or no operand is supplied for operator: '{}'"
+                    raise Exception(_msg.format(operator))
+
+                if operator == 'in':
+                    if not attrs:
+                        _msg = "'{}' operator can only be applied on list of operands, Got '{}'"
+                        raise Exception(_msg.format(operator, attrs or list()))
+                    filter_list.append(field_obj.in_(attrs))
+
+                elif operator == 'not in':
+                    if not attrs:
+                        _msg = "'{}' operator can only be applied on list of operands, Got '{}'"
+                        raise Exception(_msg.format(operator, attrs or list()))
+                    filter_list.append(~field_obj.in_(attrs))
+
+                elif operator == 'not equal to':
+                    if len(attrs) != 1:
+                        _msg = "'{}' operator can be applied only on single operand, Got '{}'"
+                        raise Exception(_msg.format(operator, attrs))
+                    filter_list.append(field_obj != (attrs[0]))
+
+                elif operator == 'is':
+                    if len(attrs) != 1:
+                        _msg = "'{}' operator can be applied only on single operand, Got '{}'"
+                        raise Exception(_msg.format(operator, attrs))
+
+                    if attrs[0] is not None:
+                        _msg = "'{}' operator can operate only on 'None' operand , Got '{}'"
+                        raise Exception(_msg.format(operator, attrs))
+
+                    filter_list.append(field_obj == (attrs[0]))
+
+                elif operator == 'is not':
+                    if len(attrs) != 1:
+                        _msg = "'{}' operator can be applied only on single operand, Got '{}'"
+                        raise Exception(_msg.format(operator, attrs))
+
+                    if attrs[0] is not None:
+                        _msg = "'{}' operator can operate only on 'None' operand , Got '{}'"
+                        raise Exception(_msg.format(operator, attrs))
+
+                    filter_list.append(field_obj != (attrs[0]))
+
+                elif operator == 'like':
+                    if len(attrs) != 1:
+                        _msg = "'{}' operator can be applied only on single operand, Got '{}'"
+                        raise Exception(_msg.format(operator, attrs))
+                    if attrs[0] is None:
+                        _msg = "'{}' operator can not operate on 'None' "
+                        raise Exception(_msg.format(operator, attrs))
+                    filter_list.append(field_obj.like('%' + attrs[0] + '%'))
+
+                else:
+                    _msg = "Operator '{}', is not being supported."
+                    raise Exception(_msg.format(operator))
+
+            elif value is None:
+
+                # If None is passed as value of a field, it will be skipped.
+                # For example if there is an optional search param(according to
+                # payload schema) and it has not been passed as part of
+                # incoming payload for an api in such case we will end up in
+                # passing None as field value (i.e. field=None) to the model method
+                # which will get converted to "is null" sql statement giving
+                # false results
+
+                pass
+
+            else:
+
+                filter_list.append(field_obj == value)
+
+        return filter_list
+
+    @classmethod
+    def prepare_query(cls, query_object, select_cols='*', **kwargs):
+
+        """Applies the custom logics to the Query, such as Joins, eager_load,
+        where clause statements, restricting the select columns etc.,
+
+        Args:
+            select_cols (Optional[list]): select column restrictions.
+            \*\*kwargs (keyword Argument): An arbitrary keyword argument.
+
+        Raises:
+            ``InvalidColumnError`` If the Column specified does not exists.
+
+        """
+
+        # ------------------------ DO NOT ALTER ---------------------------- #
+        #          THE FOLLOWING SNIPPETS TO BE KEPT IN THE ORDER            #
+        # ------------------------ DO NOT ALTER ---------------------------- #
+
+        #
+        # List of filters to be applied over the Query.
+        _filters = list()
+
+        #
+        # Make the ``\*\*kwargs`` clean, i.e, remove any additional fields
+        # added to it.
+        _join_tables = kwargs.pop('join_tables', list())
+
+        order_by = kwargs.pop('order_clause', list())
+        import pdb;pdb.set_trace()
+        #
+        # Add the join in sequence
+        for named_join_tuple in _join_tables:
+            query_object = query_object.join(named_join_tuple.table_model.table, named_join_tuple.join_on)
+
+            #
+            # Collect filters on the specific/joined tables.
+            _filters.extend(
+                named_join_tuple.table_model.fetch_filter_conditions(
+                    **named_join_tuple.where_condition
+                )
+            )
+
+        #
+        # Collect filters on the current table.
+        _filters.extend(cls.fetch_filter_conditions(**kwargs))
+
+        # Apply the collected ``_filters``.
+        for each_filter in _filters:
+            query_object = query_object.filter(each_filter)
+
+        # order by clause
+        for each in order_by:
+            query_object = query_object.order_by(each)
+
+        #
+        # Apply the select column restrictions
+        query_object = cls.apply_select(query_object, select_cols)
+
+        return query_object
+
+    @classmethod
+    def apply_select(cls, query_object, select_cols='*'):
+
+        """A custom method to apply the select screens.
+
+        Args:
+            select (str | list): ``list`` of columns to be filtered.
+
+        Raises:
+            ``Exception`` if field is not a subclass of ``QueryableAttribute``.
+
+        """
+
+        if select_cols == '*':
+            # leave this section untouched, as the default select is bound to fetch
+            # all the fields of any specific table.
+            pass
+
+        elif isinstance(select_cols, (tuple, list)):
+
+            # Select Specific fields.
+            for _field_obj in select_cols:
+
+                _allowed_subclasses = (Function, QueryableAttribute, )
+
+                if not isinstance(_field_obj, _allowed_subclasses):
+                    _msg = "Specified field {}, is not a subclass of {}"
+                    raise Exception(_msg.format(_field_obj, _allowed_subclasses))
+
+            query_object = query_object.with_entities(*select_cols)
+
+        else:
+            #
+            # Report if the given value of ``select`` is not supported.
+            _msg = "Data supplied for Argument select: {}, is invalid"
+            raise Exception(_msg.format(select_cols))
+
+        return query_object
+
     @classmethod
     def fetch(cls, session, select_cols='*', mode='all', data_as_dict=False, **kwargs):
 
@@ -53,16 +328,10 @@ class SqlAlchemyORM(object):
             RecordSet(s) if argument execute is ``True`` else query object of curent table.
 
         """
-        def apply_filter(query_object, **kwargs):
-
-            for field, value in kwargs.items():
-                query_object = query_object.filter(getattr(cls.table, field) == value)
-
-            return query_object
 
         query_object = session.query(cls.table)
 
-        query_object = apply_filter(query_object, **kwargs)
+        query_object = cls.prepare_query(query_object, select_cols=select_cols, **kwargs)
 
         q_obj = getattr(query_object, cls.mode_map[mode], query_object.all)
 

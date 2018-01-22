@@ -48,6 +48,8 @@ class UserEntity(Base):
     is_active = Column(Integer, nullable=True, default=1)
     email_id = Column(String, nullable=True)
 
+    #user_session = relationship('UserSessionEntity')
+
 class CodeStatusEntity(Base):
     __tablename__ = 'code_status'
 
@@ -68,6 +70,8 @@ class UserSessionEntity(Base):
     status_idn = Column(Integer, ForeignKey('code_status.status_idn'))
     unique_session_cd = Column(String, nullable=True)
     is_active = Column(Integer, nullable=False, default=1)
+
+    user_name = relationship('UserEntity')
 
 class UserActivityEntity(Base):
     __tablename__ = 'user_activity'
