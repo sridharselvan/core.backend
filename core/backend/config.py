@@ -131,10 +131,10 @@ def update_client_config(form_data):
     _response_dict['alert_what'] = 'msg'
     _response_dict['msg'] = "Data added successfully" 
 
-    return json.dumps(_response_dict)
+    return _response_dict
 
 
-def view_client_config(out_type='json'):
+def view_client_config():
     """."""
     if not os.path.exists(os.path.join(os.getcwd(), CLIENT_CONFIG_FILE)):
         generate_client_config()
@@ -151,6 +151,4 @@ def view_client_config(out_type='json'):
         for option, value in cparser.items(each_section):
             _config[each_section][option] = value
 
-    if out_type == 'json':
-        return json.dumps(_config)
     return _config

@@ -1,9 +1,14 @@
 
 var app = angular.module("configuration", ['ui.router']);
 
+app.factory('UserService', function() {
+  return {
+      session_cd : ''
+  };
+});
 
 //Start: controller: LoginPageController
-app.controller('loginController', function($scope, $http, $state, $stateParams){
+app.controller('loginController', function($scope, $http, $state, $stateParams, UserService){
 
   $scope.logindata = {rememberMe : 'false'};
 
@@ -11,7 +16,9 @@ app.controller('loginController', function($scope, $http, $state, $stateParams){
     $http
       .post('/loginvalidation', {'formObj' : $scope.logindata})
       .then(function(response) {
-        if(response.data.result){
+        console.log(response);
+        if(response.data.status){
+          UserService.session_cd = response.data.result.user_session_cd;
           $state.transitionTo('home.dashboard');
         }else{
           $scope.errorMsg = response.data.msg;
@@ -52,7 +59,7 @@ app.controller('signUpController', function($scope, $http, $state, $stateParams)
 
 
 //Start: controller:clientConfigController
-app.controller("clientConfigController", function($scope, $http) {
+app.controller("clientConfigController", function($scope, $http, UserService) {
 
     //Update the form data to client ini fiile
     $scope.saveConfig = function () {

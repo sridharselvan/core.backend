@@ -19,7 +19,8 @@
 # ----------- START: In-App Imports ---------- #
 from core.backend.db.saorm import SqlAlchemyORM
 from core.backend.db.entity import (
-    UserEntity, UserSessionEntity, CodeStatusEntity
+    UserEntity, UserSessionEntity, CodeStatusEntity,
+    UserActivityEntity
 )
 # ----------- END: In-App Imports ---------- #
 
@@ -62,5 +63,22 @@ class UserSessionModel(SqlAlchemyORM):
 
     @classmethod
     def create_user_session(cls, session, **kwargs):
+        return cls.insert(session, **kwargs)
+
+    @classmethod
+    def fetch_active_user_session(cls, session, **kwargs):
+
+        if 'is_active' not in kwargs:
+            kwargs['is_active'] = 1
+
+
+
+        cls.fetch_one()
+
+class UserActivityModel(SqlAlchemyORM):
+    table = UserActivityEntity
+
+    @classmethod
+    def create_user_activity(cls, session, **kwargs):
         return cls.insert(session, **kwargs)
 

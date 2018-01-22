@@ -25,6 +25,9 @@ from core.backend.db.model import (
     UserModel, UserSessionModel, CodeStatusModel
 )
 from core.backend.utils.butils import decode_form_data
+from core.backend.utils.core_utils import (
+    use_transaction, get_unique_id, AutoSession
+)
 from core.backend.deps.bottle import request as brequest
 from core.backend.controller.configs import (
     view_client_config
@@ -35,29 +38,6 @@ __all__ = [
     # All public symbols go here.
 ]
 
-class use_transaction(object):
-
-    def __init__(self, _func):
-        self._func = _func
-
-    def __call__(self, *args, **kwargs):
-
-        form_data = decode_form_data(brequest.forms)
-        session = create_session()
-        _response = None
-
-        if form_data:
-            kwargs['form_data'] = form_data
-
-        try:
-            _response = self._func(session, *args, **kwargs)
-        except SQLAlchemyError:
-            session.rollback()
-        else:
-            session.commit()
-
-        return _response
-
 
 @use_transaction
 def authenticate_user(session, *args, **kwargs):
@@ -65,7 +45,7 @@ def authenticate_user(session, *args, **kwargs):
     uname = base64.b64encode(form_data.get('username'))
     passwd = base64.b64encode(form_data.get('password'))
 
-    _response_dict = {'result': False, 'data': None, 'alert_type': None, 'alert_what': None, 'msg': None}
+    _response_dict = {'result': dict(), 'status': False, 'alert_type': None, 'alert_what': None, 'msg': None}
 
     if not uname:
         _response_dict['msg'] = 'Invalid username/password'
@@ -75,22 +55,32 @@ def authenticate_user(session, *args, **kwargs):
 
     if not user_data:
         _response_dict['msg'] = 'Invalid username/password'
-        return json.dumps(_response_dict)
+        return _response_dict
 
-    _user_session_details = dict()
-    _user_session_details['user_idn'] = user_data.user_idn
-    _user_session_details['client_ip'] = brequest.remote_addr
-    _user_session_details['browser_name'] = brequest.environ.get('HTTP_USER_AGENT')
     code_status_data = CodeStatusModel.fetch_status_idn(session, status='loggedin')
-    _user_session_details['status_idn'] = code_status_data.status_idn
 
-    # Inserting user session details
-    _user_session = UserSessionModel.create_user_session(session, **_user_session_details)
+    _user_session_params = {
+        'user_idn': user_data.user_idn,
+        'client_ip': brequest.remote_addr,
+        'browser_name': brequest.environ.get('HTTP_USER_AGENT'),
+        'status_idn': code_status_data.status_idn,
+        'unique_session_cd': get_unique_id(),
+    }
+
+    user_session_cd = None
+    with AutoSession() as auto_session:
+        # Inserting user session details
+        user_session_cd = UserSessionModel.create_user_session(
+            auto_session, **_user_session_params
+        ).unique_session_cd
 
     # Authenticate user credentials
     if user_data.hash1 == passwd:
-        _response_dict['result'] = True
-        return json.dumps(_response_dict)
+        _response_dict['result'] = {
+            'user_session_cd': user_session_cd
+        }
+        _response_dict['status'] = True
+        return _response_dict
 
 
 @use_transaction
@@ -98,7 +88,7 @@ def create_user(session, *args, **kwargs):
     form_data = kwargs.get('form_data') or dict()
     form_data['user_name'] = base64.b64encode(form_data['user_name'])
     form_data['hash1'] = base64.b64encode(form_data['hash1'])
-    _response_dict = {'result': False, 'data': None, 'alert_type': None, 'alert_what': None, 'msg': None}
+    _response_dict = {'result': False, 'data': dict(), 'alert_type': None, 'alert_what': None, 'msg': None}
 
     uname = form_data.get('user_name')
     if UserModel.user_exists(session, user_name=uname):
