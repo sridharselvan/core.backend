@@ -45,7 +45,7 @@ class UserEntity(Base):
     email_id = Column(String, nullable=True)
     crt_dt = Column(DateTime, default=datetime.datetime.utcnow)
     upd_dt = Column(DateTime, default=datetime.datetime.utcnow)
-    is_active = Column(Integer, nullable=True)
+    is_active = Column(Integer, nullable=True, default=1)
     email_id = Column(String, nullable=True)
 
 class CodeStatusEntity(Base):
@@ -66,8 +66,16 @@ class UserSessionEntity(Base):
     browser_version = Column(String, nullable=True) 
     attempted_on = Column(DateTime, default=datetime.datetime.utcnow)
     status_idn = Column(Integer, ForeignKey('code_status.status_idn'))
+    unique_session_cd = Column(String, nullable=True)
+    is_active = Column(Integer, nullable=False, default=1)
 
-    #user_idn = relationship('UserEntity', foreign_keys='UserEntity.user_idn') 
-    #status_idn = relationship('CodeStatusEntity', foreign_keys='CodeStatusEntity.status_idn')
+class UserActivityEntity(Base):
+    __tablename__ = 'user_activity'
+
+    user_activity_idn = Column(Integer, primary_key=True)
+    is_authorized = Column(Integer, nullable=False) 
+    crt_dt = Column(DateTime, default=datetime.datetime.utcnow) 
+    status_idn = Column(Integer, ForeignKey('code_status.status_idn')) 
+    user_session_idn = Column(Integer, ForeignKey('user_session.user_session_idn'))
 
 
