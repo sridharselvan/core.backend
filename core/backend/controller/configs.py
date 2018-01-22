@@ -14,7 +14,7 @@
 # ----------- END: Native Imports ---------- #
 
 # ----------- START: Third Party Imports ---------- #
-from core.backend.deps.bottle import request as brequest
+from bottle import request as brequest
 # ----------- END: Third Party Imports ---------- #
 
 # ----------- START: In-App Imports ---------- #

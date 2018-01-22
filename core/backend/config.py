@@ -20,7 +20,7 @@ from ConfigParser import SafeConfigParser
 # ----------- END: Native Imports ---------- #
 
 # ----------- START: Third Party Imports ---------- #
-from core.backend.deps.bottle import request
+from bottle import request
 # ----------- END: Third Party Imports ---------- #
 
 # ----------- START: In-App Imports ---------- #

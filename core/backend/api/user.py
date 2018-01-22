@@ -15,6 +15,7 @@ import base64
 # ----------- END: Native Imports ---------- #
 
 # ----------- START: Third Party Imports ---------- #
+from bottle import request as brequest
 from sqlalchemy.exc import SQLAlchemyError
 # ----------- END: Third Party Imports ---------- #
 
@@ -25,7 +26,6 @@ from core.backend.db.model import (
     UserModel, UserSessionModel, CodeStatusModel
 )
 from core.backend.utils.butils import decode_form_data
-from core.backend.deps.bottle import request as brequest
 from core.backend.controller.configs import (
     view_client_config
 )

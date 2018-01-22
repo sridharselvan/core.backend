@@ -13,7 +13,7 @@
 # ----------- END: Native Imports ---------- #
 
 # ----------- START: Third Party Imports ---------- #
-from core.backend.deps import bottle
+import bottle
 app = bottle.Bottle()
 # ----------- END: Third Party Imports ---------- #
 
