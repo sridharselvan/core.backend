@@ -2,3 +2,4 @@
 *.pyo
 
 core.backend.egg-info/
+core/backend/configs/client.ini
