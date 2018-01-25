@@ -66,10 +66,8 @@ class UserSessionModel(SqlAlchemyORM):
         return cls.insert(session, **kwargs)
 
     @classmethod
-    def fetch_active_user_session(cls, session, mode='one', select_cols="*", data_as_dict=False, **kwargs):
+    def fetch_active_user_session(cls, session, mode='all', select_cols="*", data_as_dict=False, **kwargs):
         kwargs.update({'join_tables':list()})
-
-        import pdb;pdb.set_trace()
 
         if 'is_active' not in kwargs:
             kwargs['is_active'] = 1
@@ -78,8 +76,8 @@ class UserSessionModel(SqlAlchemyORM):
             kwargs['join_tables'].append(
                 cls.join_construct(
                     table_model=UserModel,
-                    join_on=cls.table.user_name,
-                    where_condition={'user_name': kwargs['user_name']}
+                    join_on='default',
+                    where_condition={'user_name': kwargs.pop('user_name')}
                 )
             )
 

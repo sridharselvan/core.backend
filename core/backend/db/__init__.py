@@ -40,7 +40,7 @@ def create_session():
     #ss = c.execute('''select * from user''')
 
     # ... later
-    engine = create_engine('sqlite:///example.db')
+    engine = create_engine('sqlite:///example.db', echo=True)
     Session.configure(bind=engine)
 
     session = Session()

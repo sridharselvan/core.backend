@@ -57,33 +57,28 @@ class common_route(object):
 
     def __call__(self, *args, **kwargs):
 
+        call = False
+
+        # From the active user session of JS
         user_name = 'YWRtaW4='
         session_cd = '64d992fd-84de-47c5-978e-9a846abe4319'
 
         with AutoSession() as auto_session:
-            # Inserting user session details
-            user_session_detail = UserSessionModel.fetch_active_user_session(
-                auto_session, user_name=user_name
-            )
-            import pdb;pdb.set_trace()
 
-            if user_session_detail.uniqe_session_cd == session_cd:
-                call = True
+            if self._func.__name__ in ('on_login', ):
+                #
+                # Session check exclusions
+                pass
+            else:
+                user_has_open_session = UserSessionModel.fetch_active_user_session(
+                    auto_session, user_name=user_name, unique_session_cd=session_cd
+                )
 
-        if call:
-            _response = self._func(*args, **kwargs)
+                if not user_has_open_session:
+                    return json.dumps({})
 
-        # _user_activity_details = dict()
-        # _user_activity_details['user_session_idn'] = _response['data']['user_session_idn']
-        # _user_activity_details['is_authorized'] = 1 # todo
-        # _user_activity_details['status_idn'] = 4#_response['data']['status_idn']
-        # import pdb;pdb.set_trace()
+        return json.dumps(self._func(*args, **kwargs))
 
-        # with AutoSession() as auto_session:
-        #     # Inserting user session details
-        #     _user_activity = UserActivityModel.create_user_activity(auto_session, **_user_activity_details)
-
-        return json.dumps(_response)
 
 class use_transaction(object):
 

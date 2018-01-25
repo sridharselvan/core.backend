@@ -240,11 +240,13 @@ class SqlAlchemyORM(object):
         _join_tables = kwargs.pop('join_tables', list())
 
         order_by = kwargs.pop('order_clause', list())
-        import pdb;pdb.set_trace()
         #
         # Add the join in sequence
         for named_join_tuple in _join_tables:
-            query_object = query_object.join(named_join_tuple.table_model.table, named_join_tuple.join_on)
+            if named_join_tuple.join_on.strip().lower() == 'default':
+                query_object = query_object.join(named_join_tuple.table_model.table)
+            else:
+                query_object = query_object.join(named_join_tuple.table_model.table, named_join_tuple.join_on)
 
             #
             # Collect filters on the specific/joined tables.
