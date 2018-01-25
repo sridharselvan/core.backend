@@ -66,14 +66,24 @@ class UserSessionModel(SqlAlchemyORM):
         return cls.insert(session, **kwargs)
 
     @classmethod
-    def fetch_active_user_session(cls, session, **kwargs):
+    def fetch_active_user_session(cls, session, mode='all', select_cols="*", data_as_dict=False, **kwargs):
+        kwargs.update({'join_tables':list()})
 
         if 'is_active' not in kwargs:
             kwargs['is_active'] = 1
 
+        if 'user_name' in kwargs:
+            kwargs['join_tables'].append(
+                cls.join_construct(
+                    table_model=UserModel,
+                    join_on='default',
+                    where_condition={'user_name': kwargs.pop('user_name')}
+                )
+            )
 
-
-        cls.fetch_one()
+        return super(cls, cls).fetch(
+            session, mode=mode, select_cols=select_cols, data_as_dict=data_as_dict, **kwargs
+        )
 
 class UserActivityModel(SqlAlchemyORM):
     table = UserActivityEntity
