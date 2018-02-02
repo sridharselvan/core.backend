@@ -20,9 +20,9 @@ from sqlalchemy.exc import SQLAlchemyError
 # ----------- END: Third Party Imports ---------- #
 
 # ----------- START: In-App Imports ---------- #
-from core.backend.db import create_session
+from core.db import create_session
 
-from core.backend.db.model import (
+from core.db.model import (
     UserModel, UserSessionModel, CodeStatusModel
 )
 from core.backend.utils.butils import decode_form_data
