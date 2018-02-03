@@ -64,7 +64,7 @@ def generate_client_config():
     """."""
 
     helper = Helpers()
-
+    import pdb;pdb.set_trace()
     #
     # Setup a master config parser
     mparser = SafeConfigParser()
@@ -88,7 +88,7 @@ def generate_client_config():
     out_config = CLIENT_CONFIG_FILE
 
     # Check for instruction pattterns e.g., ${call:generate_valve_nodes}$
-    pattern = re.compile("""\$\{(.*?)\}\$""")
+    pattern = re.compile("""\{\{(.*?)\}\}""")
 
     for each_section in populate:
         if not cparser.has_section(each_section):
@@ -134,7 +134,7 @@ def update_client_config(form_data):
     return json.dumps(_response_dict)
 
 
-def view_client_config(out_type='json'):
+def view_client_config():
     """."""
     if not os.path.exists(os.path.join(os.getcwd(), CLIENT_CONFIG_FILE)):
         generate_client_config()
@@ -151,6 +151,4 @@ def view_client_config(out_type='json'):
         for option, value in cparser.items(each_section):
             _config[each_section][option] = value
 
-    if out_type == 'json':
-        return json.dumps(_config)
     return _config
