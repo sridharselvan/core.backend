@@ -64,7 +64,6 @@ def generate_client_config():
     """."""
 
     helper = Helpers()
-    import pdb;pdb.set_trace()
     #
     # Setup a master config parser
     mparser = SafeConfigParser()

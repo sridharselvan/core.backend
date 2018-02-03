@@ -61,7 +61,6 @@ class common_route(object):
     def __call__(self, *args, **kwargs):
 
         with AutoSession() as auto_session:
-            import pdb;pdb.set_trace()
             if self._func.__name__ in ('on_login', ):
                 #
                 # Session check exclusions
