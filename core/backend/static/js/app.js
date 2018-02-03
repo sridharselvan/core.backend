@@ -1,14 +1,27 @@
 
 var app = angular.module("configuration", ['ui.router']);
 
-app.factory('UserService', function() {
-  return {
-      session_cd : ''
+app.factory('UserSessionService', function() {
+  var sessionData = {
+      session_cd : '',
+      user_name : ''
   };
+
+  return {
+      getSessionData: function () {
+          return sessionData;
+      },
+      setSessionData: function (session_cd, user_name) {
+          sessionData.session_cd = session_cd;
+          sessionData.user_name = user_name;
+      }
+  };
+
+  return sessionData;
 });
 
 //Start: controller: LoginPageController
-app.controller('loginController', function($scope, $http, $state, $stateParams, UserService){
+app.controller('loginController', function($scope, $http, $state, $stateParams, UserSessionService){
 
   $scope.logindata = {rememberMe : 'false'};
 
@@ -16,9 +29,12 @@ app.controller('loginController', function($scope, $http, $state, $stateParams, 
     $http
       .post('/loginvalidation', {'formObj' : $scope.logindata})
       .then(function(response) {
-        console.log(response);
         if(response.data.status){
-          UserService.session_cd = response.data.result.user_session_cd;
+          //Setting session values
+          var session_cd = response.data.result.user_session_cd,
+          user_name = response.data.result.user_name;
+          UserSessionService.setSessionData(session_cd, user_name);
+          //Redirect to home page
           $state.transitionTo('home.dashboard');
         }else{
           $scope.errorMsg = response.data.msg;
@@ -38,15 +54,10 @@ app.controller('signUpController', function($scope, $http, $state, $stateParams)
 
   $scope.userDetails = {};
 
-  /*var s =angular.element(document).find("#xxx");
-  s[0].innerText = "qqqq";
-  console.log(s)*/;
-
   $scope.CreateUserValidation = function(){
     $http
       .post('/createUser', {'formObj' : $scope.userDetails})
       .then(function(response) {
-        console.log(response);
         $state.transitionTo('login');
     });
   }
@@ -59,7 +70,7 @@ app.controller('signUpController', function($scope, $http, $state, $stateParams)
 
 
 //Start: controller:clientConfigController
-app.controller("clientConfigController", function($scope, $http, UserService) {
+app.controller("clientConfigController", function($scope, $http, $state, UserSessionService) {
 
     //Update the form data to client ini fiile
     $scope.saveConfig = function () {
@@ -74,15 +85,22 @@ app.controller("clientConfigController", function($scope, $http, UserService) {
 
     /** Runs during page load.*/
     $http
-        .get("/viewclientconfig")
+        .get("/viewclientconfig", {
+          params: UserSessionService.getSessionData()
+        })
         .then(function (response) {
-            $scope.serverData = response.data;
+            if(response.data.is_session_valid){
+              $scope.serverData = response.data;
+            } else {
+              $state.transitionTo('login');
+            }
         });
 
 }); // end: controller:clientConfigController
 
 
-app.config(function($stateProvider, $urlRouterProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
+
   var loginState = {
     name: 'login',
     url: '/',
@@ -140,9 +158,9 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
   //
 
-  app.run(['$rootScope', function($rootScope) {
+/*  app.run(['$rootScope', function($rootScope) {
     $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
         $rootScope.title = current.$$route.name;
     });
-  }]);
+  }]);*/
 });

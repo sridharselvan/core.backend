@@ -60,12 +60,6 @@ class common_route(object):
 
     def __call__(self, *args, **kwargs):
 
-        call = False
-
-        # From the active user session of JS
-        user_name = 'YWRtaW4='
-        session_cd = '64d992fd-84de-47c5-978e-9a846abe4319'
-
         with AutoSession() as auto_session:
 
             if self._func.__name__ in ('on_login', ):
@@ -73,14 +67,22 @@ class common_route(object):
                 # Session check exclusions
                 pass
             else:
+                user_name = brequest.params.user_name
+                session_cd = brequest.params.session_cd
+
+                if not session_cd or not user_name:
+                    return json.dumps({'is_session_valid' : False})
+
                 user_has_open_session = UserSessionModel.fetch_active_user_session(
                     auto_session, user_name=user_name, unique_session_cd=session_cd
                 )
 
                 if not user_has_open_session:
-                    return json.dumps({})
+                    return json.dumps({'is_session_valid' : False})
 
-        return json.dumps(self._func(*args, **kwargs))
+        _response = self._func(*args, **kwargs)
+        _response.update({'is_session_valid' : True})
+        return json.dumps(_response)
 
 
 class use_transaction(object):
