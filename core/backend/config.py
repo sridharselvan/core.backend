@@ -64,7 +64,6 @@ def generate_client_config():
     """."""
 
     helper = Helpers()
-
     #
     # Setup a master config parser
     mparser = SafeConfigParser()
@@ -88,7 +87,7 @@ def generate_client_config():
     out_config = CLIENT_CONFIG_FILE
 
     # Check for instruction pattterns e.g., ${call:generate_valve_nodes}$
-    pattern = re.compile("""\$\{(.*?)\}\$""")
+    pattern = re.compile("""\{\{(.*?)\}\}""")
 
     for each_section in populate:
         if not cparser.has_section(each_section):
@@ -119,6 +118,12 @@ def update_client_config(form_data):
 
     _response_dict = {'result': False, 'data': None, 'alert_type': None, 'alert_what': None, 'msg': None}
 
+    if 'sessionData' in form_data:
+        form_data.pop('sessionData')
+
+    if 'is_session_valid' in form_data:
+        form_data.pop('is_session_valid')
+
     for each_section, each_data in form_data.items():
         for option, value in each_data.items():
             cparser.set(each_section, option, str(value))
@@ -131,10 +136,10 @@ def update_client_config(form_data):
     _response_dict['alert_what'] = 'msg'
     _response_dict['msg'] = "Data added successfully" 
 
-    return json.dumps(_response_dict)
+    return _response_dict
 
 
-def view_client_config(out_type='json'):
+def view_client_config():
     """."""
     if not os.path.exists(os.path.join(os.getcwd(), CLIENT_CONFIG_FILE)):
         generate_client_config()
@@ -151,6 +156,4 @@ def view_client_config(out_type='json'):
         for option, value in cparser.items(each_section):
             _config[each_section][option] = value
 
-    if out_type == 'json':
-        return json.dumps(_config)
     return _config
