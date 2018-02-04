@@ -68,17 +68,17 @@ class common_route(object):
             else:
                 if brequest.method == 'POST':
                     form_data = decode_form_data(brequest.forms)
-                    user_name = form_data['sessionData']['user_idn']
+                    user_idn = form_data['sessionData']['user_idn']
                     session_cd = form_data['sessionData']['session_cd']
                 else:
-                    user_name = brequest.params.user_idn
+                    user_idn = brequest.params.user_idn
                     session_cd = brequest.params.session_cd
 
-                if not session_cd or not user_name:
+                if not session_cd or not user_idn:
                     return json.dumps({'is_session_valid' : False})
 
                 user_has_open_session = UserSessionModel.fetch_active_user_session(
-                    auto_session, user_name=user_name, unique_session_cd=session_cd
+                    auto_session, user_idn=user_idn, unique_session_cd=session_cd
                 )
 
                 if not user_has_open_session:

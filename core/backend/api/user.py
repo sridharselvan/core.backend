@@ -103,4 +103,4 @@ def create_user(session, *args, **kwargs):
     _response_dict['alert_what'] = 'msg'
     _response_dict['msg'] = 'User {} successfully created'.format(_user.user_name)
 
-    return json.dumps(_response_dict)
+    return _response_dict
