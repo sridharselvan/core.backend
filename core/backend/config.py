@@ -118,6 +118,12 @@ def update_client_config(form_data):
 
     _response_dict = {'result': False, 'data': None, 'alert_type': None, 'alert_what': None, 'msg': None}
 
+    if 'sessionData' in form_data:
+        form_data.pop('sessionData')
+
+    if 'is_session_valid' in form_data:
+        form_data.pop('is_session_valid')
+
     for each_section, each_data in form_data.items():
         for option, value in each_data.items():
             cparser.set(each_section, option, str(value))
@@ -130,7 +136,7 @@ def update_client_config(form_data):
     _response_dict['alert_what'] = 'msg'
     _response_dict['msg'] = "Data added successfully" 
 
-    return json.dumps(_response_dict)
+    return _response_dict
 
 
 def view_client_config():

@@ -77,7 +77,7 @@ def authenticate_user(session, *args, **kwargs):
     if user_data.hash1 == passwd:
         _response_dict['result'] = {
             'user_session_cd': user_session_cd,
-            'user_name': user_data.user_name
+            'user_idn': user_data.user_idn
         }
         _response_dict['status'] = True
         return _response_dict

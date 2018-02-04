@@ -66,8 +66,13 @@ class common_route(object):
                 # Session check exclusions
                 pass
             else:
-                user_name = brequest.params.user_name
-                session_cd = brequest.params.session_cd
+                if brequest.method == 'POST':
+                    form_data = decode_form_data(brequest.forms)
+                    user_name = form_data['sessionData']['user_idn']
+                    session_cd = form_data['sessionData']['session_cd']
+                else:
+                    user_name = brequest.params.user_idn
+                    session_cd = brequest.params.session_cd
 
                 if not session_cd or not user_name:
                     return json.dumps({'is_session_valid' : False})
