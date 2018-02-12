@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse visible-xs navbar-fixed-top">
+<nav class="navbar navbar-inverse visible-xs navbar-fixed-top" ng-controller="menuController">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -14,13 +14,13 @@
         <li><a ui-sref=".configuration">Configuration</a></li>
         <li><a ui-sref=".log">Log</a></li>
         <li><a href="#">My Account</a></li>
-        <li><a href="#">Logout</a></li>
+        <li><a ng-click="logout()">Logout</a></li>
       </ul>
     </div>
   </div>
 </nav>
 
-<div class="container-fluid">
+<div class="container-fluid" ng-controller="menuController">
  <nav class="navbar navbar-inverse sidenav hidden-xs navbar-fixed-top">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -33,7 +33,12 @@
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <li><a href="#"><span class="glyphicon glyphicon-user"></span>My Account</a></li>
-      <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+      <li>
+        <a ng-click="logout()">
+          <span class="glyphicon glyphicon-log-in"></span> 
+            Logout
+        </a>
+      </li>
     </ul>
   </div>
 </nav> 

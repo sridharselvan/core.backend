@@ -76,6 +76,7 @@ def authenticate_user(session, *args, **kwargs):
         user_session = brequest.environ.get('beaker.session')
         user_session['user_id'] = user_data.user_idn
         user_session['user_session_cd'] = user_session_cd
+        # To save session data in beaker 
         user_session.save()
 
         _response_dict['result'] = {

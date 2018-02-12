@@ -1,7 +1,7 @@
 
 var app = angular.module("configuration", ['ui.router']);
 
-app.factory('UserSessionService', function() {
+/*app.factory('UserSessionService', function() {
   var sessionData = {
       session_cd : '',
       user_idn : ''
@@ -17,10 +17,10 @@ app.factory('UserSessionService', function() {
       }
   };
 
-});
+});*/
 
 //Start: controller: LoginPageController
-app.controller('loginController', function($scope, $http, $state, $stateParams, UserSessionService){
+app.controller('loginController', function($scope, $http, $state, $stateParams){
 
   $scope.logindata = {rememberMe : 'false'};
 
@@ -29,10 +29,6 @@ app.controller('loginController', function($scope, $http, $state, $stateParams, 
       .post('/loginvalidation', {'formObj' : $scope.logindata})
       .then(function(response) {
         if(response.data.status){
-          //Setting session values
-          var session_cd = response.data.result.user_session_cd,
-          user_idn = response.data.result.user_idn;
-          UserSessionService.setSessionData(session_cd, user_idn);
           //Redirect to home page
           $state.transitionTo('home.dashboard');
         }else{
@@ -68,6 +64,20 @@ app.controller('signUpController', function($scope, $http, $state, $stateParams)
 }); //End: controller: SignUpPageController
 
 
+//Start: controller: LogoutController
+app.controller('menuController', function($scope, http, $state, $stateParams){
+
+  $scope.logout = function(){
+    http
+      .get('/logoutuser')
+      .then(function(response) {
+        $state.transitionTo('logout');
+    });
+  }
+  
+}); //End: controller: LogoutController
+
+
 //Start: controller:clientConfigController
 app.controller("clientConfigController", function($scope, http, $state) {
 
@@ -96,16 +106,12 @@ app.controller("clientConfigController", function($scope, http, $state) {
 
 //Start http
 
-app.factory('http', ['$http', '$q', 'UserSessionService', '$state', 
-  function($http, $q, UserSessionService, $state) {
+app.factory('http', ['$http', '$q', '$state', 
+  function($http, $q, $state) {
     return {
       get: function(url) {
           var deferred =  $q.defer();
-          $http.get(url, 
-            {
-              params: UserSessionService.getSessionData()
-            }
-          ).then(
+          $http.get(url).then(
             function(response) {
               if(response.data.is_session_valid){
                 deferred.resolve(response);
@@ -122,12 +128,7 @@ app.factory('http', ['$http', '$q', 'UserSessionService', '$state',
 
       post: function(url, formData) {
         var deferred =  $q.defer();
-        formData["sessionData"] = UserSessionService.getSessionData();
-        $http.post(url, 
-          {formObj: formData,
-            params: UserSessionService.getSessionData()
-          })
-          .then(
+        $http.post(url, {formObj: formData}).then(
           function(response) {
             if(response.data.is_session_valid){
               deferred.resolve(response);
@@ -152,16 +153,23 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
     name: 'login',
     url: '/',
     templateUrl: '/login_page.html'
-  }
+  };
 
   var signUpState = {
     name: 'signUp',
     url: '/signup',
     templateUrl: '/signup_page.html'
+  };
+
+  var logoutState = {
+    name: 'logout',
+    url: '/logout',
+    templateUrl: '/logout_page.html'
   }
   
   $stateProvider.state(loginState);
   $stateProvider.state(signUpState);
+  $stateProvider.state(logoutState);
 
   $stateProvider
     .state('home', {
@@ -178,7 +186,6 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
     },
     name: 'Home'
   })
-
   .state('home.configuration', {
     url: '/configuration',
     views: {
@@ -203,11 +210,4 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
   // Route to Home Page if any wrong url is given
   $urlRouterProvider.otherwise('/');
 
-  //
-
-/*  app.run(['$rootScope', function($rootScope) {
-    $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
-        $rootScope.title = current.$$route.name;
-    });
-  }]);*/
 });

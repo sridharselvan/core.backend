@@ -23,7 +23,8 @@ from sqlalchemy.exc import SQLAlchemyError
 
 # ----------- START: In-App Imports ---------- #
 from core.db.model import (
-    UserSessionModel, UserActivityModel
+    UserSessionModel, UserActivityModel,
+    CodeStatusModel
 )
 
 from core.backend.utils.butils import decode_form_data
@@ -64,27 +65,40 @@ class common_route(object):
             if self._func.__name__ in ('on_login', ):
                 #
                 # Session check exclusions
-                pass
+                return self._func(*args, **kwargs)
 
-            else:
-                import pdb; pdb.set_trace() ## XXX: Remove This
+            elif self._func.__name__ in ('logout_user', ):
+
+                
                 user_session = request.environ.get('beaker.session')
                 user_id = user_session['user_id']
                 user_session_cd = user_session['user_session_cd']
+
+                UserSessionModel.logout(
+                    auto_session,
+                    user_session_cd=user_session_cd,
+                    user_idn=user_id
+                )
+
+            else:
+                #import pdb; pdb.set_trace() ## XXX: Remove This
+                user_session = request.environ.get('beaker.session')
+                user_id = user_session.get('user_id')
+                user_session_cd = user_session.get('user_session_cd')
  
                 if not user_session_cd or not user_id:
                     return json.dumps({'is_session_valid' : False})
 
-                user_has_open_session = UserSessionModel.fetch_active_user_session(
+                user_has_open_session = UserSessionModel.fetch_active_loggedin_user_session(
                     auto_session, user_idn=user_id, unique_session_cd=user_session_cd
                 )
 
                 if not user_has_open_session:
                     return json.dumps({'is_session_valid' : False})
 
-        _response = self._func(*args, **kwargs)
-        _response.update({'is_session_valid' : True})
-        return json.dumps(_response)
+                _response = self._func(*args, **kwargs)
+                _response.update({'is_session_valid' : True})
+                return json.dumps(_response)
 
 
 class use_transaction(object):
