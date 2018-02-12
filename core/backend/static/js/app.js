@@ -17,7 +17,6 @@ app.factory('UserSessionService', function() {
       }
   };
 
-  return sessionData;
 });
 
 //Start: controller: LoginPageController

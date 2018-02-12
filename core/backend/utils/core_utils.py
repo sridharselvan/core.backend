@@ -16,7 +16,7 @@ import json
 # ----------- END: Native Imports ---------- #
 
 # ----------- START: Third Party Imports ---------- #
-from bottle import request as brequest
+from bottle import request
 
 from sqlalchemy.exc import SQLAlchemyError
 # ----------- END: Third Party Imports ---------- #
@@ -65,20 +65,18 @@ class common_route(object):
                 #
                 # Session check exclusions
                 pass
-            else:
-                if brequest.method == 'POST':
-                    form_data = decode_form_data(brequest.forms)
-                    user_idn = form_data['sessionData']['user_idn']
-                    session_cd = form_data['sessionData']['session_cd']
-                else:
-                    user_idn = brequest.params.user_idn
-                    session_cd = brequest.params.session_cd
 
-                if not session_cd or not user_idn:
+            else:
+                import pdb; pdb.set_trace() ## XXX: Remove This
+                user_session = request.environ.get('beaker.session')
+                user_id = user_session['user_id']
+                user_session_cd = user_session['user_session_cd']
+ 
+                if not user_session_cd or not user_id:
                     return json.dumps({'is_session_valid' : False})
 
                 user_has_open_session = UserSessionModel.fetch_active_user_session(
-                    auto_session, user_idn=user_idn, unique_session_cd=session_cd
+                    auto_session, user_idn=user_id, unique_session_cd=user_session_cd
                 )
 
                 if not user_has_open_session:
@@ -96,7 +94,7 @@ class use_transaction(object):
 
     def __call__(self, *args, **kwargs):
 
-        form_data = decode_form_data(brequest.forms)
+        form_data = decode_form_data(request.forms)
         session = create_session()
         _response = None
 

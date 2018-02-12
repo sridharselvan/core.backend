@@ -29,9 +29,6 @@ from core.backend.utils.butils import decode_form_data
 from core.backend.utils.core_utils import (
     use_transaction, get_unique_id, AutoSession
 )
-from core.backend.controller.configs import (
-    view_client_config
-)
 # ----------- END: In-App Imports ---------- #
 
 __all__ = [
@@ -75,6 +72,12 @@ def authenticate_user(session, *args, **kwargs):
 
     # Authenticate user credentials
     if user_data.hash1 == passwd:
+
+        user_session = brequest.environ.get('beaker.session')
+        user_session['user_id'] = user_data.user_idn
+        user_session['user_session_cd'] = user_session_cd
+        user_session.save()
+
         _response_dict['result'] = {
             'user_session_cd': user_session_cd,
             'user_idn': user_data.user_idn
