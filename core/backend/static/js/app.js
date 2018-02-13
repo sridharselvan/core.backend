@@ -1,23 +1,6 @@
 
 var app = angular.module("configuration", ['ui.router']);
 
-/*app.factory('UserSessionService', function() {
-  var sessionData = {
-      session_cd : '',
-      user_idn : ''
-  };
-
-  return {
-      getSessionData: function () {
-          return sessionData;
-      },
-      setSessionData: function (session_cd, user_idn) {
-          sessionData.session_cd = session_cd;
-          sessionData.user_idn = user_idn;
-      }
-  };
-
-});*/
 
 //Start: controller: LoginPageController
 app.controller('loginController', function($scope, $http, $state, $stateParams){
@@ -67,13 +50,16 @@ app.controller('signUpController', function($scope, $http, $state, $stateParams)
 //Start: controller: LogoutController
 app.controller('menuController', function($scope, http, $state, $stateParams){
 
-  $scope.logout = function(){
-    http
-      .get('/logoutuser')
-      .then(function(response) {
-        $state.transitionTo('logout');
-    });
-  }
+    $scope.logout = function(){
+      
+      if(confirm('Are you sure you want to logout this?')){
+        http
+          .get('/logoutuser')
+          .then(function(response) {
+            $state.transitionTo('logout');
+        });
+      }
+    }
   
 }); //End: controller: LogoutController
 
@@ -116,7 +102,7 @@ app.factory('http', ['$http', '$q', '$state',
               if(response.data.is_session_valid){
                 deferred.resolve(response);
               } else {
-                $state.transitionTo('login');
+                $state.transitionTo('logout');
               }
             },
             function(response) {
@@ -133,7 +119,7 @@ app.factory('http', ['$http', '$q', '$state',
             if(response.data.is_session_valid){
               deferred.resolve(response);
             } else {
-              $state.transitionTo('login');
+              $state.transitionTo('logout');
             }
           },
           function(response) {
