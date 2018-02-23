@@ -69,8 +69,8 @@ class common_route(object):
 
             elif self._func.__name__ in ('logout_user', ):
                 user_session = request.environ.get('beaker.session')
-                user_id = user_session['user_id']
-                user_session_cd = user_session['user_session_cd']
+                user_id = user_session.get('user_id')
+                user_session_cd = user_session.get('user_session_cd')
 
                 UserSessionModel.logout(
                     auto_session,

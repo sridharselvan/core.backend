@@ -92,16 +92,64 @@ app.controller("clientConfigController", function($scope, http, $state) {
 //Start: controller:schedulerController
 app.controller("schedulerController", function($scope, http, $state, $filter) {
 
+    $scope.tab = 1;
+
+    $scope.setTab = function(newTab){
+      $scope.tab = newTab;
+      if(newTab == 1){
+        angular.element('#newScheduler').addClass("active");
+        angular.element('#searchScheduler').removeClass("active");
+      } else {
+        angular.element('#newScheduler').removeClass("active");
+        angular.element('#searchScheduler').addClass("active");
+      }
+    };
+
+    $scope.isSet = function(tabNum){
+      return $scope.tab === tabNum;
+    };
+
+  $scope.types = ['OneTime', 'Daily', 'Weekly'];
   $scope.schedulerData = {
-    type:null,
+    type:$scope.types[0],
     date: {
       day : $filter('date')(new Date(), 'd'),
       month : $filter('date')(new Date(), 'M'),
       year : $filter('date')(new Date(), 'yyyy'),
       hour : $filter('date')(new Date(), 'H'),
       mins : $filter('date')(new Date(), 'm'),
-    }
+    },
+    recurs:1,
+    weekDays:[
+      {id:0, value:'S', selected:false},
+      {id:1, value:'M', selected:false},
+      {id:2, value:'T', selected:false},
+      {id:3, value:'W', selected:false},
+      {id:4, value:'T', selected:false},
+      {id:5, value:'F', selected:false},
+      {id:6, value:'S', selected:false}
+    ],
+    ValveDetails:[]
   };
+
+  /** Runs during page load.*/
+    _loadClientConfig = function(){
+      http.get("/viewclientconfig")
+        .then(function(response){
+          var nodeList = response.data.nodes.ids.split(' ');
+          angular.forEach(nodeList, function(value) {
+            $scope.schedulerData.ValveDetails.push(
+              {name: response.data[value].name,selected:true}
+            );
+          });
+      });
+    }
+
+    _loadClientConfig();    
+
+  $scope.triggerScheduler = function(){
+    console.log($scope.schedulerData);
+  }
   $scope.range = function(min=1, max, step) {
     step = step || 1;
     var input = [];
