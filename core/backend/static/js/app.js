@@ -93,6 +93,7 @@ app.controller("clientConfigController", function($scope, http, $state) {
 app.controller("schedulerController", function($scope, http, $state, $filter) {
 
     $scope.tab = 1;
+    $scope.showSuccessMsg = false;
 
     $scope.setTab = function(newTab){
       $scope.tab = newTab;
@@ -109,10 +110,10 @@ app.controller("schedulerController", function($scope, http, $state, $filter) {
       return $scope.tab === tabNum;
     };
 
-  $scope.types = ['OneTime', 'Daily', 'Weekly'];
+  $scope.types = ['Select One', 'OneTime', 'Daily', 'Weekly'];
   $scope.schedulerData = {
     type:$scope.types[0],
-    date: {
+    start_date: {
       day : $filter('date')(new Date(), 'd'),
       month : $filter('date')(new Date(), 'M'),
       year : $filter('date')(new Date(), 'yyyy'),
@@ -121,13 +122,13 @@ app.controller("schedulerController", function($scope, http, $state, $filter) {
     },
     recurs:1,
     weekDays:[
-      {id:0, value:'S', selected:false},
-      {id:1, value:'M', selected:false},
-      {id:2, value:'T', selected:false},
-      {id:3, value:'W', selected:false},
-      {id:4, value:'T', selected:false},
-      {id:5, value:'F', selected:false},
-      {id:6, value:'S', selected:false}
+      {id:'sunday', value:'S', selected:false},
+      {id:'monday', value:'M', selected:false},
+      {id:'tuesday', value:'T', selected:false},
+      {id:'wednesday', value:'W', selected:false},
+      {id:'thursday', value:'T', selected:false},
+      {id:'friday', value:'F', selected:false},
+      {id:'saturday', value:'S', selected:false}
     ],
     ValveDetails:[]
   };
@@ -139,7 +140,11 @@ app.controller("schedulerController", function($scope, http, $state, $filter) {
           var nodeList = response.data.nodes.ids.split(' ');
           angular.forEach(nodeList, function(value) {
             $scope.schedulerData.ValveDetails.push(
-              {name: response.data[value].name,selected:true}
+              {
+                id: response.data[value].id,
+                name: response.data[value].name,
+                selected:true
+              }
             );
           });
       });
@@ -148,7 +153,13 @@ app.controller("schedulerController", function($scope, http, $state, $filter) {
     _loadClientConfig();    
 
   $scope.triggerScheduler = function(){
-    console.log($scope.schedulerData);
+
+    http
+      .post('/saveschedulerconfig', $scope.schedulerData)
+      .then(function(response) {
+        $scope.showSuccessMsg = true;
+        $scope.schedulerData.type = $scope.types[0];
+    });
   }
   $scope.range = function(min=1, max, step) {
     step = step || 1;
