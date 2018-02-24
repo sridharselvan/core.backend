@@ -177,7 +177,7 @@ def save_scheduler_config(form_data):
         .format(start_date['year'],start_date['month'],start_date['day'],start_date['hour'],start_date['mins'])    
 
     with AutoSession() as auto_session:
-        code_schedule_type = CodeScheduleTypeModel.fetch_schedule_type_idn(
+        code_schedule_type = CodeScheduleTypeModel.fetch_one(
             auto_session, schedule_type=form_data['type']
         )
 
@@ -203,7 +203,7 @@ def save_scheduler_config(form_data):
         schedule_data['day_of_week'] = "{0!s}".format(week_id)
 
         # Inserting schedule config into Job details
-        job_details_idn = JobDetailsModel.save_schedule_config(
+        job_details_idn = JobDetailsModel.insert(
             auto_session, **schedule_data
         ).job_details_idn
 
