@@ -169,6 +169,7 @@ def view_client_config():
 
 def save_scheduler_config(form_data):
 
+    # TODO: move to constants
     _response_dict = {'result': False, 'data': None, 'alert_type': None, 'alert_what': None, 'msg': None}
 
     schedule_data = dict()
@@ -183,6 +184,7 @@ def save_scheduler_config(form_data):
 
         schedule_data['schedule_type_idn'] = code_schedule_type.schedule_type_idn
 
+        # TODO: move to constants
         schedule_data['start_date'] = datetime.strptime(string_date, "%Y-%m-%d %H:%M:%S")
         schedule_data['job_id'] = get_unique_id()
         schedule_data['user_idn'] = get_loggedin_user_id()
@@ -192,7 +194,7 @@ def save_scheduler_config(form_data):
             if valve['selected'] == True:
                 valve_id.append(valve['id'])
 
-        schedule_data['params'] = "{0!s}".format(valve_id)
+        schedule_data['params'] = ','.join(valve_id)
         schedule_data['recurrence'] = form_data['recurs']
 
         week_id = list()
@@ -200,15 +202,11 @@ def save_scheduler_config(form_data):
             if weekday['selected'] != False:
                 week_id.append(weekday['id'])
 
-        schedule_data['day_of_week'] = "{0!s}".format(week_id)
+        schedule_data['day_of_week'] = ','.join(week_id)
 
         # Inserting schedule config into Job details
         job_details_idn = JobDetailsModel.insert(
             auto_session, **schedule_data
         ).job_details_idn
 
-
-
     return _response_dict
-
-
