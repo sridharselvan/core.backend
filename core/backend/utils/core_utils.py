@@ -35,6 +35,10 @@ from core.db import create_session
 def get_unique_id():
     return str(uuid4())
 
+def get_loggedin_user_id():
+    user_session = request.environ.get('beaker.session')
+    return user_session.get('user_id')
+
 
 class AutoSession(object):
 
@@ -78,7 +82,7 @@ class common_route(object):
                     user_idn=user_id
                 )
 
-            else:
+            else:  
                 user_session = request.environ.get('beaker.session')
                 user_id = user_session.get('user_id')
                 user_session_cd = user_session.get('user_session_cd')

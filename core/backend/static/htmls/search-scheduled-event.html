@@ -1,0 +1,12 @@
+<form class="form-horizontal schedulerform" ng-submit="SearchScheduler()">
+	<h3>Search Scheduled Job</h3>
+	<div class="form-group">
+        <label class="col-sm-3 control-label">Scheduler Type</label>
+        <div class="col-sm-4">
+            <select class="form-control" 
+                ng-model="schedulerType" 
+                ng-options="type for type in types">
+            </select>
+        </div>
+    </div>
+</form>

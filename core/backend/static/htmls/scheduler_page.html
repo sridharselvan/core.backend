@@ -17,22 +17,28 @@
     <div id="my-tab-content" class="tab-content">
         
         <div id="newScheduler" class="tab-pane fade in active">
+            <h3>Schedule New Job</h3>
+            <div class="alert alert-success alert-dismissible" ng-show="showSuccessMsg">
+              <a class="close" ng-click="showSuccessMsg = !showSuccessMsg">&times;</a>
+              New job scheduled successfully
+            </div>
             <form class="form-horizontal schedulerform" ng-submit="triggerScheduler()">
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Scheduler Type</label>
                     <div class="col-sm-4">
                         <select class="form-control" 
                             ng-model="schedulerData.type" 
-                            ng-options="type for type in types">
+                            ng-options="type for type in types" required>
                         </select>
                     </div>
                 </div>
-                <div class="form-inline">
+                <div class="form-inline" 
+                    ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
                     <label class="col-sm-3 control-label">Start Date</label>
                     <div class="col-sm-9 form-group">
                         <div class="margin-bottom-25 input-group">
                             <span class="input-group-addon">DD</span>
-                            <select name="day" class="form-control" ng-model="schedulerData.date.day">
+                            <select name="day" class="form-control" ng-model="schedulerData.start_date.day">
                                 <option value=''>DD</option>
                                 <option value="{{day}}" ng-repeat="day in range(1,31)">{{day}}</option>
                             </select>
@@ -40,7 +46,7 @@
 
                         <div class="margin-bottom-25 input-group">
                             <span class="input-group-addon">MM</span>
-                            <select name="month" class="form-control" ng-model="schedulerData.date.month">
+                            <select name="month" class="form-control" ng-model="schedulerData.start_date.month">
                                 <option value=''>MM</option>
                                 <option value="{{month}}" ng-repeat="month in range(1,31)">{{month}}</option>
                             </select>
@@ -48,7 +54,7 @@
                         
                         <div class="margin-bottom-25 input-group">
                             <span class="input-group-addon">YY</span>
-                            <select name="month" class="form-control" ng-model="schedulerData.date.year">
+                            <select name="month" class="form-control" ng-model="schedulerData.start_date.year">
                                 <option value=''>YYYY</option>
                                 <option value="{{year}}" ng-repeat="year in range(2000,2030)">{{year}}</option>
                             </select>
@@ -56,7 +62,7 @@
 
                         <div class="margin-bottom-25 input-group">
                             <span class="input-group-addon">Hr</span>
-                            <select name="hour" class="form-control" ng-model="schedulerData.date.hour">
+                            <select name="hour" class="form-control" ng-model="schedulerData.start_date.hour">
                                 <option value=''>HH</option>
                                 <option value="{{hour}}" ng-repeat="hour in range(0,23)">{{hour}}</option>
                             </select>
@@ -64,7 +70,7 @@
                         
                         <div class="margin-bottom-25 input-group">
                             <span class="input-group-addon">MM</span>
-                            <select name="minute" class="form-control" ng-model="schedulerData.date.mins">
+                            <select name="minute" class="form-control" ng-model="schedulerData.start_date.mins">
                                 <option value=''>MM</option>
                                 <option value="{{mins}}" ng-repeat="mins in range(0,59)">{{mins}}</option>
                             </select>
@@ -79,7 +85,7 @@
                     <div class="form-inline col-sm-6" ng-if="schedulerData.type == 'Weekly'">
                         <label ng-repeat="weekday in schedulerData.weekDays" class="form-control">
                             <input ng-model="weekday.selected"
-                                   ng-true-value="'true'"
+                                   ng-true-value="'True'"
                                    type="checkbox">
                             {{weekday.value}}
                         </label>
@@ -87,12 +93,13 @@
                 </div>
                 
 
-                <div class="form-group">
+                <div class="form-group" 
+                    ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
                     <label class="col-sm-3 control-label"></label>
                     <div class="col-sm-8">
                         <a ng-init="isCollapsed=false" 
                             ng-click="isCollapsed=!isCollapsed"
-                            class="glyphicon glyphicon-plus panel-heading">
+                            class="glyphicon glyphicon-plus panel-heading cursor">
                             Valve Config
                         </a>
                         <div ng-show="isCollapsed" class="collapse in">
@@ -100,16 +107,14 @@
                                 class="form-control">
                             <input ng-model="valve.selected"
                                    ng-false-value="'false'"
-                                   type="checkbox"
-                                   dnd-draggable="valve"
-                                dnd-moved="schedulerData.ValveDetails.splice($index, 1)"
-                                dnd-effect-allowed="move">
+                                   type="checkbox">
                             {{valve.name}}
                         </label>
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group"
+                    ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
                     <label class="col-sm-3 control-label"></label>
                     <div class="col-sm-6">
                         <button type="submit" class="btn btn-primary">Schedule</button>
@@ -118,8 +123,7 @@
             </form>
         </div>
         <div id="searchScheduler" class="tab-pane fade in">
-            <h3>Menu 1</h3>
-            <p>Some content in menu 1.</p>
+            <div ng-include src="'search-scheduled-event.html'"></div>
         </div>
     </div>
 </div>
