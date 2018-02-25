@@ -20,14 +20,12 @@ from sqlalchemy.exc import SQLAlchemyError
 # ----------- END: Third Party Imports ---------- #
 
 # ----------- START: In-App Imports ---------- #
-from core.db import create_session
-
 from core.db.model import (
     UserModel, UserSessionModel, CodeStatusModel
 )
 from core.backend.utils.butils import decode_form_data
 from core.backend.utils.core_utils import (
-    use_transaction, get_unique_id, AutoSession
+    get_unique_id, AutoSession
 )
 # ----------- END: In-App Imports ---------- #
 
@@ -35,7 +33,6 @@ __all__ = [
     # All public symbols go here.
 ]
 
-@use_transaction
 def authenticate_user(session, *args, **kwargs):
     form_data = kwargs.get('form_data') or dict()
     uname = base64.b64encode(form_data.get('username'))
@@ -86,7 +83,6 @@ def authenticate_user(session, *args, **kwargs):
         return _response_dict
 
 
-@use_transaction
 def create_user(session, *args, **kwargs):
     form_data = kwargs.get('form_data') or dict()
     form_data['user_name'] = base64.b64encode(form_data['user_name'])
