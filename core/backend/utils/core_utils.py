@@ -60,67 +60,63 @@ class AutoSession(object):
 
 class common_route(object):
 
-    def __init__(self, _func):
-        self._func = _func
+    def __init__(self, use_transaction=False):
+        self.use_transaction = use_transaction
+        self.transactional_session = None
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, func):
 
-        with AutoSession() as auto_session:
+        self._func = func
+
+        def decor(*args, **kwargs):
+
+            _response = dict()
+
             if self._func.__name__ in ('on_login', ):
-                #
-                # Session check exclusions
-                return self._func(*args, **kwargs)
 
-            elif self._func.__name__ in ('logout_user', ):
-                user_session = request.environ.get('beaker.session')
-                user_id = user_session.get('user_id')
-                user_session_cd = user_session.get('user_session_cd')
+                with AutoSession() as auto_session:
+                    return self._func(auto_session, *args, **kwargs)
 
-                UserSessionModel.logout(
-                    auto_session,
-                    user_session_cd=user_session_cd,
-                    user_idn=user_id
-                )
+            user_session = request.environ.get('beaker.session')
+            user_id = user_session.get('user_id')
+            user_session_cd = user_session.get('user_session_cd')
+
+            if self._func.__name__ in ('logout_user', ):
+
+                with AutoSession() as auto_session:
+                    UserSessionModel.logout(
+                        auto_session,
+                        user_session_cd=user_session_cd,
+                        user_idn=user_id
+                    )
 
             else:  
-                user_session = request.environ.get('beaker.session')
-                user_id = user_session.get('user_id')
-                user_session_cd = user_session.get('user_session_cd')
- 
+
+                if self.use_transaction:
+                    args = list(args)
+                    self.transactional_session = create_session()
+                    args[0:0] = [self.transactional_session]
+
                 if not user_session_cd or not user_id:
                     return json.dumps({'is_session_valid' : False})
 
-                user_has_open_session = UserSessionModel.fetch_active_loggedin_user_session(
-                    auto_session, user_idn=user_id, unique_session_cd=user_session_cd
-                )
+                with AutoSession() as auto_session:
+                    user_has_open_session = UserSessionModel.fetch_active_loggedin_user_session(
+                        auto_session, user_idn=user_id, unique_session_cd=user_session_cd
+                    )
 
                 if not user_has_open_session:
                     return json.dumps({'is_session_valid' : False})
 
-                _response = self._func(*args, **kwargs)
+                try:
+                    _response = self._func(*args, **kwargs)
+                except SQLAlchemyError:
+                    self.transactional_session.rollback()
+                else:
+                    if self.transactional_session:
+                        self.transactional_session.commit()
+
                 _response.update({'is_session_valid' : True})
                 return json.dumps(_response)
 
-
-class use_transaction(object):
-
-    def __init__(self, _func):
-        self._func = _func
-
-    def __call__(self, *args, **kwargs):
-
-        form_data = decode_form_data(request.forms)
-        session = create_session()
-        _response = None
-
-        if form_data:
-            kwargs['form_data'] = form_data
-
-        try:
-            _response = self._func(session, *args, **kwargs)
-        except SQLAlchemyError:
-            session.rollback()
-        else:
-            session.commit()
-
-        return _response
+        return decor

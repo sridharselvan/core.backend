@@ -48,7 +48,7 @@
                             <span class="input-group-addon">MM</span>
                             <select name="month" class="form-control" ng-model="schedulerData.start_date.month">
                                 <option value=''>MM</option>
-                                <option value="{{month}}" ng-repeat="month in range(1,31)">{{month}}</option>
+                                <option value="{{month}}" ng-repeat="month in range(1,12)">{{month}}</option>
                             </select>
                         </div>
                         
@@ -56,7 +56,7 @@
                             <span class="input-group-addon">YY</span>
                             <select name="month" class="form-control" ng-model="schedulerData.start_date.year">
                                 <option value=''>YYYY</option>
-                                <option value="{{year}}" ng-repeat="year in range(2000,2030)">{{year}}</option>
+                                <option value="{{year}}" ng-repeat="year in range(2018,2030)">{{year}}</option>
                             </select>
                         </div>
 
