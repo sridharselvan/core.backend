@@ -19,6 +19,8 @@ import json
 from bottle import request
 
 from sqlalchemy.exc import SQLAlchemyError
+
+import base64
 # ----------- END: Third Party Imports ---------- #
 
 # ----------- START: In-App Imports ---------- #
@@ -38,6 +40,12 @@ def get_unique_id():
 def get_loggedin_user_id():
     user_session = request.environ.get('beaker.session')
     return user_session.get('user_id')
+
+def encode(data):
+    return base64.b64encode(data)
+
+def decode(encoded_data):
+    return base64.b64decode(encoded_data)
 
 
 class AutoSession(object):
