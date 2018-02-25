@@ -27,6 +27,8 @@ from core.backend.utils.butils import decode_form_data
 from core.backend.utils.core_utils import (
     get_unique_id, AutoSession
 )
+
+from core.backend.utils.core_utils import encode
 # ----------- END: In-App Imports ---------- #
 
 __all__ = [
@@ -35,8 +37,8 @@ __all__ = [
 
 def authenticate_user(session, *args, **kwargs):
     form_data = kwargs.get('form_data') or dict()
-    uname = base64.b64encode(form_data.get('username'))
-    passwd = base64.b64encode(form_data.get('password'))
+    uname = encode(form_data.get('username'))
+    passwd = encode(form_data.get('password'))
 
     _response_dict = {'result': dict(), 'status': False, 'alert_type': None, 'alert_what': None, 'msg': None}
 
@@ -85,8 +87,8 @@ def authenticate_user(session, *args, **kwargs):
 
 def create_user(session, *args, **kwargs):
     form_data = kwargs.get('form_data') or dict()
-    form_data['user_name'] = base64.b64encode(form_data['user_name'])
-    form_data['hash1'] = base64.b64encode(form_data['hash1'])
+    form_data['user_name'] = encode(form_data['user_name'])
+    form_data['hash1'] = encode(form_data['hash1'])
     _response_dict = {'result': False, 'data': dict(), 'alert_type': None, 'alert_what': None, 'msg': None}
 
     uname = form_data.get('user_name')

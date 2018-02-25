@@ -172,7 +172,7 @@ app.controller("schedulerController", function($scope, http, $state, $filter) {
       .post('/searchscheduledjob', $scope.searchScheduledData)
       .then(function(response) {
         $scope.showSearchResult = true;
-        $scope.scheduledJobDetails = response.data.result;
+        $scope.scheduledJobDetails = response.data.data;
     }); 
   };
 
