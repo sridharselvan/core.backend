@@ -1,12 +1,50 @@
-<form class="form-horizontal schedulerform" ng-submit="SearchScheduler()">
-	<h3>Search Scheduled Job</h3>
+<form class="form-horizontal schedulerform" ng-submit="SearchScheduledJob()">
+	<h3 class="text-center">Search Scheduled Job</h3>
 	<div class="form-group">
         <label class="col-sm-3 control-label">Scheduler Type</label>
         <div class="col-sm-4">
             <select class="form-control" 
-                ng-model="schedulerType" 
+                ng-model="searchScheduledData.searchScheduleType" 
                 ng-options="type for type in types">
             </select>
         </div>
+        <div class="col-sm-4">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
     </div>
+    <div class="container" ng-show="showSearchResult">
+	    <div class="row">
+	        <div id="no-more-tables">
+	            <table class="col-md-12 table-bordered table-striped table-condensed cf">
+	        		<thead class="cf">
+	        			<tr>
+	        				<th>Action</th>
+	        				<th>Schedule Type</th>
+	        				<th class="numeric">Start Date</th>
+	        				<th class="numeric">Valve Details</th>
+	        				<th class="numeric">Scheduled By</th>
+	        				<th class="numeric">Status</th>
+	        			</tr>
+	        		</thead>
+	        		<tbody>
+	        			<tr ng-repeat="scheduledJob in scheduledJobDetails">
+	        				<td data-title="Action">
+	        					<button class="btn btn-primary btn-xs">
+	        						<span class="glyphicon glyphicon-pencil"></span>
+	        					</button>
+	        					<button class="btn btn-danger btn-xs">
+	        						<span class="glyphicon glyphicon-remove"></span>
+	        					</button>
+	        				</td>
+	        				<td data-title="Type">{{scheduledJob.schedule_type}}</td>
+	        				<td data-title="Start Date">{{scheduledJob.start_date}}</td>
+	        				<td data-title="Valve Details">{{scheduledJob.user_name}}</td>
+	        				<td data-title="Scheduled By">{{scheduledJob.params}}</td>
+	        				<td data-title="status" class="numeric">-</td>
+	        			</tr>
+	        		</tbody>
+	        	</table>
+	        </div>
+	    </div>
+	</div>
 </form>

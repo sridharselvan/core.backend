@@ -110,7 +110,7 @@ app.controller("schedulerController", function($scope, http, $state, $filter) {
       return $scope.tab === tabNum;
     };
 
-  $scope.types = ['Select One', 'OneTime', 'Daily', 'Weekly'];
+  $scope.types = ['Select One', 'OneTime', 'Daily', 'Weekly'];  
   $scope.schedulerData = {
     type:$scope.types[0],
     start_date: {
@@ -161,6 +161,21 @@ app.controller("schedulerController", function($scope, http, $state, $filter) {
         $scope.schedulerData.type = $scope.types[0];
     });
   }
+
+  $scope.showSearchResult = false;
+  $scope.searchScheduledData = {
+    searchScheduleType : $scope.types[0]
+  };
+
+  $scope.SearchScheduledJob = function(){
+    http
+      .post('/searchscheduledjob', $scope.searchScheduledData)
+      .then(function(response) {
+        $scope.showSearchResult = true;
+        $scope.scheduledJobDetails = response.data.result;
+    }); 
+  };
+
   $scope.range = function(min=1, max, step) {
     step = step || 1;
     var input = [];
