@@ -14,14 +14,20 @@
     </div>
     <div class="container" ng-show="showSearchResult">
 	    <div class="row">
-	        <div id="no-more-tables">
+	    	<label class="col-md-3"></label>
+	    	<div class="col-md-4 alert alert-warning text-center" ng-if="scheduledJobDetails.length == 0">
+	            <h5>
+	                No Records Found
+	            </h5>
+	        </div>
+	        <div id="no-more-tables" ng-if="scheduledJobDetails.length != 0">
 	            <table class="col-md-12 table-bordered table-striped table-condensed cf">
 	        		<thead class="cf">
 	        			<tr>
 	        				<th>Action</th>
 	        				<th>Schedule Type</th>
 	        				<th class="numeric">Start Date</th>
-	        				<th class="numeric">Valve Details</th>
+	        				<th class="numeric">Fields</th>
 	        				<th class="numeric">Scheduled By</th>
 	        				<th class="numeric">Status</th>
 	        			</tr>
@@ -29,10 +35,12 @@
 	        		<tbody>
 	        			<tr ng-repeat="scheduledJob in scheduledJobDetails">
 	        				<td data-title="Action">
-	        					<button class="btn btn-primary btn-xs">
+	        					<button class="btn btn-primary btn-xs" 
+	        						ng-click="editScheduledJob(scheduledJob.job_details_idn)">
 	        						<span class="glyphicon glyphicon-pencil"></span>
 	        					</button>
-	        					<button class="btn btn-danger btn-xs">
+	        					<button class="btn btn-danger btn-xs"
+	        						ng-click="deactivateScheduledJob(scheduledJob.job_details_idn)">
 	        						<span class="glyphicon glyphicon-remove"></span>
 	        					</button>
 	        				</td>

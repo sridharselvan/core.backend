@@ -90,7 +90,7 @@ app.controller("clientConfigController", function($scope, http, $state) {
 }); // end: controller:clientConfigController
 
 //Start: controller:schedulerController
-app.controller("schedulerController", function($scope, http, $state, $filter) {
+app.controller("schedulerController", function($scope, http, $state, $filter, $window) {
 
     $scope.tab = 1;
     $scope.showSuccessMsg = false;
@@ -175,6 +175,18 @@ app.controller("schedulerController", function($scope, http, $state, $filter) {
         $scope.scheduledJobDetails = response.data.data;
     }); 
   };
+
+  $scope.deactivateScheduledJob = function(jobDetailsIdn) {
+    http
+      .post('/deactivatescheduledjob', {'job_details_idn' : jobDetailsIdn})
+      .then(function(response) {
+        $window.alert("Deactivated successfully");
+    }); 
+  };
+
+  $scope.editScheduledJob = function() {
+
+  }
 
   $scope.range = function(min=1, max, step) {
     step = step || 1;
