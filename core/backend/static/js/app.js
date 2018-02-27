@@ -1,5 +1,5 @@
 
-var app = angular.module("configuration", ['ui.router']);
+var app = angular.module("configuration", ['ui.router', 'ui.bootstrap']);
 
 
 //Start: controller: LoginPageController
@@ -90,7 +90,8 @@ app.controller("clientConfigController", function($scope, http, $state) {
 }); // end: controller:clientConfigController
 
 //Start: controller:schedulerController
-app.controller("schedulerController", function($scope, http, $state, $filter, $window) {
+app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$window', '$modal', 
+  function($scope, http, $state, $filter, $window, $modal) {
 
     $scope.tab = 1;
     $scope.showSuccessMsg = false;
@@ -184,8 +185,16 @@ app.controller("schedulerController", function($scope, http, $state, $filter, $w
     }); 
   };
 
-  $scope.editScheduledJob = function() {
-
+  $scope.editScheduledJob = function(scheduledJob) {
+    var modalInstance = $modal.open({
+      templateUrl: 'edit-scheduled-event.html',
+      controller: 'editScheduledController as editCtrl',
+      resolve: {
+         editData: function () {
+           return scheduledJob;
+         }
+       }
+    });
   }
 
   $scope.range = function(min=1, max, step) {
@@ -197,7 +206,19 @@ app.controller("schedulerController", function($scope, http, $state, $filter, $w
     return input;
   };
 
-}); // end: controller:schedulerController
+}]); // end: controller:schedulerController
+
+//Start: controller:editScheduledController
+app.controller("editScheduledController",['$scope', '$modalInstance', 'editData' , 
+  function($scope, $modalInstance, editData) {
+    console.log(editData);
+    $scope.editFormData = editData;
+
+    $scope.cancel = function () {
+        $modalInstance.close('yes');
+    };
+
+}]); // end: controller:editScheduledController
 
 
 //Start http
