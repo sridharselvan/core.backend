@@ -1,0 +1,96 @@
+<div class="modal-content">
+
+  <div class="modal-body">
+  	<form class="form-horizontal schedulerform" ng-submit="updateScheduler()">
+		<div class="form-inline">
+	        <label class="col-sm-3 control-label">Start Date</label>
+	        <div class="col-sm-9 form-group">
+	            <div class="margin-bottom-25 input-group">
+	                <span class="input-group-addon">DD</span>
+	                <select name="day" class="form-control" ng-model="editFormData.start_date.day">
+	                    <option value=''>DD</option>
+	                    <option value="{{day}}" ng-repeat="day in range(1,31)">{{day}}</option>
+	                </select>
+	            </div>
+
+	            <div class="margin-bottom-25 input-group">
+	                <span class="input-group-addon">MM</span>
+	                <select name="month" class="form-control" ng-model="editFormData.start_date.month">
+	                    <option value=''>MM</option>
+	                    <option value="{{month}}" ng-repeat="month in range(1,12)">{{month}}</option>
+	                </select>
+	            </div>
+	            
+	            <div class="margin-bottom-25 input-group">
+	                <span class="input-group-addon">YY</span>
+	                <select name="month" class="form-control" ng-model="editFormData.start_date.year">
+	                    <option value=''>YYYY</option>
+	                    <option value="{{year}}" ng-repeat="year in range(2018,2030)">{{year}}</option>
+	                </select>
+	            </div>
+
+	            <div class="margin-bottom-25 input-group">
+	                <span class="input-group-addon">Hr</span>
+	                <select name="hour" class="form-control" ng-model="editFormData.start_date.hour">
+	                    <option value=''>HH</option>
+	                    <option value="{{hour}}" ng-repeat="hour in range(0,23)">{{hour}}</option>
+	                </select>
+	            </div>
+	            
+	            <div class="margin-bottom-25 input-group">
+	                <span class="input-group-addon">MM</span>
+	                <select name="minute" class="form-control" ng-model="editFormData.start_date.mins">
+	                    <option value=''>MM</option>
+	                    <option value="{{mins}}" ng-repeat="mins in range(0,59)">{{mins}}</option>
+	                </select>
+	            </div>
+	        </div>
+	    </div>
+
+	    <div class="form-group" ng-if="editFormData.type == 'Daily' || editFormData.type == 'Weekly'">
+	        <label class="col-sm-3 control-label">Recurs</label>
+	        <div class="col-sm-3">
+	            <input type="text" ng-model="editFormData.recurs" class="form-control">
+	        </div>
+	        <div class="form-inline col-sm-6" ng-if="editFormData.type == 'Weekly'">
+	            <label ng-repeat="weekday in editFormData.weekDays" class="form-control">
+	                <input ng-model="weekday.selected"
+	                       type="checkbox">
+	                {{weekday.value}}
+	            </label>
+	        </div>
+	    </div>
+	    
+
+	    <div class="form-group" 
+	        ng-if="editFormData.type == 'Daily' || editFormData.type == 'Weekly' || editFormData.type == 'OneTime'">
+	        <label class="col-sm-3 control-label"></label>
+	        <div class="col-sm-8">
+	            <a ng-init="isCollapsed=false" 
+	                ng-click="isCollapsed=!isCollapsed"
+	                class="glyphicon glyphicon-plus panel-heading cursor">
+	                Valve Config
+	            </a>
+	            <div ng-show="isCollapsed" class="collapse in">
+	                <label ng-repeat="valve in editFormData.ValveDetails" 
+	                    class="form-control">
+	                <input ng-model="valve.selected"
+	                       type="checkbox">
+	                {{valve.name}}
+	            </label>
+	            </div>
+	        </div>
+	    </div>
+
+	    <div class="form-group"
+	        ng-if="editFormData.type == 'Daily' || editFormData.type == 'Weekly' || editFormData.type == 'OneTime'">
+	        <label class="col-sm-3 control-label"></label>
+	        <div class="col-sm-6">
+	            <button type="submit" class="btn btn-primary">Update</button>
+	        </div>
+	  	</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+		</div>
+	</form>
+</div>

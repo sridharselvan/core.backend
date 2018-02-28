@@ -1,5 +1,5 @@
 
-var app = angular.module("configuration", ['ui.router']);
+var app = angular.module("configuration", ['ui.router', 'ui.bootstrap']);
 
 
 //Start: controller: LoginPageController
@@ -90,7 +90,8 @@ app.controller("clientConfigController", function($scope, http, $state) {
 }); // end: controller:clientConfigController
 
 //Start: controller:schedulerController
-app.controller("schedulerController", function($scope, http, $state, $filter, $window) {
+app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$window', '$modal', 
+  function($scope, http, $state, $filter, $window, $modal) {
 
     $scope.tab = 1;
     $scope.showSuccessMsg = false;
@@ -184,8 +185,17 @@ app.controller("schedulerController", function($scope, http, $state, $filter, $w
     }); 
   };
 
-  $scope.editScheduledJob = function() {
-
+  $scope.editScheduledJob = function(scheduledJob) {
+    var modalInstance = $modal.open({
+      templateUrl: 'edit-scheduled-event.html',
+      controller: 'editScheduledController as editCtrl',
+      resolve: {
+         editData: function () {
+           return scheduledJob;
+         }
+       },
+       size: 'lg'
+    });
   }
 
   $scope.range = function(min=1, max, step) {
@@ -197,7 +207,107 @@ app.controller("schedulerController", function($scope, http, $state, $filter, $w
     return input;
   };
 
-}); // end: controller:schedulerController
+}]); // end: controller:schedulerController
+
+//Start: controller:editScheduledController
+app.controller("editScheduledController",['$scope', '$modalInstance', 'editData', 'http', '$state',
+  function($scope, $modalInstance, editData, http, $state) {
+
+    var formData = editData, 
+        start_date_time = formData.start_date.split(" "),
+        start_date = start_date_time[0].split("-"),
+        start_time = start_date_time[1].split(":"),
+        dayOfWeek = formData.day_of_week.split(","),
+        dayOfWeek = dayOfWeek.map(s => s.trim());;
+
+    $scope.editFormData = {
+      job_details_idn: formData.job_details_idn,
+      type:formData.schedule_type,
+      start_date: {
+        day : start_date[2],
+        month : start_date[1],
+        year : start_date[0],
+        hour : start_time[0],
+        mins : start_time[1],
+      },
+      recurs:formData.recurrence,
+      weekDays:[
+        {id:'sunday', value:'S', selected:false},
+        {id:'monday', value:'M', selected:false},
+        {id:'tuesday', value:'T', selected:false},
+        {id:'wednesday', value:'W', selected:false},
+        {id:'thursday', value:'T', selected:false},
+        {id:'friday', value:'F', selected:false},
+        {id:'saturday', value:'S', selected:false}
+      ],
+      ValveDetails:[]
+    };
+
+    angular.forEach($scope.editFormData.weekDays, function(day){
+      if(dayOfWeek.indexOf(day.id) > -1) {
+        day.selected = true
+      }
+    });
+
+    $scope.updateScheduler = function(){
+      http
+        .post('/updateschedulerconfig', $scope.editFormData)
+        .then(function(response) {
+          $modalInstance.close('yes');
+          $state.reload('home.scheduler')
+      });
+    }
+
+    $scope.range = function(min=1, max, step) {
+      step = step || 1;
+      var input = [];
+      for (var i = min; i <= max; i += step) {
+          if(i<10){
+            input.push("0"+i);
+          }else{
+            input.push(i);
+          }
+      }
+      return input;
+    };
+
+    /** Runs during page load.*/
+      _loadClientConfig = function(formData){
+        var valve_names = formData.params.split(",");
+        valve_names = valve_names.map(s => s.trim());
+
+        http.get("/viewclientconfig")
+          .then(function(response){
+            var nodeList = response.data.nodes.ids.split(' ');
+            angular.forEach(nodeList, function(value) {
+              if(valve_names.indexOf(response.data[value].name) > -1) {
+                $scope.editFormData.ValveDetails.push(
+                  {
+                    id: response.data[value].id,
+                    name: response.data[value].name,
+                    selected:true
+                  }
+                );
+              } else {
+                $scope.editFormData.ValveDetails.push(
+                  {
+                    id: response.data[value].id,
+                    name: response.data[value].name,
+                    selected:false
+                  }
+                );
+              }
+            });
+        });
+      }
+
+      _loadClientConfig(formData); 
+
+    $scope.cancel = function () {
+        $modalInstance.close('yes');
+    };
+
+}]); // end: controller:editScheduledController
 
 
 //Start http
