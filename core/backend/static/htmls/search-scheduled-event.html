@@ -9,7 +9,7 @@
             </select>
         </div>
         <div class="col-sm-4">
-            <button type="submit" class="btn btn-primary">Search</button>
+            <button type="submit" class="btn btn-success">Search</button>
         </div>
     </div>
     <div class="container" ng-show="showSearchResult">
@@ -28,6 +28,7 @@
 	        				<th>Schedule Type</th>
 	        				<th class="numeric">Start Date</th>
 	        				<th class="numeric">Fields</th>
+	        				<th class="numeric">Recurs</th>
 	        				<th class="numeric">Scheduled By</th>
 	        				<th class="numeric">Status</th>
 	        			</tr>
@@ -35,7 +36,7 @@
 	        		<tbody>
 	        			<tr ng-repeat="scheduledJob in scheduledJobDetails">
 	        				<td data-title="Action">
-	        					<button class="btn btn-primary btn-xs"
+	        					<button class="btn btn-success btn-xs"
 	        						ng-click="editScheduledJob(scheduledJob)">
 	        						<span class="glyphicon glyphicon-pencil"></span>
 	        					</button>
@@ -47,6 +48,8 @@
 	        				<td data-title="Type">{{scheduledJob.schedule_type}}</td>
 	        				<td data-title="Start Date">{{scheduledJob.start_date}}</td>
 	        				<td data-title="Valve Details">{{scheduledJob.params}}</td>
+	        				<td data-title="Recurs" ng-if="!scheduledJob.day_of_week">-</td>
+	        				<td data-title="Recurs" ng-if="scheduledJob.day_of_week">{{scheduledJob.day_of_week}}</td>
 	        				<td data-title="Scheduled By">{{scheduledJob.user_name}}</td>
 	        				<td data-title="status" class="numeric">-</td>
 	        			</tr>
