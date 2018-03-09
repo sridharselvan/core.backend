@@ -1,0 +1,61 @@
+<form class="form-horizontal schedulerform" ng-submit="SearchScheduledJob()">
+	<h3 class="text-center">Search Scheduled Job</h3>
+	<div class="form-group">
+        <label class="col-sm-3 control-label">Scheduler Type</label>
+        <div class="col-sm-4">
+            <select class="form-control" 
+                ng-model="searchScheduledData.searchScheduleType" 
+                ng-options="type for type in types">
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <button type="submit" class="btn btn-success">Search</button>
+        </div>
+    </div>
+    <div class="container" ng-show="showSearchResult">
+	    <div class="row">
+	    	<label class="col-md-3"></label>
+	    	<div class="col-md-4 alert alert-warning text-center" ng-if="scheduledJobDetails.length == 0">
+	            <h5>
+	                No Records Found
+	            </h5>
+	        </div>
+	        <div id="no-more-tables" ng-if="scheduledJobDetails.length != 0">
+	            <table class="col-md-12 table-bordered table-striped table-condensed cf">
+	        		<thead class="cf">
+	        			<tr>
+	        				<th>Action</th>
+	        				<th>Schedule Type</th>
+	        				<th class="numeric">Start Date</th>
+	        				<th class="numeric">Fields</th>
+	        				<th class="numeric">Recurs</th>
+	        				<th class="numeric">Scheduled By</th>
+	        				<th class="numeric">Status</th>
+	        			</tr>
+	        		</thead>
+	        		<tbody>
+	        			<tr ng-repeat="scheduledJob in scheduledJobDetails">
+	        				<td data-title="Action">
+	        					<button class="btn btn-success btn-xs"
+	        						ng-click="editScheduledJob(scheduledJob)">
+	        						<span class="glyphicon glyphicon-pencil"></span>
+	        					</button>
+	        					<button class="btn btn-danger btn-xs"
+	        						ng-click="deactivateScheduledJob(scheduledJob.job_details_idn)">
+	        						<span class="glyphicon glyphicon-remove"></span>
+	        					</button>
+	        				</td>
+	        				<td data-title="Type">{{scheduledJob.schedule_type}}</td>
+	        				<td data-title="Start Date">{{scheduledJob.start_date}}</td>
+	        				<td data-title="Valve Details">{{scheduledJob.params}}</td>
+	        				<td data-title="Recurs" ng-if="!scheduledJob.day_of_week">-</td>
+	        				<td data-title="Recurs" ng-if="scheduledJob.day_of_week">{{scheduledJob.day_of_week}}</td>
+	        				<td data-title="Scheduled By">{{scheduledJob.user_name}}</td>
+	        				<td data-title="status" class="numeric">-</td>
+	        			</tr>
+	        		</tbody>
+	        	</table>
+	        </div>
+	    </div>
+	</div>
+</form>

@@ -1,16 +1,11 @@
-.margin-bottom-25{
-	margin-bottom: 25px;
-}
+.margin-bottom-25px{margin-bottom: 25px;}
+.margin-top-5px{margin-top: 5px;}
+.cursor{cursor: pointer;}
+.table-responsive{overflow-x: auto;}
 
-.margin-top-10{
-	margin-top: 10px;
-}
-
-.cursor{
-	cursor: pointer;
-}
-
-.table-responsive
-{
-    overflow-x: auto;
-}
+/************************ Login Page ***********************************/
+.forgot-passwd{float:right; font-size: 80%; position: relative; top:-25px}
+.account{border-top: 1px solid#888; padding-top:15px; font-size:85%}
+.mainbox{margin-top:50px;}
+.loginbox{padding-top:30px;}
+.login-alert{display:none}
