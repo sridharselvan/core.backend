@@ -90,8 +90,8 @@ app.controller("clientConfigController", function($scope, http, $state) {
 }); // end: controller:clientConfigController
 
 //Start: controller:schedulerController
-app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$window', '$modal', 
-  function($scope, http, $state, $filter, $window, $modal) {
+app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$window', '$modal', '$rootScope',
+  function($scope, http, $state, $filter, $window, $modal, $rootScope) {
 
     $scope.tab = 1;
     $scope.showSuccessMsg = false;
@@ -151,7 +151,11 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
       });
     }
 
-    _loadClientConfig();    
+    _loadClientConfig();
+
+  $rootScope.$on('eventName', function (event, args) {
+   $scope.SearchScheduledJob();
+  });  
 
   $scope.triggerScheduler = function(){
 
@@ -210,8 +214,8 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
 }]); // end: controller:schedulerController
 
 //Start: controller:editScheduledController
-app.controller("editScheduledController",['$scope', '$modalInstance', 'editData', 'http', '$state',
-  function($scope, $modalInstance, editData, http, $state) {
+app.controller("editScheduledController",['$scope', '$modalInstance', 'editData', 'http', '$state', '$rootScope',
+  function($scope, $modalInstance, editData, http, $state, $rootScope) {
 
     var formData = editData, 
         start_date_time = formData.start_date.split(" "),
@@ -253,8 +257,8 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
       http
         .post('/updateschedulerconfig', $scope.editFormData)
         .then(function(response) {
+          $rootScope.$emit('eventName', {});
           $modalInstance.close('yes');
-          $state.reload('home.scheduler')
       });
     }
 
