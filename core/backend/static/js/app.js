@@ -5,7 +5,7 @@ var app = angular.module("configuration", ['ui.router', 'ui.bootstrap']);
 //Start: controller: LoginPageController
 app.controller('loginController', function($scope, $http, $state, $stateParams){
 
-  $scope.logindata = {rememberMe : 'false'};
+  $scope.logindata = {};
 
   $scope.loginVaidation = function(){
     $http
