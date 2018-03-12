@@ -225,6 +225,7 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
         dayOfWeek = dayOfWeek.map(s => s.trim());;
 
     $scope.editFormData = {
+      job_id: formData.job_id,
       job_details_idn: formData.job_details_idn,
       type:formData.schedule_type,
       start_date: {
