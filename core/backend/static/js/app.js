@@ -115,13 +115,13 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
   $scope.schedulerData = {
     type:$scope.types[0],
     start_date: {
-      day : $filter('date')(new Date(), 'd'),
-      month : $filter('date')(new Date(), 'M'),
+      day : $filter('date')(new Date(), 'dd'),
+      month : $filter('date')(new Date(), 'MM'),
       year : $filter('date')(new Date(), 'yyyy'),
-      hour : $filter('date')(new Date(), 'H'),
-      mins : $filter('date')(new Date(), 'm'),
+      hour : $filter('date')(new Date(), 'HH'),
+      mins : $filter('date')(new Date(), 'mm'),
     },
-    recurs:1,
+    recurs:[],
     weekDays:[
       {id:'sunday', value:'S', selected:false},
       {id:'monday', value:'M', selected:false},
@@ -132,6 +132,32 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
       {id:'saturday', value:'S', selected:false}
     ],
     ValveDetails:[]
+  };
+  
+
+  /** Update recurs in scheduler data obj **/
+  $scope.updateRecurs = function(){
+    
+    var max = ($scope.schedulerData.type.toLowerCase() == 'weekly') ? 5 : 31;
+    $scope.schedulerData.recurs = [];
+    for(var i=1;i<=max;i++){
+      i = (i<10) ? '0'+i : i;
+      $scope.schedulerData.recurs.push({id:i, selected:false})
+    };
+  };
+
+  $scope.selectAllDays = function(){
+    var frequency = $scope.schedulerData.recurs;
+    for(var i=0;i<frequency.length;i++){
+      $scope.schedulerData.recurs[i]['selected'] = !frequency[i]['selected'];
+    }
+  };
+
+  $scope.selectAllWeekDays = function(){
+    var weekDays = $scope.schedulerData.weekDays;
+    for(var i=0;i<weekDays.length;i++){
+      $scope.schedulerData.weekDays[i]['selected'] = !weekDays[i]['selected'];
+    }
   };
 
   /** Runs during page load.*/
@@ -206,7 +232,11 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
     step = step || 1;
     var input = [];
     for (var i = min; i <= max; i += step) {
+      if(i<10){
+        input.push("0"+i);
+      }else{
         input.push(i);
+      }
     }
     return input;
   };
@@ -222,7 +252,8 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
         start_date = start_date_time[0].split("-"),
         start_time = start_date_time[1].split(":"),
         dayOfWeek = formData.day_of_week.split(","),
-        dayOfWeek = dayOfWeek.map(s => s.trim());;
+        dayOfWeek = dayOfWeek.map(s => s.trim()),
+        recurrence = formData.recurrence.split(",");
 
     $scope.editFormData = {
       job_id: formData.job_id,
@@ -235,7 +266,7 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
         hour : start_time[0],
         mins : start_time[1],
       },
-      recurs:formData.recurrence,
+      recurs:[],
       weekDays:[
         {id:'sunday', value:'S', selected:false},
         {id:'monday', value:'M', selected:false},
@@ -247,6 +278,13 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
       ],
       ValveDetails:[]
     };
+    var type = (formData.schedule_type == 'Daily') ? 31 : 5;
+    for(var i = 1; i <= type; i++){
+      if(parseInt(recurrence[i-1]) === i)
+        $scope.editFormData.recurs.push({id:i, selected:true})
+      else
+        $scope.editFormData.recurs.push({id:i, selected:false})
+    }
 
     angular.forEach($scope.editFormData.weekDays, function(day){
       if(dayOfWeek.indexOf(day.id) > -1) {
@@ -267,11 +305,11 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
       step = step || 1;
       var input = [];
       for (var i = min; i <= max; i += step) {
-          if(i<10){
-            input.push("0"+i);
-          }else{
-            input.push(i);
-          }
+        if(i<10){
+          input.push("0"+i);
+        }else{
+          input.push(i);
+        }
       }
       return input;
     };
