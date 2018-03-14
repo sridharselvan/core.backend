@@ -141,8 +141,8 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
     var max = ($scope.schedulerData.type.toLowerCase() == 'weekly') ? 5 : 31;
     $scope.schedulerData.recurs = [];
     for(var i=1;i<=max;i++){
-      i = (i<10) ? '0'+i : i;
-      $scope.schedulerData.recurs.push({id:i, selected:false})
+      var j = (i<10) ? '0'+i : i;
+      $scope.schedulerData.recurs.push({id:i, value:j, selected:false})
     };
   };
 
@@ -253,7 +253,7 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
         start_time = start_date_time[1].split(":"),
         dayOfWeek = formData.day_of_week.split(","),
         dayOfWeek = dayOfWeek.map(s => s.trim()),
-        recurrence = formData.recurrence.split(",");
+        recurrence = formData.recurrence;
 
     $scope.editFormData = {
       job_id: formData.job_id,
@@ -278,12 +278,12 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
       ],
       ValveDetails:[]
     };
-    var type = (formData.schedule_type == 'Daily') ? 31 : 5;
-    for(var i = 1; i <= type; i++){
-      if(parseInt(recurrence[i-1]) === i)
-        $scope.editFormData.recurs.push({id:i, selected:true})
+
+    for(var i=0; i<recurrence.length; i++){
+      if(parseInt(recurrence[i]) !== -1)
+        $scope.editFormData.recurs.push({id:i, value:i+1, selected:true});
       else
-        $scope.editFormData.recurs.push({id:i, selected:false})
+        $scope.editFormData.recurs.push({id:i, value:i+1, selected:false});
     }
 
     angular.forEach($scope.editFormData.weekDays, function(day){
