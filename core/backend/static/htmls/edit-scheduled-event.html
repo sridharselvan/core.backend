@@ -56,12 +56,15 @@
                     {{recur.value}}
                 </label>
             </div>
-	        <div class="form-inline col-sm-6" ng-if="editFormData.type == 'Weekly'">
-	            <label ng-repeat="weekday in editFormData.weekDays" class="form-control">
-	                <input ng-model="weekday.selected"
-	                       type="checkbox">
-	                {{weekday.value}}
-	            </label>
+	        <div class="form-inline" ng-if="editFormData.type == 'Weekly'">
+	        	<label class="col-sm-3 control-label"></label>
+	        	<div class="col-sm-9">
+		            <label ng-repeat="weekday in editFormData.weekDays" class="form-control">
+		                <input ng-model="weekday.selected"
+		                       type="checkbox">
+		                {{weekday.value}}
+		            </label>
+		        </div>
 	        </div>
 	    </div>
 	    
