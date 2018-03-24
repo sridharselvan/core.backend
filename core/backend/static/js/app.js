@@ -190,6 +190,7 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
       .then(function(response) {
         $scope.showSuccessMsg = true;
         $scope.schedulerData.type = $scope.types[0];
+        $state.reload();
     });
   }
 
