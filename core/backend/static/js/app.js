@@ -56,7 +56,7 @@ app.controller('menuController', function($scope, http, $state, $stateParams){
         http
           .get('/logoutuser')
           .then(function(response) {
-            $state.transitionTo('logout');
+            $state.transitionTo('login');
         });
       }
     }
@@ -372,7 +372,7 @@ app.factory('http', ['$http', '$q', '$state',
               if(response.data.is_session_valid){
                 deferred.resolve(response);
               } else {
-                $state.transitionTo('logout');
+                $state.transitionTo('login');
               }
             },
             function(response) {
@@ -389,7 +389,7 @@ app.factory('http', ['$http', '$q', '$state',
             if(response.data.is_session_valid){
               deferred.resolve(response);
             } else {
-              $state.transitionTo('logout');
+              $state.transitionTo('login');
             }
           },
           function(response) {
