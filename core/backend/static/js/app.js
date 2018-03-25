@@ -46,9 +46,24 @@ app.controller('signUpController', function($scope, $http, $state, $stateParams)
   
 }); //End: controller: SignUpPageController
 
+//Start: Alert Message
+app.controller('messageController', ['$scope', '$timeout', '$modalInstance', 'msgData', function($scope, $timeout, $modalInstance, msgData){
+
+  $scope.errorMsg = msgData;
+  $timeout(function(){
+    $modalInstance.close('yes');
+  }, 3000);
+
+  $scope.cancel = function(){
+    $modalInstance.close('yes');
+  }
+
+}]);
+//End: Alert Message
+
 
 //Start: controller: LogoutController
-app.controller('menuController', function($scope, http, $state, $stateParams){
+app.controller('menuController',['$scope', 'http', '$state', '$stateParams', '$timeout', '$rootScope', '$modal', function($scope, http, $state, $stateParams, $timeout, $rootScope, $modal){
 
     $scope.logout = function(){
 
@@ -59,9 +74,26 @@ app.controller('menuController', function($scope, http, $state, $stateParams){
             $state.transitionTo('logout');
         });
       }
-    }
+    };
+
+  $scope.alertMessage = function(msg) {
+    var modalInstance = $modal.open({
+      templateUrl: 'alert-message.html',
+      controller: 'messageController',
+      resolve: {
+         msgData: function () {
+           return msg;
+         }
+       },
+       size: 'sm'
+    });
+  }
+
+  $rootScope.$on('alert', function (event, args) {
+   $scope.alertMessage(args.msg);
+  });
   
-}); //End: controller: LogoutController
+}]); //End: controller: LogoutController
 
 //Start: controller: LogoutController
 app.controller('logoutController', function($scope, http, $state, $stateParams){
@@ -72,7 +104,7 @@ app.controller('logoutController', function($scope, http, $state, $stateParams){
 
 
 //Start: controller:clientConfigController
-app.controller("clientConfigController", function($scope, http, $state) {
+app.controller("clientConfigController", function($scope, http, $state, $rootScope) {
 
     /** Runs during page load.*/
     _loadClientConfig = function(){
@@ -90,8 +122,17 @@ app.controller("clientConfigController", function($scope, http, $state) {
       http.post("/modifyclientconfig", $scope.serverData)
         .then(function(response){
           $scope.serverData = response.data;
+          $rootScope.$emit('alert', {msg:'Data saved successfully'});
           _loadClientConfig();
       });
+    };
+
+    //Toggle glyphicon
+    $scope.toggleNodes = function(active, span_id){
+      var add_class_name = (active) ? 'glyphicon-chevron-down':'glyphicon-chevron-right',
+      remove_class_name = (active) ? 'glyphicon-chevron-right':'glyphicon-chevron-down';
+      angular.element('#node-config-'+span_id).removeClass(remove_class_name);
+      angular.element('#node-config-'+span_id).addClass(add_class_name);
     }
 
 }); // end: controller:clientConfigController
@@ -195,7 +236,7 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
     http
       .post('/saveschedulerconfig', $scope.schedulerData)
       .then(function(response) {
-        $scope.showSuccessMsg = true;
+        $rootScope.$emit('alert', {msg:'Data saved successfully'});
         $scope.schedulerData.type = $scope.types[0];
         $state.reload();
     });
@@ -219,7 +260,7 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
     http
       .post('/deactivatescheduledjob', {'job_details_idn' : jobDetailsIdn})
       .then(function(response) {
-        $window.alert("Deactivated successfully");
+        $rootScope.$emit('alert', {msg:'Deactivated successfully'});
     }); 
   };
 

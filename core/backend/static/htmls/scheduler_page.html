@@ -18,10 +18,6 @@
         
         <div id="newScheduler" class="tab-pane fade in active">
             <h3>Schedule New Job</h3>
-            <div class="alert alert-success alert-dismissible" ng-show="showSuccessMsg">
-              <a class="close" ng-click="showSuccessMsg = !showSuccessMsg">&times;</a>
-              New job scheduled successfully
-            </div>
             <form class="form-horizontal schedulerform" ng-submit="triggerScheduler()">
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Scheduler Type</label>
