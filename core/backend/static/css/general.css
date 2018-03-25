@@ -3,6 +3,7 @@
 .margin-top-5px{margin-top: 5px;}
 .cursor{cursor: pointer;}
 .table-responsive{overflow-x: auto;}
+.main-header{position: relative; top:60px}
 
 /************************ Login Page ***********************************/
 .forgot-passwd{float:right; font-size: 80%; position: relative; top:-25px}
