@@ -56,10 +56,17 @@ app.controller('menuController', function($scope, http, $state, $stateParams){
         http
           .get('/logoutuser')
           .then(function(response) {
-            $state.transitionTo('login');
+            $state.transitionTo('logout');
         });
       }
     }
+  
+}); //End: controller: LogoutController
+
+//Start: controller: LogoutController
+app.controller('logoutController', function($scope, http, $state, $stateParams){
+
+  $scope.session_valid = $stateParams['session_valid'];
   
 }); //End: controller: LogoutController
 
@@ -369,10 +376,11 @@ app.factory('http', ['$http', '$q', '$state',
           var deferred =  $q.defer();
           $http.get(url).then(
             function(response) {
+              var session_valid = (response.data.is_session_valid == false) ? true: false;
               if(response.data.is_session_valid){
                 deferred.resolve(response);
               } else {
-                $state.transitionTo('login');
+                $state.go('logout',{session_valid: session_valid});
               }
             },
             function(response) {
@@ -389,7 +397,7 @@ app.factory('http', ['$http', '$q', '$state',
             if(response.data.is_session_valid){
               deferred.resolve(response);
             } else {
-              $state.transitionTo('login');
+              $state.go('logout',{session_valid: ressession_valid});
             }
           },
           function(response) {
@@ -420,6 +428,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
   var logoutState = {
     name: 'logout',
     url: '/logout',
+    params: {session_valid:null},
     templateUrl: '/logout_page.html'
   }
   

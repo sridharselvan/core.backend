@@ -1,1 +1,13 @@
-<h2>Logout successfully</h2>
+<div id="signupbox" class="container" ng-controller="logoutController">
+    <div class="panel panel-info alert alert-warning mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2"> 
+        <div class="panel-body" >
+            <div class="form-group">
+                <h4>
+                    Logged out successfully. 
+                    <span ng-if="session_valid">Session Timeout. </span>
+                    <a href="#">Log me in again</a>
+                </h4>
+            </div>
+        </div>
+    </div>
+</div>
