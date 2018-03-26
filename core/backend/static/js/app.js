@@ -111,10 +111,6 @@ app.controller("clientConfigController", function($scope, http, $state, $rootSco
       http.get("/viewclientconfig")
         .then(function(response){
           $scope.serverData = response.data;
-          //convert mins/hrs to seconds
-          angular.forEach($scope.serverData.nodes.ids.split(' '), function(key, value) {
-            $scope.serverData[key].duration_type = (!value) ? 'Mins' : value;
-          });
       });
     }
 

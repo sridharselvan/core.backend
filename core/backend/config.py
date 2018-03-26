@@ -179,6 +179,13 @@ def view_client_config():
             _config[each_section] = dict()
 
         for option, value in cparser.items(each_section):
+            if option == 'close_after':
+                _duration_type = dict(cparser.items(each_section))['duration_type']
+                if _duration_type.strip().lower() == 'mins':
+                    value = int(value) / 60
+                elif _duration_type.strip().lower() == 'hrs':
+                    value = int(value) / 3600
+
             _config[each_section][option] = value
 
     return _config

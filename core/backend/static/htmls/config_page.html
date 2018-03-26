@@ -14,7 +14,7 @@
               <div class="input-group">
                   <h4 class="cursor">
                     <span id="node-config-{{eachNode}}" class="glyphicon glyphicon-chevron-right"></span>
-                    {{serverData[eachNode].name.toUpperCase()}}
+                    {{serverData[eachNode].name.toUpperCase() || eachNode.toUpperCase()}}
                   </h4>
               </div>
             </div>
