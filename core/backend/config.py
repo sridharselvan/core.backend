@@ -117,6 +117,12 @@ def generate_client_config():
 
 
 def update_client_config(form_data):
+
+    def compute(value, type_):
+        if type_ == 'mins':
+            return str(value * 60)
+        return str(value * 60 * 60)
+
     # Setup a client config parser
     cparser = SafeConfigParser()
     cparser.read(CLIENT_CONFIG_FILE)
@@ -135,10 +141,15 @@ def update_client_config(form_data):
 
         if section.strip() == 'nodes' and isinstance(data, dict):
             nodes_section = data['ids'].split(" ")
-
             for each_node in nodes_section:
 
-                [cparser.set(each_node, key, str(value))
+                _duration_type = str(form_data[each_node]['duration_type']).lower()
+
+                [cparser.set(
+                    each_node,
+                    key,
+                    compute(int(value), _duration_type) if _duration_type in ('mins', 'hrs', ) and key == 'close_after' else str(value)
+                 )
                  for key, value in form_data[each_node].items()
                  ]
 
