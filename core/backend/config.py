@@ -129,9 +129,18 @@ def update_client_config(form_data):
     if 'is_session_valid' in form_data:
         form_data.pop('is_session_valid')
 
-    for each_section, each_data in form_data.items():
-        for option, value in each_data.items():
-            cparser.set(each_section, option, str(value))
+    for section, data in form_data.items():
+        if section.strip() == 'on_interrupt' and isinstance(data, dict):
+            [cparser.set(section, key, str(value)) for key, value in data.items()]
+
+        if section.strip() == 'nodes' and isinstance(data, dict):
+            nodes_section = data['ids'].split(" ")
+
+            for each_node in nodes_section:
+
+                [cparser.set(each_node, key, str(value))
+                 for key, value in form_data[each_node].items()
+                 ]
 
     with open(CLIENT_CONFIG_FILE, 'w') as configfile:
         cparser.write(configfile)
