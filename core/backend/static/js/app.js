@@ -116,7 +116,7 @@ app.controller("clientConfigController", function($scope, http, $state, $rootSco
 
     _loadClientConfig();
 
-    //Update the form data to client ini fiile
+    //Save/update the form data to client ini fiile
     $scope.saveConfig = function () {
 
       http.post("/modifyclientconfig", $scope.serverData)

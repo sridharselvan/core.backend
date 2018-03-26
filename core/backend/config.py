@@ -117,6 +117,12 @@ def generate_client_config():
 
 
 def update_client_config(form_data):
+
+    def compute(value, type_):
+        if type_ == 'mins':
+            return str(value * 60)
+        return str(value * 60 * 60)
+
     # Setup a client config parser
     cparser = SafeConfigParser()
     cparser.read(CLIENT_CONFIG_FILE)
@@ -129,9 +135,23 @@ def update_client_config(form_data):
     if 'is_session_valid' in form_data:
         form_data.pop('is_session_valid')
 
-    for each_section, each_data in form_data.items():
-        for option, value in each_data.items():
-            cparser.set(each_section, option, str(value))
+    for section, data in form_data.items():
+        if section.strip() == 'on_interrupt' and isinstance(data, dict):
+            [cparser.set(section, key, str(value)) for key, value in data.items()]
+
+        if section.strip() == 'nodes' and isinstance(data, dict):
+            nodes_section = data['ids'].split(" ")
+            for each_node in nodes_section:
+
+                _duration_type = str(form_data[each_node]['duration_type']).lower()
+
+                [cparser.set(
+                    each_node,
+                    key,
+                    compute(int(value), _duration_type) if _duration_type in ('mins', 'hrs', ) and key == 'close_after' else str(value)
+                 )
+                 for key, value in form_data[each_node].items()
+                 ]
 
     with open(CLIENT_CONFIG_FILE, 'w') as configfile:
         cparser.write(configfile)
@@ -159,6 +179,13 @@ def view_client_config():
             _config[each_section] = dict()
 
         for option, value in cparser.items(each_section):
+            if option == 'close_after':
+                _duration_type = dict(cparser.items(each_section))['duration_type']
+                if _duration_type.strip().lower() == 'mins':
+                    value = int(value) / 60
+                elif _duration_type.strip().lower() == 'hrs':
+                    value = int(value) / 3600
+
             _config[each_section][option] = value
 
     return _config
