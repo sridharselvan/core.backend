@@ -43,8 +43,8 @@
                 <div class="input-group">
                   <span class="input-group-addon">Duration</span>
                   <input type="text" ng-model="serverData[eachNode].close_after" class="form-control" placeholder="In mins">
-                  <span class="input-group-addon cursor" 
-                    ng-click="serverData[eachNode].duration_type = (serverData[eachNode].duration_type == 'Mins') ? 'Hrs' : 'Mins'">
+                  <span class="input-group-addon cursor" ng-class="{{eachNode}} == 'Hrs' ? 'label-info' : 'btn'"
+                    ng-click="serverData[eachNode].duration_type = toggleHrsMins(serverData[eachNode].duration_type, eachNode)">
                     {{serverData[eachNode].duration_type}}
                   </span>
                 </div>
