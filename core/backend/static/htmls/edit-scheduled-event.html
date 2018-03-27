@@ -8,7 +8,6 @@
 	            <div class="margin-bottom-25 input-group">
 	                <span class="input-group-addon">DD</span>
 	                <select name="day" class="form-control" ng-model="editFormData.start_date.day">
-	                    <option value=''>DD</option>
 	                    <option value="{{day}}" ng-repeat="day in range(1,31)">{{day}}</option>
 	                </select>
 	            </div>
@@ -16,7 +15,6 @@
 	            <div class="margin-bottom-25 input-group">
 	                <span class="input-group-addon">MM</span>
 	                <select name="month" class="form-control" ng-model="editFormData.start_date.month">
-	                    <option value=''>MM</option>
 	                    <option value="{{month}}" ng-repeat="month in range(1,12)">{{month}}</option>
 	                </select>
 	            </div>
@@ -24,7 +22,6 @@
 	            <div class="margin-bottom-25 input-group">
 	                <span class="input-group-addon">YY</span>
 	                <select name="month" class="form-control" ng-model="editFormData.start_date.year">
-	                    <option value=''>YYYY</option>
 	                    <option value="{{year}}" ng-repeat="year in range(2018,2030)">{{year}}</option>
 	                </select>
 	            </div>
@@ -32,7 +29,6 @@
 	            <div class="margin-bottom-25 input-group">
 	                <span class="input-group-addon">Hr</span>
 	                <select name="hour" class="form-control" ng-model="editFormData.start_date.hour">
-	                    <option value=''>HH</option>
 	                    <option value="{{hour}}" ng-repeat="hour in range(0,23)">{{hour}}</option>
 	                </select>
 	            </div>
@@ -40,7 +36,6 @@
 	            <div class="margin-bottom-25 input-group">
 	                <span class="input-group-addon">MM</span>
 	                <select name="minute" class="form-control" ng-model="editFormData.start_date.mins">
-	                    <option value=''>MM</option>
 	                    <option value="{{mins}}" ng-repeat="mins in range(0,59)">{{mins}}</option>
 	                </select>
 	            </div>
