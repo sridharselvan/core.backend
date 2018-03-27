@@ -116,6 +116,11 @@ app.controller("clientConfigController", function($scope, http, $state, $rootSco
 
     _loadClientConfig();
 
+    //Toggle
+    $scope.toggleHrsMins = function(duration_type, node){
+      return (duration_type == 'Mins') ? 'Hrs' : 'Mins';
+    }
+
     //Save/update the form data to client ini fiile
     $scope.saveConfig = function () {
 
