@@ -27,10 +27,9 @@
 	        				<th>Action</th>
 	        				<th>Schedule Type</th>
 	        				<th class="numeric">Start Date</th>
-	        				<th class="numeric">Fields</th>
-	        				<th class="numeric">Recurs</th>
-	        				<th class="numeric">Scheduled By</th>
+	        				<th class="numeric">User</th>
 	        				<th class="numeric">Status</th>
+	        				<th class="numeric">Next Run Time</th>
 	        			</tr>
 	        		</thead>
 	        		<tbody>
@@ -47,11 +46,10 @@
 	        				</td>
 	        				<td data-title="Type">{{scheduledJob.schedule_type}}</td>
 	        				<td data-title="Start Date">{{scheduledJob.start_date}}</td>
-	        				<td data-title="Valve Details">{{scheduledJob.params}}</td>
-	        				<td data-title="Recurs" ng-if="!scheduledJob.day_of_week">-</td>
-	        				<td data-title="Recurs" ng-if="scheduledJob.day_of_week">{{scheduledJob.day_of_week}}</td>
-	        				<td data-title="Scheduled By">{{scheduledJob.user_name}}</td>
+	        				<td data-title="User">{{scheduledJob.user_name}}</td>
 	        				<td data-title="status" class="numeric">-</td>
+	        				<td data-title="Next Run Time" ng-if="!scheduledJob.next_run_time">-</td>
+	        				<td data-title="Next Run Time" ng-if="scheduledJob.next_run_time">{{scheduledJob.next_run_time}}</td>
 	        			</tr>
 	        		</tbody>
 	        	</table>
