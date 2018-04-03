@@ -35,13 +35,13 @@
 	        		<tbody>
 	        			<tr ng-repeat="scheduledJob in scheduledJobDetails">
 	        				<td data-title="Action">
-	        					<button class="btn btn-success btn-xs"
+	        					<button class="btn btn-success"
 	        						ng-click="editScheduledJob(scheduledJob)">
-	        						<span class="glyphicon glyphicon-pencil"></span>
+	        						Edit
 	        					</button>
-	        					<button class="btn btn-danger btn-xs"
+	        					<button class="btn btn-danger"
 	        						ng-click="deactivateScheduledJob(scheduledJob.job_details_idn)">
-	        						<span class="glyphicon glyphicon-remove"></span>
+	        						Delete
 	        					</button>
 	        				</td>
 	        				<td data-title="Type">{{scheduledJob.schedule_type}}</td>
