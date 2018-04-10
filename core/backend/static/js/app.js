@@ -52,7 +52,7 @@ app.controller('messageController', ['$scope', '$timeout', '$modalInstance', 'ms
   $scope.errorMsg = msgData;
   $timeout(function(){
     $modalInstance.close('yes');
-  }, 3000);
+  }, 2000);
 
   $scope.cancel = function(){
     $modalInstance.close('yes');
@@ -195,8 +195,13 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
     $scope.schedulerData.recurs = [];
     for(var i=1;i<=max;i++){
       var j = (i<10) ? '0'+i : i;
-      $scope.schedulerData.recurs.push({id:i, value:j, selected:false})
+      $scope.schedulerData.recurs.push({id:i, value:j, selected:false});
     };
+    $scope.schedulerData.start_date.day = $filter('date')(new Date(), 'dd');
+    $scope.schedulerData.start_date.month = $filter('date')(new Date(), 'MM');
+    $scope.schedulerData.start_date.year = $filter('date')(new Date(), 'yyyy');
+    $scope.schedulerData.start_date.hour = $filter('date')(new Date(), 'HH');
+    $scope.schedulerData.start_date.mins = $filter('date')(new Date(), 'mm');
   };
 
   $scope.selectAllDays = function(){
@@ -243,7 +248,7 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
       .then(function(response) {
         $rootScope.$emit('alert', {msg:'Data saved successfully'});
         $scope.schedulerData.type = $scope.types[0];
-        $state.reload();
+        $state.go($state.current, {}, {reload: true});
     });
   }
 
