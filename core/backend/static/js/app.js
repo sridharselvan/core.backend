@@ -237,7 +237,7 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
 
     _loadClientConfig();
 
-  $rootScope.$on('eventName', function (event, args) {
+  $scope.$on('eventName', function (event, args) {
    $scope.SearchScheduledJob();
   });  
 
@@ -361,7 +361,7 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
       http
         .post('/updateschedulerconfig', $scope.editFormData)
         .then(function(response) {
-          $rootScope.$emit('eventName', {});
+          $rootScope.$broadcast('eventName', {});
           $modalInstance.close('yes');
       });
     }
