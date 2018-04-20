@@ -4,6 +4,7 @@
 .cursor{cursor: pointer;}
 .table-responsive{overflow-x: auto;}
 .main-header{position: relative; top:60px}
+.remove-decor{text-decoration: none;}
 
 /************************ Login Page ***********************************/
 .forgot-passwd{float:right; font-size: 80%; position: relative; top:-25px}
@@ -14,7 +15,96 @@
 
 
 /************************ Scheduler Page ***********************************/
-.frequency{margin-right:5px;}
+.frequency{margin-right:5px; margin-bottom:5px;}
+
+/* Start Tabs panel */
+.tabbable-panel {
+  border:1px solid #eee;
+  padding: 10px;
+}
+
+/* Default mode */
+.tabbable-line > .nav-tabs {
+  border: none;
+  margin: 0px;
+}
+.tabbable-line > .nav-tabs > li {
+  margin-right: 2px;
+}
+.tabbable-line > .nav-tabs > li > a {
+  border: 0;
+  margin-right: 0;
+  color: #737373;
+}
+.tabbable-line > .nav-tabs > li > a > i {
+  color: #a6a6a6;
+}
+.tabbable-line > .nav-tabs > li.open, .tabbable-line > .nav-tabs > li:hover {
+  border-bottom: 4px solid #fbcdcf;
+}
+.tabbable-line > .nav-tabs > li.open > a, .tabbable-line > .nav-tabs > li:hover > a {
+  border: 0;
+  background: none !important;
+  color: #333333;
+}
+.tabbable-line > .nav-tabs > li.open > a > i, .tabbable-line > .nav-tabs > li:hover > a > i {
+  color: #a6a6a6;
+}
+.tabbable-line > .nav-tabs > li.open .dropdown-menu, .tabbable-line > .nav-tabs > li:hover .dropdown-menu {
+  margin-top: 0px;
+}
+.tabbable-line > .nav-tabs > li.active {
+  border-bottom: 4px solid #f3565d;
+  position: relative;
+}
+.tabbable-line > .nav-tabs > li.active > a {
+  border: 0;
+  color: #333333;
+}
+.tabbable-line > .nav-tabs > li.active > a > i {
+  color: #404040;
+}
+.tabbable-line > .tab-content {
+  margin-top: -3px;
+  background-color: #fff;
+  border: 0;
+  border-top: 1px solid #eee;
+  padding: 15px 0;
+}
+.portlet .tabbable-line > .tab-content {
+  padding-bottom: 0;
+}
+/*End tab panel*/
+
+/* start panel content */
+
+body {
+    background: #fff;
+	font-family: 'Roboto', sans-serif;
+	color:#333;
+	line-height: 22px;	
+}
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Roboto Condensed', sans-serif;
+	font-weight: 400;
+	color:#111;
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
+
+.control-label {
+    color:#333333;
+}
+
+.panel-heading a {
+	margin-top: -20px;
+	font-size: 15px;
+}
+
+
+/* end panel content*/
+
 
 
 /************************* Logout Page ************************************/
