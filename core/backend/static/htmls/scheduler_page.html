@@ -111,11 +111,11 @@
                                     <label class="btn btn-default btn-checkbox frequency" 
                                             ng-repeat="recur in schedulerData.recurs"
                                             data-icon-on="glyphicon glyphicon-check" 
-                                            data-icon-off="glyphicon glyphicon-unchecked">
+                                            data-icon-off="glyphicon glyphicon-unchecked"
+                                            ng-class="{'has-error': frequencyMsg}">
                                         
                                         <input ng-model="recur.selected"
-                                               type="checkbox" name="recurs"
-                                               ng-change="someSelected()">
+                                               type="checkbox" name="recurs">
                                         {{recur.value}}
                                     </label>
                                     <span class="help-block error"
@@ -132,7 +132,8 @@
                                     <label class="btn btn-default btn-checkbox frequency" 
                                             ng-repeat="recur in schedulerData.recurs"
                                             data-icon-on="glyphicon glyphicon-check" 
-                                            data-icon-off="glyphicon glyphicon-unchecked">
+                                            data-icon-off="glyphicon glyphicon-unchecked"
+                                            ng-class="{'has-error': frequencyMsg}">
                                         
                                         <input ng-model="recur.selected"
                                                type="checkbox">
@@ -164,7 +165,8 @@
                                     <label ng-repeat="weekday in schedulerData.weekDays" 
                                             class="btn btn-default btn-checkbox frequency"
                                             data-icon-on="glyphicon glyphicon-check"
-                                            data-icon-off="glyphicon glyphicon-unchecked">
+                                            data-icon-off="glyphicon glyphicon-unchecked"
+                                            ng-class="{'has-error': weekDayMsg}">
 
                                         <input ng-model="weekday.selected"
                                                type="checkbox">
@@ -197,7 +199,8 @@
                                 </div>
                                 <div ng-show="isCollapsed" class="collapse in panel-body">
                                     <label ng-repeat="valve in schedulerData.ValveDetails" 
-                                        class="btn btn-default btn-checkbox frequency">
+                                        class="btn btn-default btn-checkbox frequency"
+                                        ng-class="{'has-error': valveMsg}">
                                         <input ng-model="valve.selected"
                                                type="checkbox">
                                         {{valve.name}}
