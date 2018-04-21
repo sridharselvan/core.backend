@@ -1,157 +1,208 @@
-<div class="content" ng-controller="schedulerController as schedulerCtrl">
-    <h2>Scheduler Configuration</h2>
-
-    <ul id="tabs" class="nav nav-tabs">
-        <li ng-class="{ active: isSet(1) }">
-            <a ng-click="setTab(1)">
-                New Scheduler
-            </a>
-        </li>
-        <li ng-class="{ active: isSet(2) }">
-            <a ng-click="setTab(2)">
-                Search Scheduler
-            </a>
-        </li>
-    </ul>
+<div class="row" ng-controller="schedulerController as schedulerCtrl">
+    <div class="col-xs-12">
+        <h3 class="text-center">Scheduler Configuration</h3>
+    </div>
     
-    <div id="my-tab-content" class="tab-content">
-        
-        <div id="newScheduler" class="tab-pane fade in active">
-            <h3>Schedule New Job</h3>
-            <form class="form-horizontal schedulerform" ng-submit="triggerScheduler()">
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Scheduler Type</label>
-                    <div class="col-sm-4">
-                        <select class="form-control" 
-                            ng-model="schedulerData.type" 
-                            ng-options="type for type in types" 
-                            ng-change="updateRecurs()" required>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-inline" 
-                    ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
-                    <label class="col-sm-3 control-label">Start Date</label>
-                    <div class="col-sm-9 form-group">
-                        <div class="margin-bottom-25px input-group">
-                            <span class="input-group-addon">DD</span>
-                            <select name="day" class="form-control" ng-model="schedulerData.start_date.day">
-                                <option value="{{day}}" ng-repeat="day in range(1,31)">{{day}}</option>
-                            </select>
-                        </div>
+    <div class="tabbable-panel">
+        <div class="tabbable-line">
+            <ul id="tabs" class="nav nav-tabs">
+                <li ng-class="{ active: isSet(1) }">
+                    <a ng-click="setTab(1)">
+                        New Scheduler
+                    </a>
+                </li>
+                <li ng-class="{ active: isSet(2) }">
+                    <a ng-click="setTab(2)">
+                        Search Scheduler
+                    </a>
+                </li>
+            </ul>
+            
+            <div id="my-tab-content" class="tab-content">
+                
+                <div id="newScheduler" class="tab-pane fade in active">
 
-                        <div class="margin-bottom-25px input-group">
-                            <span class="input-group-addon">MM</span>
-                            <select name="month" class="form-control" ng-model="schedulerData.start_date.month">
-                                <option value="{{month}}" ng-repeat="month in range(1,12)">{{month}}</option>
-                            </select>
+                    <div class="col-xs-12">
+                        <h3 class="text-center">Schedule New Job</h3>
+                    </div>
+                    
+                    <hr>
+
+                    <form class="form-horizontal schedulerform" ng-submit="triggerScheduler()">
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">
+                                Scheduler Type <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-9">
+                                <select class="form-control" 
+                                    ng-model="schedulerData.type" 
+                                    ng-options="type for type in types" 
+                                    ng-change="updateRecurs()" required>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group form-inline" 
+                            ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
+                            <label class="col-sm-3 control-label">
+                                Start Date <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-md-8 col-sm-9">
+                                <div class="margin-bottom-25px input-group">
+                                    <span class="input-group-addon">DD</span>
+                                    <select name="day" class="form-control" ng-model="schedulerData.start_date.day">
+                                        <option value="{{day}}" ng-repeat="day in range(1,31)">{{day}}</option>
+                                    </select>
+                                </div>
+
+                                <div class="margin-bottom-25px input-group">
+                                    <span class="input-group-addon">MM</span>
+                                    <select name="month" class="form-control" ng-model="schedulerData.start_date.month">
+                                        <option value="{{month}}" ng-repeat="month in range(1,12)">{{month}}</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="margin-bottom-25px input-group">
+                                    <span class="input-group-addon">YY</span>
+                                    <select name="month" class="form-control" ng-model="schedulerData.start_date.year">
+                                        <option value="{{year}}" ng-repeat="year in range(2018,2030)">{{year}}</option>
+                                    </select>
+                                </div>
+
+                                <div class="margin-bottom-25px input-group">
+                                    <span class="input-group-addon">Hr</span>
+                                    <select name="hour" class="form-control" ng-model="schedulerData.start_date.hour">
+                                        <option value="{{hour}}" ng-repeat="hour in range(0,23)">{{hour}}</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="margin-bottom-25px input-group">
+                                    <span class="input-group-addon">MM</span>
+                                    <select name="minute" class="form-control" ng-model="schedulerData.start_date.mins">
+                                        <option value="{{mins}}" ng-repeat="mins in range(0,59)">{{mins}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly'">
+                            <label class="col-sm-3 control-label">
+                                Frequency <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-md-8 col-sm-9">
+                                <label class="control-label" ng-if="schedulerData.type == 'Daily'">
+                                    <input ng-model="isAllDays"
+                                           ng-change="selectAllDays()"
+                                           type="checkbox">
+                                    <span>All Days OR </span>
+                                </label>
+                                <label class="control-label" ng-if="schedulerData.type == 'Weekly'">
+                                    <input ng-model="isAllWeeks"
+                                           ng-change="selectAllDays()"
+                                           type="checkbox">
+                                    <span>All Weeks OR </span>
+                                </label>
+                            </div>
                         </div>
                         
-                        <div class="margin-bottom-25px input-group">
-                            <span class="input-group-addon">YY</span>
-                            <select name="month" class="form-control" ng-model="schedulerData.start_date.year">
-                                <option value="{{year}}" ng-repeat="year in range(2018,2030)">{{year}}</option>
-                            </select>
+                        <div class="form-group" ng-if="schedulerData.type == 'Daily'">
+                            <div class="btn-group">
+                                <label class="col-sm-3 control-label"></label>
+                                <div class="col-md-7 col-sm-9">
+                                    <label class="btn btn-default btn-checkbox frequency" 
+                                            ng-repeat="recur in schedulerData.recurs"
+                                            data-icon-on="glyphicon glyphicon-check" 
+                                            data-icon-off="glyphicon glyphicon-unchecked">
+                                        
+                                        <input ng-model="recur.selected"
+                                               type="checkbox">
+                                        {{recur.value}}
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="margin-bottom-25px input-group">
-                            <span class="input-group-addon">Hr</span>
-                            <select name="hour" class="form-control" ng-model="schedulerData.start_date.hour">
-                                <option value="{{hour}}" ng-repeat="hour in range(0,23)">{{hour}}</option>
-                            </select>
+                        <div class="form-group" ng-if="schedulerData.type == 'Weekly'">
+                            <div class="btn-group">
+                                <div class="col-md-12 col-sm-offset-10">
+                                    <label class="btn btn-default btn-checkbox frequency" 
+                                            ng-repeat="recur in schedulerData.recurs"
+                                            data-icon-on="glyphicon glyphicon-check" 
+                                            data-icon-off="glyphicon glyphicon-unchecked">
+                                        
+                                        <input ng-model="recur.selected"
+                                               type="checkbox">
+                                        {{recur.value}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-if="schedulerData.type == 'Weekly'">
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="col-sm-2">
+                                <label class="control-label">
+                                    <input ng-model="isAllWeekDays"
+                                           ng-change="selectAllWeekDays()"
+                                           type="checkbox">
+                                    <span>All Weekdays OR</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-if="schedulerData.type == 'Weekly'">
+                            <div class="btn-group">
+                                <div class="col-md-12 col-sm-offset-8">
+                                    <label ng-repeat="weekday in schedulerData.weekDays" 
+                                            class="btn btn-default btn-checkbox frequency"
+                                            data-icon-on="glyphicon glyphicon-check"
+                                            data-icon-off="glyphicon glyphicon-unchecked">
+
+                                        <input ng-model="weekday.selected"
+                                               type="checkbox">
+                                        {{weekday.value}}
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                         
-                        <div class="margin-bottom-25px input-group">
-                            <span class="input-group-addon">MM</span>
-                            <select name="minute" class="form-control" ng-model="schedulerData.start_date.mins">
-                                <option value="{{mins}}" ng-repeat="mins in range(0,59)">{{mins}}</option>
-                            </select>
+                        <label class="col-sm-3 control-label"
+                            ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
+                            Configuration <span class="text-danger">*</span>
+                        </label>
+                        <div class="form-group col-md-4" 
+                            ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        Valve Config
+                                    </h3>
+                                    <a class="cursor pull-right" 
+                                        ng-init="isCollapsed=false" 
+                                        ng-click="isCollapsed=!isCollapsed">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </a>
+                                </div>
+                                <div ng-show="isCollapsed" class="collapse in panel-body">
+                                    <label ng-repeat="valve in schedulerData.ValveDetails" 
+                                        class="btn btn-default btn-checkbox frequency">
+                                        <input ng-model="valve.selected"
+                                               type="checkbox">
+                                        {{valve.name}}
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="form-group" ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly'">
-                    <label class="col-sm-3 control-label">Frequency</label>
-                    <div class="col-sm-2">
-                        <label class="control-label" ng-if="schedulerData.type == 'Daily'">
-                            <input ng-model="isAllDays"
-                                   ng-change="selectAllDays()"
-                                   type="checkbox">
-                            <span>All Days OR </span>
-                        </label>
-                        <label class="control-label" ng-if="schedulerData.type == 'Weekly'">
-                            <input ng-model="isAllWeeks"
-                                   ng-change="selectAllDays()"
-                                   type="checkbox">
-                            <span>All Weeks OR</span>
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="form-group form-inline" ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly'">
-                    <label class="col-sm-3 control-label"></label>
-                    <div class="col-sm-7">
-                        <label class="form-control frequency" ng-repeat="recur in schedulerData.recurs">
-                            <input ng-model="recur.selected"
-                                   type="checkbox">
-                            {{recur.value}}
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-group" ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly'">
-                    <label class="col-sm-3 control-label"></label>
-                    <div class="col-sm-2">
-                        <label class="control-label">
-                            <input ng-model="isAllWeekDays"
-                                   ng-if="schedulerData.type == 'Weekly'"
-                                   ng-change="selectAllWeekDays()"
-                                   type="checkbox">
-                            <span ng-if="schedulerData.type == 'Weekly'">All Weekdays OR</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-group form-inline" ng-if="schedulerData.type == 'Weekly'">
-                    <label class="col-sm-3 control-label"></label>
-                    <div class="col-sm-5">
-                        <label ng-repeat="weekday in schedulerData.weekDays" class="form-control">
-                            <input ng-model="weekday.selected"
-                                   type="checkbox">
-                            {{weekday.value}}
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="form-group" 
-                    ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
-                    <label class="col-sm-3 control-label"></label>
-                    <div class="col-sm-6">
-                        <a ng-init="isCollapsed=false" 
-                            ng-click="isCollapsed=!isCollapsed"
-                            class="glyphicon glyphicon-plus panel-heading cursor">
-                            Valve Config
-                        </a>
-                        <div ng-show="isCollapsed" class="collapse in">
-                            <label ng-repeat="valve in schedulerData.ValveDetails" 
-                                class="form-control">
-                            <input ng-model="valve.selected"
-                                   type="checkbox">
-                            {{valve.name}}
-                        </label>
+                        <div class="form-group"
+                            ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
+                            <div class="col-md-12 col-sm-offset-3">
+                                <button type="submit" class="btn btn-success col-xs-12 col-sm-2">Schedule</button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
-                <div class="form-group"
-                    ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
-                    <label class="col-sm-3 control-label"></label>
-                    <div class="col-sm-6">
-                        <button type="submit" class="btn btn-success">Schedule</button>
-                    </div>
+                <div id="searchScheduler" class="tab-pane fade in">
+                    <div ng-include src="'search-scheduled-event.html'"></div>
                 </div>
-            </form>
-        </div>
-        <div id="searchScheduler" class="tab-pane fade in">
-            <div ng-include src="'search-scheduled-event.html'"></div>
+            </div>
         </div>
     </div>
 </div>
