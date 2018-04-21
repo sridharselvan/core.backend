@@ -39,6 +39,7 @@
                                     ng-options="type for type in types" 
                                     ng-change="updateRecurs()" required>
                                 </select>
+
                             </div>
                         </div>
                         <div class="form-group form-inline" 
@@ -113,9 +114,14 @@
                                             data-icon-off="glyphicon glyphicon-unchecked">
                                         
                                         <input ng-model="recur.selected"
-                                               type="checkbox">
+                                               type="checkbox" name="recurs"
+                                               ng-change="someSelected()">
                                         {{recur.value}}
                                     </label>
+                                    <span class="help-block error"
+                                        ng-show="frequencyMsg">
+                                        Please select atleast one day
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -132,6 +138,10 @@
                                                type="checkbox">
                                         {{recur.value}}
                                     </label>
+                                    <span class="help-block error"
+                                        ng-show="frequencyMsg">
+                                        Please select atleast one week
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -160,6 +170,10 @@
                                                type="checkbox">
                                         {{weekday.value}}
                                     </label>
+                                    <span class="help-block error"
+                                        ng-show="weekDayMsg">
+                                        Please select atleast one weekday
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -190,6 +204,10 @@
                                     </label>
                                 </div>
                             </div>
+                            <span class="help-block error"
+                                ng-show="valveMsg">
+                                Please select atleast one Valve config
+                            </span>
                         </div>
                         <div class="form-group"
                             ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">

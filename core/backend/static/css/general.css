@@ -5,6 +5,7 @@
 .table-responsive{overflow-x: auto;}
 .main-header{position: relative; top:60px}
 .remove-decor{text-decoration: none;}
+.error{color: #f00;}
 
 /************************ Login Page ***********************************/
 .forgot-passwd{float:right; font-size: 80%; position: relative; top:-25px}
