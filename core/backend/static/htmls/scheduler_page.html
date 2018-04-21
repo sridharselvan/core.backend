@@ -39,6 +39,7 @@
                                     ng-options="type for type in types" 
                                     ng-change="updateRecurs()" required>
                                 </select>
+
                             </div>
                         </div>
                         <div class="form-group form-inline" 
@@ -110,12 +111,17 @@
                                     <label class="btn btn-default btn-checkbox frequency" 
                                             ng-repeat="recur in schedulerData.recurs"
                                             data-icon-on="glyphicon glyphicon-check" 
-                                            data-icon-off="glyphicon glyphicon-unchecked">
+                                            data-icon-off="glyphicon glyphicon-unchecked"
+                                            ng-class="{'has-error': frequencyMsg}">
                                         
                                         <input ng-model="recur.selected"
-                                               type="checkbox">
+                                               type="checkbox" name="recurs">
                                         {{recur.value}}
                                     </label>
+                                    <span class="help-block error"
+                                        ng-show="frequencyMsg">
+                                        Please select atleast one day
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -126,12 +132,17 @@
                                     <label class="btn btn-default btn-checkbox frequency" 
                                             ng-repeat="recur in schedulerData.recurs"
                                             data-icon-on="glyphicon glyphicon-check" 
-                                            data-icon-off="glyphicon glyphicon-unchecked">
+                                            data-icon-off="glyphicon glyphicon-unchecked"
+                                            ng-class="{'has-error': frequencyMsg}">
                                         
                                         <input ng-model="recur.selected"
                                                type="checkbox">
                                         {{recur.value}}
                                     </label>
+                                    <span class="help-block error"
+                                        ng-show="frequencyMsg">
+                                        Please select atleast one week
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -154,12 +165,17 @@
                                     <label ng-repeat="weekday in schedulerData.weekDays" 
                                             class="btn btn-default btn-checkbox frequency"
                                             data-icon-on="glyphicon glyphicon-check"
-                                            data-icon-off="glyphicon glyphicon-unchecked">
+                                            data-icon-off="glyphicon glyphicon-unchecked"
+                                            ng-class="{'has-error': weekDayMsg}">
 
                                         <input ng-model="weekday.selected"
                                                type="checkbox">
                                         {{weekday.value}}
                                     </label>
+                                    <span class="help-block error"
+                                        ng-show="weekDayMsg">
+                                        Please select atleast one weekday
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -183,13 +199,18 @@
                                 </div>
                                 <div ng-show="isCollapsed" class="collapse in panel-body">
                                     <label ng-repeat="valve in schedulerData.ValveDetails" 
-                                        class="btn btn-default btn-checkbox frequency">
+                                        class="btn btn-default btn-checkbox frequency"
+                                        ng-class="{'has-error': valveMsg}">
                                         <input ng-model="valve.selected"
                                                type="checkbox">
                                         {{valve.name}}
                                     </label>
                                 </div>
                             </div>
+                            <span class="help-block error"
+                                ng-show="valveMsg">
+                                Please select atleast one Valve config
+                            </span>
                         </div>
                         <div class="form-group"
                             ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">

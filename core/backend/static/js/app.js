@@ -239,17 +239,36 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
 
   $scope.$on('eventName', function (event, args) {
    $scope.SearchScheduledJob();
-  });  
+  });
+
+  //New scheduler form validation
+  $scope.bandChoosed = function(object) {
+    var trues = $filter("filter")(object, {
+        selected: true
+    });
+    return trues.length;
+  }
 
   $scope.triggerScheduler = function(){
 
-    http
-      .post('/saveschedulerconfig', $scope.schedulerData)
-      .then(function(response) {
-        $rootScope.$emit('alert', {msg:'Data saved successfully'});
-        $scope.schedulerData.type = $scope.types[0];
-        $state.go($state.current, {}, {reload: true});
-    });
+    $scope.frequencyMsg = false;
+    $scope.weekDayMsg = false;
+    if($scope.schedulerData.type == 'Daily' || $scope.schedulerData.type == 'Weekly'){
+      $scope.frequencyMsg = ($scope.bandChoosed($scope.schedulerData.recurs) <= 0) ? true : false;
+    }
+    if($scope.schedulerData.type == 'Weekly'){
+      $scope.weekDayMsg = ($scope.bandChoosed($scope.schedulerData.weekDays) <= 0) ? true : false;
+    }
+    $scope.valveMsg = ($scope.bandChoosed($scope.schedulerData.ValveDetails) <= 0) ? true : false;
+    if(!$scope.frequencyMsg && !$scope.valveMsg && !$scope.weekDayMsg){
+      http
+        .post('/saveschedulerconfig', $scope.schedulerData)
+        .then(function(response) {
+          $rootScope.$emit('alert', {msg:'Data saved successfully'});
+          $scope.schedulerData.type = $scope.types[0];
+          $state.go($state.current, {}, {reload: true});
+      });
+    }
   }
 
   $scope.showSearchResult = false;
