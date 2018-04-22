@@ -6,7 +6,7 @@
 .main-header{position: relative; top:60px}
 .remove-decor{text-decoration: none;}
 .error{color: #f00;}
- .has-error{border: solid #f00 1px;}
+.has-error{border: solid #f00 1px;}
 
 /************************ Login Page ***********************************/
 .forgot-passwd{float:right; font-size: 80%; position: relative; top:-25px}
