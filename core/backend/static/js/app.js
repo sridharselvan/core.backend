@@ -80,6 +80,8 @@ app.controller('menuController',['$scope', 'http', '$state', '$stateParams', '$t
     var modalInstance = $modal.open({
       templateUrl: 'alert-message.html',
       controller: 'messageController',
+      backdrop: "static",
+      backdropClick: false,
       resolve: {
          msgData: function () {
            return msg;
