@@ -127,8 +127,9 @@
                         </div>
 
                         <div class="form-group" ng-if="schedulerData.type == 'Weekly'">
-                            <div class="btn-group">
-                                <div class="col-md-12 col-sm-offset-10">
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="col-md-7 col-sm-9">    
+                                <div class="btn-group">
                                     <label class="btn btn-default btn-checkbox frequency" 
                                             ng-repeat="recur in schedulerData.recurs"
                                             data-icon-on="glyphicon glyphicon-check" 
@@ -149,7 +150,7 @@
 
                         <div class="form-group" ng-if="schedulerData.type == 'Weekly'">
                             <label class="col-sm-3 control-label"></label>
-                            <div class="col-sm-2">
+                            <div class="col-md-8 col-sm-9">
                                 <label class="control-label">
                                     <input ng-model="isAllWeekDays"
                                            ng-change="selectAllWeekDays()"
@@ -160,8 +161,9 @@
                         </div>
 
                         <div class="form-group" ng-if="schedulerData.type == 'Weekly'">
-                            <div class="btn-group">
-                                <div class="col-md-12 col-sm-offset-8">
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="col-md-7 col-sm-9">    
+                                <div class="btn-group">
                                     <label ng-repeat="weekday in schedulerData.weekDays" 
                                             class="btn btn-default btn-checkbox frequency"
                                             data-icon-on="glyphicon glyphicon-check"
@@ -180,37 +182,39 @@
                             </div>
                         </div>
                         
-                        <label class="col-sm-3 control-label"
-                            ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
-                            Configuration <span class="text-danger">*</span>
-                        </label>
-                        <div class="form-group col-md-4" 
-                            ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">
-                                        Valve Config
-                                    </h3>
-                                    <a class="cursor pull-right" 
-                                        ng-init="isCollapsed=false" 
-                                        ng-click="isCollapsed=!isCollapsed">
-                                        <span class="glyphicon glyphicon-plus"></span>
-                                    </a>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"
+                                ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
+                                Configuration <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-md-7 col-sm-6" 
+                                ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">
+                                            Valve Config
+                                        </h3>
+                                        <a class="cursor pull-right" 
+                                            ng-init="isCollapsed=false" 
+                                            ng-click="isCollapsed=!isCollapsed">
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                        </a>
+                                    </div>
+                                    <div ng-show="isCollapsed" class="collapse in panel-body">
+                                        <label ng-repeat="valve in schedulerData.ValveDetails" 
+                                            class="btn btn-default btn-checkbox frequency"
+                                            ng-class="{'has-error': valveMsg}">
+                                            <input ng-model="valve.selected"
+                                                   type="checkbox">
+                                            {{valve.name}}
+                                        </label>
+                                    </div>
                                 </div>
-                                <div ng-show="isCollapsed" class="collapse in panel-body">
-                                    <label ng-repeat="valve in schedulerData.ValveDetails" 
-                                        class="btn btn-default btn-checkbox frequency"
-                                        ng-class="{'has-error': valveMsg}">
-                                        <input ng-model="valve.selected"
-                                               type="checkbox">
-                                        {{valve.name}}
-                                    </label>
-                                </div>
+                                <span class="help-block error"
+                                    ng-show="valveMsg">
+                                    Please select atleast one Valve config
+                                </span>
                             </div>
-                            <span class="help-block error"
-                                ng-show="valveMsg">
-                                Please select atleast one Valve config
-                            </span>
                         </div>
                         <div class="form-group"
                             ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">

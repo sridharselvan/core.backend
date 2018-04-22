@@ -297,12 +297,15 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
     var modalInstance = $modal.open({
       templateUrl: 'edit-scheduled-event.html',
       controller: 'editScheduledController as editCtrl',
+      backdrop: "static",
+      backdropClick: false,
+      //windowClass: 'xx-dialog',
+      size: 'xl',
       resolve: {
          editData: function () {
            return scheduledJob;
          }
        },
-       size: 'lg'
     });
   }
 
@@ -322,8 +325,8 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
 }]); // end: controller:schedulerController
 
 //Start: controller:editScheduledController
-app.controller("editScheduledController",['$scope', '$modalInstance', 'editData', 'http', '$state', '$rootScope',
-  function($scope, $modalInstance, editData, http, $state, $rootScope) {
+app.controller("editScheduledController",['$scope', '$modalInstance', 'editData', 'http', '$state', '$rootScope', '$filter',
+  function($scope, $modalInstance, editData, http, $state, $rootScope, $filter) {
 
     var formData = editData, 
         start_date_time = formData.start_date.split(" "),
@@ -376,13 +379,33 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
       }
     });
 
-    $scope.updateScheduler = function(){
-      http
-        .post('/updateschedulerconfig', $scope.editFormData)
-        .then(function(response) {
-          $rootScope.$broadcast('eventName', {});
-          $modalInstance.close('yes');
+    //Edit scheduler form validation
+    $scope.bandChoosed = function(object) {
+      var trues = $filter("filter")(object, {
+          selected: true
       });
+      return (trues.length <= 0) ? true : false;
+    };
+
+    $scope.updateScheduler = function(){
+
+      $scope.editFrequencyMsg = false;
+      $scope.editWeekDayMsg = false;
+      if($scope.editFormData.type == 'Daily' || $scope.editFormData.type == 'Weekly'){
+        $scope.editFrequencyMsg = $scope.bandChoosed($scope.editFormData.recurs)
+      }
+      if($scope.editFormData.type == 'Weekly'){
+        $scope.editWeekDayMsg = $scope.bandChoosed($scope.editFormData.weekDays)
+      }
+      $scope.editValveMsg = $scope.bandChoosed($scope.editFormData.ValveDetails)
+      if(!$scope.editFrequencyMsg && !$scope.editValveMsg && !$scope.editWeekDayMsg){
+        http
+          .post('/updateschedulerconfig', $scope.editFormData)
+          .then(function(response) {
+            $rootScope.$broadcast('eventName', {});
+            $modalInstance.close('yes');
+        });
+      };
     }
 
     $scope.range = function(min=1, max, step) {
