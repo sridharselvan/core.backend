@@ -80,6 +80,8 @@ app.controller('menuController',['$scope', 'http', '$state', '$stateParams', '$t
     var modalInstance = $modal.open({
       templateUrl: 'alert-message.html',
       controller: 'messageController',
+      backdrop: "static",
+      backdropClick: false,
       resolve: {
          msgData: function () {
            return msg;
@@ -143,8 +145,8 @@ app.controller("clientConfigController", function($scope, http, $state, $rootSco
 }); // end: controller:clientConfigController
 
 //Start: controller:schedulerController
-app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$window', '$modal', '$rootScope',
-  function($scope, http, $state, $filter, $window, $modal, $rootScope) {
+app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$window', '$modal', '$rootScope', '$timeout',
+  function($scope, http, $state, $filter, $window, $modal, $rootScope, $timeout) {
 
     $scope.tab = 1;
     $scope.showSuccessMsg = false;
@@ -191,6 +193,11 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
   /** Update recurs in scheduler data obj **/
   $scope.updateRecurs = function(){
     
+    //Resetting the error message flag
+    $scope.frequencyMsg = false;
+    $scope.weekDayMsg = false;
+    $scope.valveMsg = false;
+
     var max = ($scope.schedulerData.type.toLowerCase() == 'weekly') ? 5 : 31;
     $scope.schedulerData.recurs = [];
     for(var i=1;i<=max;i++){
@@ -261,9 +268,16 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
     }
     $scope.valveMsg = ($scope.bandChoosed($scope.schedulerData.ValveDetails) <= 0) ? true : false;
     if(!$scope.frequencyMsg && !$scope.valveMsg && !$scope.weekDayMsg){
+
+      //Disabling the schedule button to avoid multiple click
+      $scope.isScheduleDisable = true;
       http
         .post('/saveschedulerconfig', $scope.schedulerData)
         .then(function(response) {
+
+          //Eabling the schedule button after response
+          $scope.isScheduleDisable = false;
+          //Emitting alert message
           $rootScope.$emit('alert', {msg:'Data saved successfully'});
           $scope.schedulerData.type = $scope.types[0];
           $state.go($state.current, {}, {reload: true});

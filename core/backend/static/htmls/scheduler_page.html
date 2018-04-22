@@ -219,7 +219,11 @@
                         <div class="form-group"
                             ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
                             <div class="col-md-12 col-sm-offset-3">
-                                <button type="submit" class="btn btn-success col-xs-12 col-sm-2">Schedule</button>
+                                <button type="submit" 
+                                        class="btn btn-success col-xs-12 col-sm-2"
+                                        ng-disabled="isScheduleDisable">
+                                    Schedule
+                                </button>
                             </div>
                         </div>
                     </form>
