@@ -65,16 +65,27 @@ app.controller('messageController', ['$scope', '$timeout', '$modalInstance', 'ms
 //Start: controller: LogoutController
 app.controller('menuController',['$scope', 'http', '$state', '$stateParams', '$timeout', '$rootScope', '$modal', function($scope, http, $state, $stateParams, $timeout, $rootScope, $modal){
 
-    $scope.logout = function(){
+  $scope.menus = [
+    'dashboard',
+    'configuration',
+    'scheduler',
+    'log',
+  ];
 
-      if(confirm('Are you sure you want to logout this?')){
-        http
-          .get('/logoutuser')
-          .then(function(response) {
-            $state.transitionTo('logout');
-        });
-      }
-    };
+  $scope.navBarCollapse = function() {
+    angular.element('#myNavbar').removeClass("in");
+  }
+
+  $scope.logout = function(){
+
+    if(confirm('Are you sure you want to logout this?')){
+      http
+        .get('/logoutuser')
+        .then(function(response) {
+          $state.transitionTo('logout');
+      });
+    }
+  };
 
   $scope.alertMessage = function(msg) {
     var modalInstance = $modal.open({
