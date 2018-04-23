@@ -211,17 +211,17 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
     $scope.schedulerData.start_date.mins = $filter('date')(new Date(), 'mm');
   };
 
-  $scope.selectAllDays = function(){
+  $scope.selectAllDays = function(isAllDays){
     var frequency = $scope.schedulerData.recurs;
     for(var i=0;i<frequency.length;i++){
-      $scope.schedulerData.recurs[i]['selected'] = !frequency[i]['selected'];
+      $scope.schedulerData.recurs[i]['selected'] = isAllDays;
     }
   };
 
-  $scope.selectAllWeekDays = function(){
+  $scope.selectAllWeekDays = function(isAllWeekDays){
     var weekDays = $scope.schedulerData.weekDays;
     for(var i=0;i<weekDays.length;i++){
-      $scope.schedulerData.weekDays[i]['selected'] = !weekDays[i]['selected'];
+      $scope.schedulerData.weekDays[i]['selected'] = isAllWeekDays;
     }
   };
 
