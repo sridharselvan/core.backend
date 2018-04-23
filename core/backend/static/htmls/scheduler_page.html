@@ -91,13 +91,13 @@
                             <div class="col-md-8 col-sm-9">
                                 <label class="control-label" ng-if="schedulerData.type == 'Daily'">
                                     <input ng-model="isAllDays"
-                                           ng-change="selectAllDays()"
+                                           ng-change="selectAllDays(isAllDays)"
                                            type="checkbox">
                                     <span>All Days OR </span>
                                 </label>
                                 <label class="control-label" ng-if="schedulerData.type == 'Weekly'">
                                     <input ng-model="isAllWeeks"
-                                           ng-change="selectAllDays()"
+                                           ng-change="selectAllDays(isAllWeeks)"
                                            type="checkbox">
                                     <span>All Weeks OR </span>
                                 </label>
@@ -153,7 +153,7 @@
                             <div class="col-md-8 col-sm-9">
                                 <label class="control-label">
                                     <input ng-model="isAllWeekDays"
-                                           ng-change="selectAllWeekDays()"
+                                           ng-change="selectAllWeekDays(isAllWeekDays)"
                                            type="checkbox">
                                     <span>All Weekdays OR</span>
                                 </label>
