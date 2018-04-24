@@ -498,6 +498,7 @@ app.factory('http', ['$http', '$q', '$state',
           var deferred =  $q.defer();
           $http.get(url).then(
             function(response) {
+              //To show session time out in logout html
               var session_valid = (response.data.is_session_valid == false) ? true: false;
               if(response.data.is_session_valid){
                 deferred.resolve(response);
@@ -516,10 +517,12 @@ app.factory('http', ['$http', '$q', '$state',
         var deferred =  $q.defer();
         $http.post(url, {formObj: formData}).then(
           function(response) {
+            //To show session time out in logout html
+            var session_valid = (response.data.is_session_valid == false) ? true: false;
             if(response.data.is_session_valid){
               deferred.resolve(response);
             } else {
-              $state.go('logout',{session_valid: ressession_valid});
+              $state.go('logout',{session_valid: session_valid});
             }
           },
           function(response) {
