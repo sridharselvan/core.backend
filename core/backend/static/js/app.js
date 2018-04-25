@@ -242,13 +242,15 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
         .then(function(response){
           var nodeList = response.data.nodes.ids.split(' ');
           angular.forEach(nodeList, function(value) {
-            $scope.schedulerData.ValveDetails.push(
-              {
-                id: response.data[value].id,
-                name: response.data[value].name,
-                selected:true
-              }
-            );
+            if(response.data[value].enabled === "true"){
+              $scope.schedulerData.ValveDetails.push(
+                {
+                  id: response.data[value].id,
+                  name: response.data[value].name,
+                  selected:true
+                }
+              );
+            }
           });
       });
     }
@@ -455,22 +457,24 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
           .then(function(response){
             var nodeList = response.data.nodes.ids.split(' ');
             angular.forEach(nodeList, function(value) {
-              if(valve_names.indexOf(response.data[value].name) > -1) {
-                $scope.editFormData.ValveDetails.push(
-                  {
-                    id: response.data[value].id,
-                    name: response.data[value].name,
-                    selected:true
-                  }
-                );
-              } else {
-                $scope.editFormData.ValveDetails.push(
-                  {
-                    id: response.data[value].id,
-                    name: response.data[value].name,
-                    selected:false
-                  }
-                );
+              if(response.data[value].enabled === 'true') {
+                if(valve_names.indexOf(response.data[value].name) > -1) {
+                  $scope.editFormData.ValveDetails.push(
+                    {
+                      id: response.data[value].id,
+                      name: response.data[value].name,
+                      selected:true
+                    }
+                  );
+                } else {
+                  $scope.editFormData.ValveDetails.push(
+                    {
+                      id: response.data[value].id,
+                      name: response.data[value].name,
+                      selected:false
+                    }
+                  );
+                }
               }
             });
         });
@@ -494,6 +498,7 @@ app.factory('http', ['$http', '$q', '$state',
           var deferred =  $q.defer();
           $http.get(url).then(
             function(response) {
+              //To show session time out in logout html
               var session_valid = (response.data.is_session_valid == false) ? true: false;
               if(response.data.is_session_valid){
                 deferred.resolve(response);
@@ -512,10 +517,12 @@ app.factory('http', ['$http', '$q', '$state',
         var deferred =  $q.defer();
         $http.post(url, {formObj: formData}).then(
           function(response) {
+            //To show session time out in logout html
+            var session_valid = (response.data.is_session_valid == false) ? true: false;
             if(response.data.is_session_valid){
               deferred.resolve(response);
             } else {
-              $state.go('logout',{session_valid: ressession_valid});
+              $state.go('logout',{session_valid: session_valid});
             }
           },
           function(response) {
