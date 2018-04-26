@@ -111,16 +111,16 @@
 	            ng-if="editFormData.type == 'Daily' || editFormData.type == 'Weekly' || editFormData.type == 'OneTime'">
 	            Configuration <span class="text-danger">*</span>
 	        </label>
-		    <div class="col-md-7 col-sm-9" 
-	            ng-if="editFormData.type == 'Daily' || editFormData.type == 'Weekly' || editFormData.type == 'OneTime'">
+		    <div class="col-md-7 col-sm-9 cursor" 
+	            ng-if="editFormData.type == 'Daily' || editFormData.type == 'Weekly' || editFormData.type == 'OneTime'"
+	            ng-init="isCollapsed=false" 
+	            ng-click="isCollapsed=!isCollapsed">
 	            <div class="panel panel-default">
 	                <div class="panel-heading">
 	                    <h3 class="panel-title">
 	                        Valve Config
 	                    </h3>
-	                    <a class="cursor pull-right" 
-	                        ng-init="isCollapsed=false" 
-	                        ng-click="isCollapsed=!isCollapsed">
+	                    <a class="cursor pull-right">
 	                        <span class="glyphicon glyphicon-plus"></span>
 	                    </a>
 	                </div>
