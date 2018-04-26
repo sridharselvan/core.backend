@@ -31,13 +31,18 @@ app.controller('loginController', function($scope, $http, $state, $stateParams){
 app.controller('signUpController', function($scope, $http, $state, $stateParams){
 
   $scope.userDetails = {};
+  $scope.formValidation = true;
 
-  $scope.CreateUserValidation = function(){
-    $http
-      .post('/createUser', {'formObj' : $scope.userDetails})
-      .then(function(response) {
-        $state.transitionTo('login');
-    });
+  $scope.CreateUserValidation = function(isValid){
+    if(isValid){
+      $http
+        .post('/createUser', {'formObj' : $scope.userDetails})
+        .then(function(response) {
+          $state.transitionTo('login');
+      });
+    }else{
+      $scope.formValidation = false;
+    }
   }
 
   $scope.signUpValidation = function(){

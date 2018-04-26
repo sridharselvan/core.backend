@@ -1,47 +1,66 @@
-<div id="signupbox" class="container" ng-controller="signUpController">
-    <div class="panel panel-info mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+<div id="signupbox" class="row" ng-controller="signUpController">
+    <div class="panel panel-info mainbox col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-2">
         <div class="panel-heading">
             <div class="panel-title">Sign Up</div>
-            <div style="float:right; font-size: 85%; position: relative; top:-10px">
-                <a id="signinlink" href="#">Sign In</a>
-            </div>
         </div>  
         <div class="panel-body" >
-            <form id="signupform" class="form-horizontal" role="form" ng-submit="CreateUserValidation()">
-                <div id="signupalert" style="display:none" class="alert alert-danger">
-                    <p>Error:</p>
-                    <span></span>
-                </div>
-                <div class="form-group">
-                    <label for="phone" class="col-md-3 control-label">User Name</label>
-                    <div class="col-md-9">
-                        <input type="text" class="form-control" name="phone" ng-model="userDetails.user_name" placeholder="User Name">
-                    </div>
+            <form name="signupform" class="form-horizontal" role="form" ng-submit="CreateUserValidation(userDetails.$valid)" novalidate>
+
+               <div class="form-group">
+                   <label for="phone" class="col-md-3 control-label">User ID <span class="text-danger">*</span></label>
+                   <div class="col-md-7 col-sm-9">
+                       <input type="text" class="form-control" name="user_id" ng-model="userDetails.user_name" placeholder="User ID" ng-class="{ 'has-error': (signupform.user_id.$touched && signupform.user_id.$invalid) || !formValidation}" required>
+
+                       <span class="text-danger" 
+                             ng-show="(signupform.user_id.$touched && signupform.user_id.$error.required) || !formValidation">
+                            Please enter the User id
+                        </span>
+                   </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="firstname" class="col-md-3 control-label">First Name</label>
-                    <div class="col-md-9">
-                        <input type="text" class="form-control" name="firstname" ng-model="userDetails.first_name" placeholder="First Name">
+                    <label for="firstname" class="col-md-3 control-label">First Name <span class="text-danger">*</span></label>
+                    <div class="col-md-7 col-sm-9">
+                        <input type="text" class="form-control" name="firstname" ng-model="userDetails.first_name" placeholder="First Name"       ng-class="{ 'has-error': (signupform.firstname.$touched && signupform.firstname.$invalid) || !formValidation}"       required>
+
+                        <span class="text-danger" 
+                              ng-show="(signupform.firstname.$touched && signupform.firstname.$error.required) || !formValidation">
+                            Please enter the First name
+                        </span>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label for="lastname" class="col-md-3 control-label">Last Name</label>
                     <div class="col-md-9">
                         <input type="text" class="form-control" name="lastname" ng-model="userDetails.last_name" placeholder="Last Name">
                     </div>
                 </div>
+
                 <div class="form-group">
-                    <label for="password" class="col-md-3 control-label">Password</label>
+                    <label for="password" class="col-md-3 control-label">Password <span class="text-danger">*</span></label>
                     <div class="col-md-9">
-                        <input type="password" class="form-control" name="passwd" ng-model="userDetails.hash1" placeholder="Password">
+                        <input type="password" class="form-control" name="passwd" ng-model="userDetails.hash1" placeholder="Password"
+                                ng-class="{ 'has-error': (signupform.passwd.$touched && signupform.passwd.$invalid) || !formValidation}" required>
+
+                        <span class="text-danger" 
+                              ng-show="(signupform.passwd.$touched && signupform.passwd.$error.required) || !formValidation">
+                            Please enter the password
+                        </span>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="lastname" class="col-md-3 control-label">Primary Phone</label>
+                    <label for="phone_no1" class="col-md-3 control-label">Primary Phone <span class="text-danger">*</span></label>
                     <div class="col-md-9">
-                        <input type="text" class="form-control" name="lastname" ng-model="userDetails.phone_no1" placeholder="Phone 1">
+                        <input type="text" class="form-control" name="phone_no1" ng-model="userDetails.phone_no1" placeholder="Phone 1"
+                            ng-class="{ 'has-error': (signupform.phone_no1.$touched && signupform.phone_no1.$invalid) || !formValidation}" required>  
+
+                        <span class="text-danger" 
+                              ng-show="(signupform.phone_no1.$touched && signupform.phone_no1.$error.required) || !formValidation">
+                            Please enter the password
+                        </span>
+
                     </div>
                 </div>
 
@@ -53,16 +72,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="email" class="col-md-3 control-label">Email</label>
-                    <div class="col-md-9">
-                        <input type="text" class="form-control" name="email" ng-model="userDetails.email_id" placeholder="Email Address">
-                    </div>
-                </div>
-
-                <div class="form-group">
                     <!-- Button -->                                        
                     <div class="col-md-offset-3 col-md-9">
-                        <button id="btn-signup" type="submit" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Sign Up</button> 
+                        <button name="signup" 
+                                type="submit" 
+                                class="btn btn-info">
+                            Sign Up
+                        </button> 
                     </div>
                 </div>
 
