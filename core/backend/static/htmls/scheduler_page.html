@@ -187,16 +187,16 @@
                                 ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
                                 Configuration <span class="text-danger">*</span>
                             </label>
-                            <div class="col-md-7 col-sm-6" 
-                                ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
+                            <div class="col-md-7 col-sm-6 cursor" 
+                                ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'"
+                                ng-init="isCollapsed=false" 
+                                ng-click="isCollapsed=!isCollapsed">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">
                                             Valve Config
                                         </h3>
-                                        <a class="cursor pull-right" 
-                                            ng-init="isCollapsed=false" 
-                                            ng-click="isCollapsed=!isCollapsed">
+                                        <a class="pull-right">
                                             <span class="glyphicon glyphicon-plus"></span>
                                         </a>
                                     </div>
