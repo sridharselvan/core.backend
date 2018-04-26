@@ -317,6 +317,7 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
       .post('/deactivatescheduledjob', {'job_details_idn' : jobDetailsIdn})
       .then(function(response) {
         $rootScope.$emit('alert', {msg:'Deactivated successfully'});
+        $rootScope.$broadcast('eventName', {});
     }); 
   };
 
