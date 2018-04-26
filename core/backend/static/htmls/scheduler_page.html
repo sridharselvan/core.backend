@@ -43,7 +43,7 @@
                             </div>
                         </div>
                         <div class="form-group form-inline" 
-                            ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
+                            ng-if="schedulerData.type != 'Select One'">
                             <label class="col-sm-3 control-label">
                                 Start Date <span class="text-danger">*</span>
                             </label>
@@ -184,11 +184,11 @@
                         
                         <div class="form-group">
                             <label class="col-sm-3 control-label"
-                                ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
+                                ng-if="schedulerData.type != 'Select One'">
                                 Configuration <span class="text-danger">*</span>
                             </label>
                             <div class="col-md-7 col-sm-6 cursor" 
-                                ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'"
+                                ng-if="schedulerData.type != 'Select One'"
                                 ng-init="isCollapsed=false" 
                                 ng-click="isCollapsed=!isCollapsed">
                                 <div class="panel panel-default">
@@ -201,6 +201,11 @@
                                         </a>
                                     </div>
                                     <div ng-show="isCollapsed" class="collapse in panel-body">
+                                        <div class="alert alert-warning text-center" ng-if="schedulerData.ValveDetails.length == 0">
+                                            <h5>
+                                                No valves available. Please enable from configuration
+                                            </h5>
+                                        </div>
                                         <label ng-repeat="valve in schedulerData.ValveDetails" 
                                             class="btn btn-default btn-checkbox frequency"
                                             ng-class="{'has-error': valveMsg}">
@@ -217,7 +222,7 @@
                             </div>
                         </div>
                         <div class="form-group"
-                            ng-if="schedulerData.type == 'Daily' || schedulerData.type == 'Weekly' || schedulerData.type == 'OneTime'">
+                            ng-if="schedulerData.type != 'Select One'">
                             <div class="col-md-12 col-sm-offset-3">
                                 <button type="submit" 
                                         class="btn btn-success col-xs-12 col-sm-2"

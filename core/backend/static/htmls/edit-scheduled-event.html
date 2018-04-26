@@ -125,6 +125,11 @@
 	                    </a>
 	                </div>
 	                <div ng-show="isCollapsed" class="collapse in panel-body">
+	                	<div class="alert alert-warning text-center" ng-if="editFormData.ValveDetails.length == 0">
+                            <h5>
+                                No valves available. Please enable from configuration
+                            </h5>
+                        </div>
 	                    <label ng-repeat="valve in editFormData.ValveDetails" 
 	                        class="btn btn-default btn-checkbox frequency"
 	                        ng-class="{'has-error': editValveMsg}">
