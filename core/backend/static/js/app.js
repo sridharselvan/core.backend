@@ -31,13 +31,18 @@ app.controller('loginController', function($scope, $http, $state, $stateParams){
 app.controller('signUpController', function($scope, $http, $state, $stateParams){
 
   $scope.userDetails = {};
+  $scope.formValidation = true;
 
-  $scope.CreateUserValidation = function(){
-    $http
-      .post('/createUser', {'formObj' : $scope.userDetails})
-      .then(function(response) {
-        $state.transitionTo('login');
-    });
+  $scope.CreateUserValidation = function(isValid){
+    if(isValid){
+      $http
+        .post('/createUser', {'formObj' : $scope.userDetails})
+        .then(function(response) {
+          $state.transitionTo('login');
+      });
+    }else{
+      $scope.formValidation = false;
+    }
   }
 
   $scope.signUpValidation = function(){
@@ -317,6 +322,7 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
       .post('/deactivatescheduledjob', {'job_details_idn' : jobDetailsIdn})
       .then(function(response) {
         $rootScope.$emit('alert', {msg:'Deactivated successfully'});
+        $rootScope.$broadcast('eventName', {});
     }); 
   };
 
