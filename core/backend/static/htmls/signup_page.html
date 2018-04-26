@@ -9,14 +9,15 @@
                <div class="form-group">
                    <label for="phone" class="col-md-3 control-label">User ID <span class="text-danger">*</span></label>
                    <div class="col-md-9">
-                       <input type="text" class="form-control" name="user_id" ng-model="userDetails.user_name" placeholder="User ID" ng-class="{ 'has-error': (signupform.user_id.$touched && signupform.user_id.$invalid && !formValidation) || user_exists}" 
+                       <input type="text" class="form-control" name="user_id" ng-model="userDetails.user_name" placeholder="User ID" ng-class="{ 'has-error': (signupform.user_id.$touched && signupform.user_id.$error.required) || formValidation || user_exists}" 
                         ng-pattern="/^[a-zA-Z]+[0-9]*[a-zA_Z]*$/"
                        required>
 
                        <span class="text-danger" 
-                             ng-show="(signupform.user_id.$touched && signupform.user_id.$error.required) && !formValidation">
+                             ng-show="(signupform.user_id.$touched && signupform.user_id.$error.required) || formValidation">
                             Please enter the User id
                         </span>
+                        <br>
                         <span class="text-danger" 
                               ng-show="signupform.user_id.$touched && user_exists">
                             User already exists
@@ -32,12 +33,12 @@
                 <div class="form-group">
                     <label for="firstname" class="col-md-3 control-label">First Name <span class="text-danger">*</span></label>
                     <div class="col-md-9">
-                        <input type="text" class="form-control" name="firstname" ng-model="userDetails.first_name" placeholder="First Name"       ng-class="{ 'has-error': (signupform.firstname.$touched && signupform.firstname.$invalid) && !formValidation}"
+                        <input type="text" class="form-control" name="firstname" ng-model="userDetails.first_name" placeholder="First Name"       ng-class="{ 'has-error': (signupform.firstname.$touched && signupform.firstname.$error.required) || formValidation}"
                                ng-pattern="/^[a-zA-Z]{3,}$/"
                                required>
 
                         <span class="text-danger" 
-                              ng-show="(signupform.firstname.$touched && signupform.firstname.$error.required) && !formValidation">
+                              ng-show="(signupform.firstname.$touched && signupform.firstname.$error.required) || formValidation">
                             Please enter the First name
                         </span>
                         <br>
@@ -59,7 +60,7 @@
                     <label for="password" class="col-md-3 control-label">Password <span class="text-danger">*</span></label>
                     <div class="col-md-9">
                         <input type="password" class="form-control" name="passwd" ng-model="userDetails.hash1" placeholder="Password"
-                                ng-class="{ 'has-error': (signupform.passwd.$touched && signupform.passwd.$invalid) && !formValidation}" required>
+                                ng-class="{ 'has-error': (signupform.passwd.$touched && signupform.passwd.$error.required) || formValidation}" required>
 
                         <span class="text-danger" 
                               ng-show="(signupform.passwd.$touched && signupform.passwd.$error.required) && !formValidation">
@@ -72,10 +73,10 @@
                     <label for="phone_no1" class="col-md-3 control-label">Primary Phone <span class="text-danger">*</span></label>
                     <div class="col-md-9">
                         <input type="text" class="form-control" name="phone_no1" ng-model="userDetails.phone_no1" placeholder="Phone 1"
-                            ng-class="{ 'has-error': (signupform.phone_no1.$touched && signupform.phone_no1.$invalid) && !formValidation}" ng-pattern="/^[0-9]{10}$/" required>  
+                            ng-class="{ 'has-error': (signupform.phone_no1.$touched && signupform.phone_no1.$error.required) || formValidation}" ng-pattern="/^[0-9]{10}$/" required>  
 
                         <span class="text-danger" 
-                              ng-show="(signupform.phone_no1.$touched && signupform.phone_no1.$error.required) && !formValidation">
+                              ng-show="(signupform.phone_no1.$touched && signupform.phone_no1.$error.required) || formValidation">
                             Please enter the primary phone
                         </span>
                         <br>
