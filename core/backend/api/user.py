@@ -95,9 +95,11 @@ def create_user(session, *args, **kwargs):
     _response_dict = {'result': False, 'data': dict(), 'alert_type': None, 'alert_what': None, 'msg': None}
 
     uname = form_data.get('user_name')
-    if UserModel.user_exists(session, user_name=uname):
+    is_user_exists = UserModel.user_exists(session, user_name=uname)
+    if is_user_exists:
         _response_dict['alert_type'] = 'push_msg'
         _response_dict['alert_what'] = 'msg'
+        _response_dict['is_user_exists'] = is_user_exists
         _response_dict['msg'] = "User Already exists"
         return json.dumps(_response_dict)
 

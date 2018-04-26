@@ -28,16 +28,22 @@ app.controller('loginController', function($scope, $http, $state, $stateParams){
 
 
 //Start: controller: SignUpPageController
-app.controller('signUpController', function($scope, $http, $state, $stateParams){
+app.controller('signUpController', ['$scope', '$http', '$state', '$stateParams', '$rootScope', 
+  function($scope, $http, $state, $stateParams, $rootScope){
 
   $scope.userDetails = {};
   $scope.formValidation = true;
+  $scope.user_exists = false;
 
   $scope.CreateUserValidation = function(isValid){
     if(isValid){
       $http
         .post('/createUser', {'formObj' : $scope.userDetails})
         .then(function(response) {
+          if(response.data.is_user_exists){
+            $scope.user_exists = true;
+            return false;
+          }
           $state.transitionTo('login');
       });
     }else{
@@ -49,7 +55,7 @@ app.controller('signUpController', function($scope, $http, $state, $stateParams)
     $state.transitionTo('signUp');
   }
   
-}); //End: controller: SignUpPageController
+}]); //End: controller: SignUpPageController
 
 //Start: Alert Message
 app.controller('messageController', ['$scope', '$timeout', '$modalInstance', 'msgData', function($scope, $timeout, $modalInstance, msgData){
