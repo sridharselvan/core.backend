@@ -37,7 +37,6 @@ app.controller('signUpController', ['$scope', '$http', '$state', '$stateParams',
 
   $scope.CreateUserValidation = function(isValid){
     if(isValid){
-      $scope.formValidation = false;
       $scope.user_exists = false;
       $http
         .post('/createUser', {'formObj' : $scope.userDetails})
@@ -48,8 +47,6 @@ app.controller('signUpController', ['$scope', '$http', '$state', '$stateParams',
           }
           $state.transitionTo('login');
       });
-    }else{
-      $scope.formValidation = true;
     }
   }
 
