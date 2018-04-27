@@ -76,7 +76,7 @@
                     <label for="phone_no1" class="col-md-3 control-label">Primary Phone <span class="text-danger">*</span></label>
                     <div class="col-md-9">
                         <input type="text" class="form-control" name="phone_no1" ng-model="userDetails.phone_no1" placeholder="Phone 1"
-                            ng-class="{ 'has-error': (signupform.phone_no1.$touched && signupform.phone_no1.$error.required)}" ng-pattern="/^[0-9]{10}$/" required>  
+                            ng-class="{ 'has-error': (signupform.phone_no1.$touched && signupform.phone_no1.$error.required)}" ng-pattern="/^[0-9]{10}$/" required ng-change="isPhoneNoMatched=false">  
 
                         <div ng-show="signupform.$submitted || signupform.phone_no1.$touched">
                             <span class="text-danger" 
@@ -101,12 +101,17 @@
                                 ng-model="userDetails.phone_no2" 
                                 placeholder="Phone 2"
                                 ng-pattern="/^[0-9]{10}$/"
-                                ng-class="{ 'has-error': signupform.phone_no2.$error.pattern}">
+                                ng-class="{ 'has-error': signupform.phone_no2.$error.pattern}"
+                                ng-change="isPhoneNoMatched=false">
 
                         <div ng-show="signupform.$submitted || signupform.phone_no2.$touched">
                             <span class="text-danger" 
                                   ng-show="(signupform.phone_no2.$error.pattern)">
                                     Please enter the valid phone number
+                            </span>
+                            <span class="text-danger" 
+                                  ng-show="isPhoneNoMatched">
+                                    Please enter different phone number
                             </span>
                         </div>
 
