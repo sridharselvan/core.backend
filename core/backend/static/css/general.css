@@ -8,6 +8,18 @@
 .error{color: #f00;}
 .has-error{border: solid #f00 1px;}
 
+/************************ Message Model window ***********************************/
+
+.center-modal {
+    position: fixed;
+    top: 15%;
+    left: 18.5%;
+    z-index: 1050;
+    width: 80%;
+    height: 80%;
+    margin-left: -10%;
+}
+
 /************************ Login Page ***********************************/
 .forgot-passwd{float:right; font-size: 80%; position: relative; top:-25px}
 .account{border-top: 1px solid#888; padding-top:15px; font-size:85%}

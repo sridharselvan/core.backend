@@ -72,7 +72,7 @@ app.controller('messageController', ['$scope', '$timeout', '$modalInstance', 'ms
   $scope.errorMsg = msgData;
   $timeout(function(){
     $modalInstance.close('yes');
-  }, 2000);
+  }, 4000);
 
   $scope.cancel = function(){
     $modalInstance.close('yes');
@@ -113,6 +113,7 @@ app.controller('menuController',['$scope', 'http', '$state', '$stateParams', '$t
       controller: 'messageController',
       backdrop: "static",
       backdropClick: false,
+      windowClass: 'center-modal',
       resolve: {
          msgData: function () {
            return msg;
