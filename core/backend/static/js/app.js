@@ -156,14 +156,18 @@ app.controller("clientConfigController", function($scope, http, $state, $rootSco
     }
 
     //Save/update the form data to client ini fiile
-    $scope.saveConfig = function () {
+    $scope.saveConfig = function (isValid) {
 
-      http.post("/modifyclientconfig", $scope.serverData)
-        .then(function(response){
-          $scope.serverData = response.data;
-          $rootScope.$emit('alert', {msg:'Data saved successfully'});
-          _loadClientConfig();
-      });
+      if(isValid){
+        $scope.isSaveDisabled = true;
+        http.post("/modifyclientconfig", $scope.serverData)
+          .then(function(response){
+            $scope.isSaveDisabled = false;
+            $scope.serverData = response.data;
+            $rootScope.$emit('alert', {msg:'Data saved successfully'});
+            _loadClientConfig();
+        });
+      }
     };
 
     //Toggle glyphicon
