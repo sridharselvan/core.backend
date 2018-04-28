@@ -7,6 +7,11 @@
 .remove-decor{text-decoration: none;}
 .error{color: #f00;}
 .has-error{border: solid #f00 1px;}
+.label-pill {
+  padding-right: .6em;
+  padding-left: .6em;
+  border-radius: 10rem;
+}
 
 /************************ Message Model window ***********************************/
 

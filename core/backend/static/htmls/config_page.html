@@ -11,16 +11,30 @@
                 <div class="panel-heading" ng-click="toggleNodes(active, eachNode); active = !active">
                     <h3 class="panel-title">
                         {{serverData[eachNode].name.toUpperCase() || eachNode.toUpperCase()}}
+                        <span ng-if="serverData[eachNode].enabled == 'true'" class="label label-pill label-success">
+                          Enabled
+                        </span>
+                        <span class="label label-pill label-danger" ng-if="serverData[eachNode].enabled == 'false'">
+                          Disabled
+                        </span>
                     </h3>
                     <a class="pull-right">
                       <span id="node-config-{{eachNode}}" class="glyphicon glyphicon-chevron-right"></span>
                     </a>
                 </div>
                 <div ng-hide="active" class="collapse in panel-body">
-                    <div class="form-group">
+                    <div class="form-group" 
+                         ng-class="{'has-error': (clientconfigform.{{eachNode}}.$touched && clientconfigform.{{eachNode}}.$error.required)}">
                       <div class="input-group">
                         <span class="input-group-addon">Name</span>
-                        <input type="text" ng-model="serverData[eachNode].name" class="form-control" placeholder="Name of the Valve">
+                        <input type="text" name="{{eachNode}}" ng-model="serverData[eachNode].name" class="form-control" placeholder="Name of the Valve" required>
+
+                        <div ng-show="clientconfigform.$submitted || clientconfigform.{{eachNode}}.$touched">
+                            <span class="text-danger" 
+                                  ng-show="clientconfigform.{{eachNode}}.$error.required">
+                                Please enter the First name
+                            </span>
+                        </div>
                       </div>
                     </div>
 
@@ -53,8 +67,7 @@
 
     <div class="form-group">
       <div class="col-md-12 col-sm-12 col-sm-offset-3">
-          <button type="submit" 
-                  class="btn btn-success col-xs-12 col-sm-2 margin-bottom-25px">
+          <button type="submit" class="btn btn-success col-xs-12 col-sm-2 margin-bottom-25px">
               Save
           </button>
       </div>
