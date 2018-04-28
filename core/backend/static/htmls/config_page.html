@@ -1,86 +1,63 @@
 <div class="container" ng-controller="clientConfigController">
-  <div class="row form-group">
-    <div class="col-xs-12">
-        <h2 class="text-center">Valve Configuration</h2>
-    </div>
+  <div class="col-xs-12">
+      <h3 class="text-center margin-bottom-25px">Valve Configuration</h3>
   </div>
   <form class="clientconfigform" ng-submit="saveConfig()">
-    <fieldset ng-repeat="eachNode in serverData.nodes.ids.split(' ')" ng-init="active=true">
-      
-      <div class="row" ng-click="active = !active">
-        <div class="col-xs-12" ng-click="toggleNodes(active, eachNode)">
-          <div class="col-sm-offset-4 col-sm-6">
-            <div class="form-group">
-              <div class="input-group">
-                  <h4 class="cursor">
-                    <span id="node-config-{{eachNode}}" class="glyphicon glyphicon-chevron-right"></span>
-                    {{serverData[eachNode].name.toUpperCase() || eachNode.toUpperCase()}}
-                  </h4>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="{{eachNode}}" ng-hide="active" calss="col well">
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="col-sm-offset-4 col-sm-6">
-              <div class="form-group">
-                <div class="input-group">
-                  <span class="input-group-addon">Name</span>
-                  <input type="text" ng-model="serverData[eachNode].name" class="form-control" placeholder="Name of the Valve">
+    <div ng-repeat="eachNode in serverData.nodes.ids.split(' ')" ng-init="active=true">
+      <div class="form-group">
+        <label class="col-sm-3 control-label"></label>
+        <div class="col-md-7 col-sm-7 cursor">
+            <div class="panel panel-default">
+                <div class="panel-heading" ng-click="toggleNodes(active, eachNode); active = !active">
+                    <h3 class="panel-title">
+                        {{serverData[eachNode].name.toUpperCase() || eachNode.toUpperCase()}}
+                    </h3>
+                    <a class="pull-right">
+                      <span id="node-config-{{eachNode}}" class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
+                <div ng-hide="active" class="collapse in panel-body">
+                    <div class="form-group">
+                      <div class="input-group">
+                        <span class="input-group-addon">Name</span>
+                        <input type="text" ng-model="serverData[eachNode].name" class="form-control" placeholder="Name of the Valve">
+                      </div>
+                    </div>
 
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="col-sm-offset-4 col-sm-6">
-              <div class="form-group">
-                <div class="input-group">
-                  <span class="input-group-addon">Duration</span>
-                  <input type="text" ng-model="serverData[eachNode].close_after" class="form-control" placeholder="In mins">
-                  <span class="input-group-addon cursor" ng-class="serverData[eachNode].duration_type == 'Hrs' ? 'label-info' : 'btn'"
-                    ng-click="serverData[eachNode].duration_type = toggleHrsMins(serverData[eachNode].duration_type, eachNode)">
-                    {{serverData[eachNode].duration_type}}
-                  </span>
+                    <div class="form-group">
+                      <div class="input-group">
+                        <span class="input-group-addon">Duration</span>
+                        <input type="text" ng-model="serverData[eachNode].close_after" class="form-control" placeholder="In mins">
+                        <span class="input-group-addon cursor" ng-class="serverData[eachNode].duration_type == 'Hrs' ? 'label-info' : 'btn'"
+                          ng-click="serverData[eachNode].duration_type = toggleHrsMins(serverData[eachNode].duration_type, eachNode)">
+                          {{serverData[eachNode].duration_type}}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="input-group">
+                        <span class="input-group-addon">Enabled</span>
+                        <select class="form-control" ng-model="serverData[eachNode].enabled">
+                          <option value="true">Yes</option>
+                          <option value="false">No</option>
+                        </select>
+                      </div>
+                    </div>
+
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="col-sm-offset-4 col-sm-6">
-              <div class="form-group">
-                <div class="input-group">
-                  <span class="input-group-addon">Enabled</span>
-                  <select class="form-control" ng-model="serverData[eachNode].enabled">
-                    <option value="true">Yes</option>
-                    <option value="false">No</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </fieldset>
-
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="col-sm-offset-4 col-sm-6">
-          <div class="form-group">
-            <button type="submit" class="btn btn-primary">Save</button>
-          </div>
         </div>
       </div>
     </div>
-  </div>
+
+    <div class="form-group">
+      <div class="col-md-12 col-sm-12 col-sm-offset-3">
+          <button type="submit" 
+                  class="btn btn-success col-xs-12 col-sm-2 margin-bottom-25px">
+              Save
+          </button>
+      </div>
+    </div>
   </form>
 </div>
