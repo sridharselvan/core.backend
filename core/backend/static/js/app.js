@@ -37,8 +37,12 @@ app.controller('signUpController', ['$scope', '$http', '$state', '$stateParams',
 
   $scope.CreateUserValidation = function(isValid){
     if(isValid){
-      $scope.formValidation = false;
       $scope.user_exists = false;
+      $scope.isPhoneNoMatched = false;
+      if($scope.userDetails.phone_no1 === $scope.userDetails.phone_no2){
+        $scope.isPhoneNoMatched = true;
+        return false;
+      }
       $http
         .post('/createUser', {'formObj' : $scope.userDetails})
         .then(function(response) {
@@ -48,8 +52,6 @@ app.controller('signUpController', ['$scope', '$http', '$state', '$stateParams',
           }
           $state.transitionTo('login');
       });
-    }else{
-      $scope.formValidation = true;
     }
   }
 
