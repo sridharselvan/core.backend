@@ -61,12 +61,32 @@
                     <label for="password" class="col-md-3 control-label">Password <span class="text-danger">*</span></label>
                     <div class="col-md-9">
                         <input type="password" class="form-control" name="passwd" ng-model="userDetails.hash1" placeholder="Password"
-                                ng-class="{ 'has-error': (signupform.passwd.$touched && signupform.passwd.$error.required)}" required>
+                                ng-class="{ 'has-error': (signupform.passwd.$touched && signupform.passwd.$error.required)}" required
+                                ng-change="isPasswdMatched=false">
 
                         <div ng-show="signupform.$submitted || signupform.passwd.$touched">
                             <span class="text-danger" 
                                   ng-show="signupform.passwd.$error.required">
                                 Please enter the password
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="col-md-3 control-label">Confirm password <span class="text-danger">*</span></label>
+                    <div class="col-md-9">
+                        <input type="password" class="form-control" name="confirm_passwd" ng-model="confirmPasswd" placeholder="Password"
+                                ng-class="{ 'has-error': (signupform.confirm_passwd.$touched && signupform.confirm_passwd.$error.required)}" required ng-change="isPasswdMatched=false">
+
+                        <div ng-show="signupform.$submitted || signupform.confirm_passwd.$touched">
+                            <span class="text-danger" 
+                                  ng-show="signupform.confirm_passwd.$error.required">
+                                Please enter confirm password
+                            </span>
+                            <span class="text-danger" 
+                                  ng-show="isPasswdMatched">
+                                    Password and confirm password should match
                             </span>
                         </div>
                     </div>
