@@ -54,6 +54,7 @@ app.controller('signUpController', ['$scope', '$http', '$state', '$stateParams',
             $scope.user_exists = true;
             return false;
           }
+          $rootScope.$emit('alert', {msg:'User created successfully. Please login'});
           $state.transitionTo('login');
       });
     }
