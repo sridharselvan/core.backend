@@ -439,6 +439,7 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
 
       $scope.editFrequencyMsg = false;
       $scope.editWeekDayMsg = false;
+      
       if($scope.editFormData.type == 'Daily' || $scope.editFormData.type == 'Weekly'){
         $scope.editFrequencyMsg = $scope.bandChoosed($scope.editFormData.recurs)
       }
@@ -447,9 +448,11 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
       }
       $scope.editValveMsg = $scope.bandChoosed($scope.editFormData.ValveDetails)
       if(!$scope.editFrequencyMsg && !$scope.editValveMsg && !$scope.editWeekDayMsg){
+        $scope.isUpdateDisable = true;
         http
           .post('/updateschedulerconfig', $scope.editFormData)
           .then(function(response) {
+            $scope.isUpdateDisable = false;
             $rootScope.$broadcast('eventName', {});
             $modalInstance.close('yes');
         });
