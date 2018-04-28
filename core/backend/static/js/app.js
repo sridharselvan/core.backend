@@ -39,6 +39,10 @@ app.controller('signUpController', ['$scope', '$http', '$state', '$stateParams',
     if(isValid){
       $scope.user_exists = false;
       $scope.isPhoneNoMatched = false;
+      if($scope.userDetails.hash1 !== $scope.confirmPasswd){
+        $scope.isPasswdMatched = true;
+        return false;
+      }
       if($scope.userDetails.phone_no1 === $scope.userDetails.phone_no2){
         $scope.isPhoneNoMatched = true;
         return false;
