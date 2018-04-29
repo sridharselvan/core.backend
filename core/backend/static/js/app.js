@@ -72,7 +72,7 @@ app.controller('messageController', ['$scope', '$timeout', '$modalInstance', 'ms
   $scope.errorMsg = msgData;
   $timeout(function(){
     $modalInstance.close('yes');
-  }, 2000);
+  }, 4000);
 
   $scope.cancel = function(){
     $modalInstance.close('yes');
@@ -113,6 +113,7 @@ app.controller('menuController',['$scope', 'http', '$state', '$stateParams', '$t
       controller: 'messageController',
       backdrop: "static",
       backdropClick: false,
+      windowClass: 'center-modal',
       resolve: {
          msgData: function () {
            return msg;
@@ -155,14 +156,18 @@ app.controller("clientConfigController", function($scope, http, $state, $rootSco
     }
 
     //Save/update the form data to client ini fiile
-    $scope.saveConfig = function () {
+    $scope.saveConfig = function (isValid) {
 
-      http.post("/modifyclientconfig", $scope.serverData)
-        .then(function(response){
-          $scope.serverData = response.data;
-          $rootScope.$emit('alert', {msg:'Data saved successfully'});
-          _loadClientConfig();
-      });
+      if(isValid){
+        $scope.isSaveDisabled = true;
+        http.post("/modifyclientconfig", $scope.serverData)
+          .then(function(response){
+            $scope.isSaveDisabled = false;
+            $scope.serverData = response.data;
+            $rootScope.$emit('alert', {msg:'Data saved successfully'});
+            _loadClientConfig();
+        });
+      }
     };
 
     //Toggle glyphicon
