@@ -1,0 +1,135 @@
+<div class="row" ng-controller="manageAccountController">
+    <div class="col-xs-12">
+        <h3 class="text-center">Manage Account</h3>
+    </div>
+    
+    <div class="tabbable-panel">
+        <div class="tabbable-line">
+            <ul id="tabs" class="nav nav-tabs">
+                <li ng-class="{ active: isSet(1) }">
+                    <a ng-click="setTab(1)">
+                        Account Details
+                    </a>
+                </li>
+                <li ng-class="{ active: isSet(2) }">
+                    <a ng-click="setTab(2)">
+                        Add New User
+                    </a>
+                </li>
+            </ul>
+            
+            <div id="my-tab-content" class="tab-content">
+                
+                <div id="user_details" class="tab-pane fade in active">
+					<div class="panel panel-info mainbox col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-2">
+	                    <div class="panel-heading margin-bottom-25px">
+	                        <div class="text-center">Edit User Details</div>
+	                    </div>
+	                    
+	                    <hr>
+
+	                    <form name="manageuserform" class="form-horizontal" role="form" ng-submit="updateUserDetails(manageuserform.$valid)" novalidate>
+
+							<div class="form-group">
+			                   <label for="phone" class="col-md-3 control-label">User ID <span class="text-danger">*</span></label>
+			                   <div class="col-md-9">
+			                       <input type="text" class="form-control" name="user_id" ng-model="editUserDetails.user_name" placeholder="User ID" ng-disabled="true">
+			                   </div>
+			                </div>
+							
+							<div class="form-group">
+			                    <label for="firstname" class="col-md-3 control-label">First Name <span class="text-danger">*</span></label>
+			                    <div class="col-md-9">
+			                        <input type="text" class="form-control" name="firstname" ng-model="editUserDetails.first_name" placeholder="First Name"       ng-class="{ 'has-error': (manageuserform.firstname.$touched && (manageuserform.firstname.$error.required ||manageuserform.firstname.$error.pattern))}"
+			                               ng-pattern="/^[a-zA-Z]{3,}$/"
+			                               required>
+
+			                        <div ng-show="manageuserform.$submitted || manageuserform.firstname.$touched">
+			                            <span class="text-danger" 
+			                                  ng-show="manageuserform.firstname.$error.required">
+			                                Please enter the First name
+			                            </span>
+			                            <span class="text-danger" 
+			                                  ng-show="(manageuserform.firstname.$error.pattern)">
+			                                    Please enter minimum 3 alphabets only
+			                            </span>
+			                        </div>
+			                    </div>
+			                </div>
+
+			                <div class="form-group">
+			                    <label for="lastname" class="col-md-3 control-label">Last Name</label>
+			                    <div class="col-md-9">
+			                        <input type="text" class="form-control" name="lastname" ng-model="editUserDetails.last_name" placeholder="Last Name">
+			                    </div>
+			                </div>
+
+			                <div class="form-group">
+			                    <label for="phone_no1" class="col-md-3 control-label">Primary Phone <span class="text-danger">*</span></label>
+			                    <div class="col-md-9">
+			                        <input type="text" class="form-control" name="phone_no1" ng-model="editUserDetails.phone_no1" placeholder="Phone 1"
+			                            ng-class="{ 'has-error': (manageuserform.phone_no1.$touched && manageuserform.phone_no1.$error.required)}" ng-pattern="/^[0-9]{10}$/" required ng-change="isPhoneNoMatched=false">  
+
+			                        <div ng-show="manageuserform.$submitted || manageuserform.phone_no1.$touched">
+			                            <span class="text-danger" 
+			                                  ng-show="manageuserform.phone_no1.$error.required">
+			                                Please enter the primary phone
+			                            </span>
+			                            <span class="text-danger" 
+			                                  ng-show="manageuserform.phone_no1.$error.pattern">
+			                                    Please enter the valid phone number
+			                            </span>
+			                        </div>
+
+			                    </div>
+			                </div>
+
+			                <div class="form-group">
+			                    <label for="phone_no2" class="col-md-3 control-label">Secondary Phone</label>
+			                    <div class="col-md-9">
+			                        <input type="text" 
+			                                class="form-control" 
+			                                name="phone_no2" 
+			                                ng-model="editUserDetails.phone_no2" 
+			                                placeholder="Phone 2"
+			                                ng-pattern="/^[0-9]{10}$/"
+			                                ng-class="{ 'has-error': manageuserform.phone_no2.$error.pattern}"
+			                                ng-change="isPhoneNoMatched=false">
+
+			                        <div ng-show="manageuserform.$submitted || manageuserform.phone_no2.$touched">
+			                            <span class="text-danger" 
+			                                  ng-show="(manageuserform.phone_no2.$error.pattern)">
+			                                    Please enter the valid phone number
+			                            </span>
+			                            <span class="text-danger" 
+			                                  ng-show="isPhoneNoMatched">
+			                                    Please enter different phone number
+			                            </span>
+			                        </div>
+
+			                    </div>
+			                </div>
+
+			                <div class="form-group">
+			                    <!-- Button -->                                        
+			                    <div class="col-md-offset-3 col-md-9">
+			                        <button name="manageuser" 
+			                                type="submit" 
+			                                class="btn btn-info col-xs-12 col-sm-4"
+			                                ng-disabled="isEditUserDisabled">
+			                            Update user
+			                        </button> 
+			                    </div>
+			                </div>
+
+	                    </form>
+	                </div>
+                </div>
+
+                <div id="add_user" class="tab-pane fade in">
+                    <div ng-include src="'signup_page.html'"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
