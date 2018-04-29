@@ -28,7 +28,7 @@ from core.backend.utils.core_utils import (
     get_unique_id, AutoSession
 )
 
-from core.backend.utils.core_utils import encode
+from core.backend.utils.core_utils import encode, decode
 # ----------- END: In-App Imports ---------- #
 
 __all__ = [
@@ -108,5 +108,37 @@ def create_user(session, *args, **kwargs):
     _response_dict['alert_type'] = 'push_msg'
     _response_dict['alert_what'] = 'msg'
     _response_dict['msg'] = 'User {} successfully created'.format(_user.user_name)
+
+    return _response_dict
+
+
+def get_user_details(session, user_id):
+    _response_dict = {'result': False, 'data': dict(), 'alert_type': None, 'alert_what': None, 'msg': None}
+    user_data = UserModel.fetch_user_data(session, mode='one', user_idn=user_id)
+    user_details = {
+        'user_idn': user_data.user_idn,
+        'first_name': user_data.first_name,
+        'last_name': user_data.last_name,
+        'phone_no1': user_data.phone_no1,
+        'phone_no2': user_data.phone_no2,
+        'user_name': decode(user_data.user_name)
+    }
+    if user_data:
+        _response_dict['data'] = user_details
+    return _response_dict
+
+def update_user_details(session, form_data):
+    _response_dict = {'result': False, 'data': dict(), 'alert_type': None, 'alert_what': None, 'msg': None}
+
+    form_data['user_name'] = encode(form_data['user_name'])
+
+    _updates = form_data
+    updated_user_details = UserModel.update_user_details(
+        session, 
+        where_condition={'user_idn':form_data['user_idn']}, 
+        updates=_updates
+    )
+
+    _response_dict.update({'data': updated_user_details})
 
     return _response_dict

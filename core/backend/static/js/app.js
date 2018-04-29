@@ -72,7 +72,7 @@ app.controller('messageController', ['$scope', '$timeout', '$modalInstance', 'ms
   $scope.errorMsg = msgData;
   $timeout(function(){
     $modalInstance.close('yes');
-  }, 4000);
+  }, 3000);
 
   $scope.cancel = function(){
     $modalInstance.close('yes');
@@ -179,6 +179,54 @@ app.controller("clientConfigController", function($scope, http, $state, $rootSco
     }
 
 }); // end: controller:clientConfigController
+
+//Start: controller:MangeAccountController
+app.controller("manageAccountController",['$scope', 'http', '$state', '$filter', '$window', '$modal', '$rootScope', '$timeout',
+  function($scope, http, $state, $filter, $window, $modal, $rootScope, $timeout) {
+
+    $scope.tab = 1;
+
+    $scope.setTab = function(newTab){
+      $scope.tab = newTab;
+      if(newTab == 1){
+        angular.element('#user_details').addClass("active");
+        angular.element('#add_user').removeClass("active");
+      } else {
+        angular.element('#user_details').removeClass("active");
+        angular.element('#add_user').addClass("active");
+      }
+    };
+
+    $scope.isSet = function(tabNum){
+      return $scope.tab === tabNum;
+    };
+
+    /*To retrive user details*/
+    _getUserDetails = function(){
+      http.get("/getuserdetails")
+        .then(function(response){
+          $scope.editUserDetails = response.data.data;
+      });
+    };
+
+    _getUserDetails();
+
+    /*Update user details*/
+    $scope.updateUserDetails = function(isValid){
+      if(isValid){
+        $scope.isEditUserDisabled = true;
+        http
+          .post('/updateuserdetails', $scope.editUserDetails)
+          .then(function(response) {
+            $scope.isEditUserDisabled = false;
+            //Emitting alert message
+            $rootScope.$emit('alert', {msg:'Data updated successfully'});
+        });
+      }
+    }
+
+}]);
+//End: controller:MangeAccountController
 
 //Start: controller:schedulerController
 app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$window', '$modal', '$rootScope', '$timeout',
@@ -630,6 +678,16 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
     views: {
       'subPage': {
         templateUrl: "scheduler_page.html"
+      }
+    },
+    name: 'Scheduler'
+  })
+
+  .state('home.manage_account', {
+    url: '/manage_account',
+    views: {
+      'subPage': {
+        templateUrl: "manage_account.html"
       }
     },
     name: 'Scheduler'

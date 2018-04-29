@@ -16,7 +16,7 @@
               {{menu}}
             </a>
           </li>
-          <li><a href="#">My Account</a></li>
+          <li><a ui-sref=".manage_account" ng-click="navBarCollapse()">My Account</a></li>
           <li><a ng-click="logout()" class="cursor">Logout</a></li>
         </ul>
       </div>
@@ -33,7 +33,7 @@
         <li><a ui-sref=".{{menu}}" class="text-capitalize">{{menu}}</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"><span class="glyphicon glyphicon-user"></span>My Account</a></li>
+        <li><a ui-sref=".manage_account" class="cursor"><span class="glyphicon glyphicon-user"></span>My Account</a></li>
         <li><a ng-click="logout()" class="cursor"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
     </div>
