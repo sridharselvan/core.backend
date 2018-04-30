@@ -378,6 +378,11 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
 
           //Eabling the schedule button after response
           $scope.isScheduleDisable = false;
+          var isInvalidDate = response.data.data.is_invalid_date;
+          if(isInvalidDate){
+            alert("Invalid Date. Please select valid date");
+            return false;
+          }
           //Emitting alert message
           $rootScope.$emit('alert', {msg:'Data saved successfully'});
           $scope.schedulerData.type = $scope.types[0];
