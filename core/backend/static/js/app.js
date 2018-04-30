@@ -526,6 +526,11 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
           .post('/updateschedulerconfig', $scope.editFormData)
           .then(function(response) {
             $scope.isUpdateDisable = false;
+            var isInvalidDate = response.data.data.is_invalid_date;
+            if(isInvalidDate){
+              alert("Invalid Date. Please select valid date");
+              return false;
+            };
             $rootScope.$broadcast('eventName', {});
             $modalInstance.close('yes');
         });
