@@ -75,7 +75,9 @@
                     <div class="form-group">
                       <div class="input-group">
                         <span class="input-group-addon">Enabled</span>
-                        <select class="form-control" ng-model="serverData[eachNode].enabled">
+                        <select class="form-control" 
+                                ng-model="serverData[eachNode].enabled" 
+                                ng-change="checkEnabledValves(serverData[eachNode].enabled, eachNode)">
                           <option value="true">Yes</option>
                           <option value="false">No</option>
                         </select>

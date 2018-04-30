@@ -138,7 +138,7 @@ app.controller('logoutController', function($scope, http, $state, $stateParams){
 
 
 //Start: controller:clientConfigController
-app.controller("clientConfigController", function($scope, http, $state, $rootScope) {
+app.controller("clientConfigController", function($scope, http, $state, $rootScope, $window) {
 
     /** Runs during page load.*/
     _loadClientConfig = function(){
@@ -149,6 +149,21 @@ app.controller("clientConfigController", function($scope, http, $state, $rootSco
     }
 
     _loadClientConfig();
+
+    //Check valve names
+    $scope.checkEnabledValves = function(enabled, node){
+      if(enabled === 'false'){
+        http.post("/checkenabledvalves", node)
+          .then(function(response){
+            if(response.data.is_node_available){
+              var schedule_type = response.data.data.schedule_type;
+              $scope.serverData[node].enabled = 'true';
+              $window.alert("Cannot disable the valves. It is used in "+schedule_type+" jobs");
+              return false;
+            }
+        });
+      }
+    }
 
     //Toggle
     $scope.toggleHrsMins = function(duration_type, node){
@@ -340,7 +355,7 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
         selected: true
     });
     return trues.length;
-  }
+  };
 
   $scope.triggerScheduler = function(){
 
