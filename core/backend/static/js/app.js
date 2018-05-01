@@ -378,6 +378,11 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
 
           //Eabling the schedule button after response
           $scope.isScheduleDisable = false;
+          var isInvalidDate = response.data.data.is_invalid_date;
+          if(isInvalidDate){
+            alert("Invalid Date. Please select valid date");
+            return false;
+          }
           //Emitting alert message
           $rootScope.$emit('alert', {msg:'Data saved successfully'});
           $scope.schedulerData.type = $scope.types[0];
@@ -521,6 +526,11 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
           .post('/updateschedulerconfig', $scope.editFormData)
           .then(function(response) {
             $scope.isUpdateDisable = false;
+            var isInvalidDate = response.data.data.is_invalid_date;
+            if(isInvalidDate){
+              alert("Invalid Date. Please select valid date");
+              return false;
+            };
             $rootScope.$broadcast('eventName', {});
             $modalInstance.close('yes');
         });
