@@ -18,13 +18,55 @@ app.controller('loginController', function($scope, $http, $state, $stateParams){
           $scope.errorMsg = response.data.msg;
         }
     });
-  }
+  };
 
   $scope.signUpValidation = function(){
     $state.transitionTo('signUp');
-  }
+  };
+
+  $scope.forgotPassword = function(){
+    $state.transitionTo('forgotPassword');
+  };
   
 }); //End: controller: LoginPageController
+
+
+//Start: controller: ForgotPasswordController
+app.controller('forgotPasswordController', function($scope, $http, $state, $stateParams, $rootScope){
+
+  $scope.forgotPasswordData = {};
+  $scope.isForgotPasswdMatched = false;
+
+  $scope.forgotPasswordVaidation = function(isValid){
+
+    if($scope.forgotPasswordData.new_hash !== $scope.confirmHash){
+      $scope.isForgotPasswdMatched = true;
+      return false;
+    };
+
+    if(isValid){
+      $http
+        .post('/forgotpassword', {'formObj' : $scope.forgotPasswordData})
+        .then(function(response) {
+          if(!response.data.is_phone_no_matched){
+            $scope.isForgotPhoneMatched = true;
+            $scope.msg = response.msg;
+            return false;
+          }else{
+            //Redirect to login page
+            $rootScope.$emit('alert', {msg:'Password changed successfully. Please login'});
+            $state.transitionTo('login');
+          }          
+      });
+    };
+
+  };
+
+  $scope.gotoLogin = function(){
+    $state.transitionTo('login');
+  }
+  
+}); //End: controller: ForgotPasswordController
 
 
 //Start: controller: SignUpPageController
@@ -657,11 +699,18 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
     url: '/logout',
     params: {session_valid:null},
     templateUrl: '/logout_page.html'
+  };
+
+  var forgotPasswordState = {
+    name: 'forgotPassword',
+    url: '/forgot_password',
+    templateUrl: '/forgot_password.html'
   }
   
   $stateProvider.state(loginState);
   $stateProvider.state(signUpState);
   $stateProvider.state(logoutState);
+  $stateProvider.state(forgotPasswordState);
 
   $stateProvider
     .state('home', {
