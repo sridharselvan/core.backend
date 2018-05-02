@@ -142,3 +142,29 @@ def update_user_details(session, form_data):
     _response_dict.update({'data': updated_user_details})
 
     return _response_dict
+
+def forgot_password(session, form_data):
+    _response_dict = {'result': False, 'data': dict(), 'alert_type': None, 'alert_what': None, 'msg': None}
+    
+    form_user_name = encode(form_data['user_name'])
+    form_phone_no = form_data['phone_no']
+    new_hash = encode(form_data['new_hash'])
+
+    user_data = UserModel.fetch_user_data(session, mode='one', user_name=form_user_name)
+    if user_data and str(user_data.phone_no1) == form_phone_no:
+        _response_dict['is_phone_no_matched'] = True
+        updated_user_details = UserModel.update_user_details(
+            session, 
+            where_condition={'user_name':form_user_name}, 
+            updates={
+                'hash1': new_hash, 
+                'hash2': user_data.hash1
+            }
+        )
+
+        _response_dict.update({'data': updated_user_details})
+
+    else:
+        _response_dict['is_phone_no_matched'] = False
+        
+    return _response_dict
