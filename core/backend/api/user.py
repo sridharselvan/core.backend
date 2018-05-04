@@ -12,6 +12,7 @@
 # ----------- START: Native Imports ---------- #
 import json as json
 import base64
+import random
 # ----------- END: Native Imports ---------- #
 
 # ----------- START: Third Party Imports ---------- #
@@ -21,12 +22,15 @@ from sqlalchemy.exc import SQLAlchemyError
 
 # ----------- START: In-App Imports ---------- #
 from core.db.model import (
-    UserModel, UserSessionModel, CodeStatusModel
+    UserModel, UserSessionModel, CodeStatusModel, TransOtpModel
 )
 from core.backend.utils.butils import decode_form_data
 from core.backend.utils.core_utils import (
     get_unique_id, AutoSession
 )
+
+from core.mq import SimplePublisher
+from core.utils.environ import get_queue_details
 
 from core.backend.utils.core_utils import encode, decode
 # ----------- END: In-App Imports ---------- #
@@ -34,6 +38,7 @@ from core.backend.utils.core_utils import encode, decode
 __all__ = [
     # All public symbols go here.
 ]
+OTP_CODE_DIGITS = 4
 
 def authenticate_user(session, *args, **kwargs):
     form_data = kwargs.get('form_data') or dict()
@@ -143,28 +148,72 @@ def update_user_details(session, form_data):
 
     return _response_dict
 
-def forgot_password(session, form_data):
+def forgot_password_validation(session, form_data):
     _response_dict = {'result': False, 'data': dict(), 'alert_type': None, 'alert_what': None, 'msg': None}
     
     form_user_name = encode(form_data['user_name'])
     form_phone_no = form_data['phone_no']
-    new_hash = encode(form_data['new_hash'])
 
     user_data = UserModel.fetch_user_data(session, mode='one', user_name=form_user_name)
-    if user_data and str(user_data.phone_no1) == form_phone_no:
-        _response_dict['is_phone_no_matched'] = True
-        updated_user_details = UserModel.update_user_details(
-            session, 
-            where_condition={'user_name':form_user_name}, 
-            updates={
-                'hash1': new_hash, 
-                'hash2': user_data.hash1
-            }
-        )
 
-        _response_dict.update({'data': updated_user_details})
+    if not user_data:
+        _response_dict['is_user_name_matched'] = False
+        return _response_dict
 
-    else:
+    if user_data.user_name != form_user_name:
+        _response_dict['is_user_name_matched'] = False
+        return _response_dict
+
+    if str(user_data.phone_no1) != form_phone_no:
         _response_dict['is_phone_no_matched'] = False
+        _response_dict['is_user_name_matched'] = True
+        return _response_dict
+
+    _response_dict['is_phone_no_matched'] = True
+    _response_dict['is_user_name_matched'] = True
+
+    otp_code = ''.join([str(random.randint(0, 9)) for _ in range(OTP_CODE_DIGITS if OTP_CODE_DIGITS >= 4 else 4)])
+    code_status_data = CodeStatusModel.fetch_status_idn(session, status='pending')
+
+    trans_otp_id = TransOtpModel.insert(
+        session, 
+        user_idn=user_data.user_idn, 
+        otp_code=otp_code, 
+        status_idn=code_status_data.status_idn
+    )
+
+    queue_details = get_queue_details()
+    #
+    # Push sms notification
+    SimplePublisher().publish(
+        queue_name=queue_details['central_sms_queue'][0],
+        durable=True,
+        payload=dict(
+            message='OTP: {}'.format(otp_code),
+            number=user_data.phone_no1,
+        )
+    )
+    
+    _response_dict['data']['is_otp_enabled'] = True
+    return _response_dict
+
+
+def update_password(session, form_data):
+    _response_dict = {'result': False, 'data': dict(), 'alert_type': None, 'alert_what': None, 'msg': None}
+
+    form_user_name = encode(form_data['user_name'])
+    new_hash = encode(form_data['new_hash'])
+
+    updated_user_details = UserModel.update_user_details(
+        session, 
+        where_condition={'user_name':form_user_name}, 
+        updates={
+            'hash1': new_hash, 
+            'hash2': user_data.hash1
+        }
+    )
+
+    _response_dict.update({'data': updated_user_details})
+        
         
     return _response_dict
