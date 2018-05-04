@@ -35,16 +35,16 @@ app.controller('loginController', function($scope, $http, $state, $stateParams){
 app.controller('forgotPasswordController', function($scope, $http, $state, $stateParams, $rootScope){
 
   $scope.forgotPasswordData = {};
-  $scope.isForgotPasswdMatched = false;
-  $scope.isForgotPhoneMatched = false;
-  $scope.isForgotUsernameMatched = false;
+  $scope.forgotPasswordData.isForgotUsernameMatched = false;
+  $scope.forgotPasswordData.isForgotPhoneMatched = false;
+  $scope.forgotPasswordData.isForgotPasswdMatched = false;
   $scope.isOtpEnabled = false;
   $scope.isValidationButtonDisabled = true;
 
   $scope.forgotPasswordValidation = function(isValid){
 
     if($scope.forgotPasswordData.new_hash !== $scope.forgotPasswordData.confirmHash){
-      $scope.isForgotPasswdMatched = true;
+      $scope.forgotPasswordData.isForgotPasswdMatched = true;
       return false;
     };
 
@@ -52,15 +52,15 @@ app.controller('forgotPasswordController', function($scope, $http, $state, $stat
       $http
         .post('/forgotpasswordvalidation', {'formObj' : $scope.forgotPasswordData})
         .then(function(response) {
-
+          
           if(!response.data.is_user_name_matched){
-            $scope.isForgotUsernameMatched = true;
+            $scope.forgotPasswordData.isForgotUsernameMatched = true;
             $scope.msg = response.msg;
             return false;
           };
 
           if(!response.data.is_phone_no_matched){
-            $scope.isForgotPhoneMatched = true;
+            $scope.forgotPasswordData.isForgotPhoneMatched = true;
             $scope.msg = response.msg;
             return false;
           };
