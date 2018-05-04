@@ -38,17 +38,19 @@ app.controller('forgotPasswordController', function($scope, $http, $state, $stat
   $scope.isForgotPasswdMatched = false;
   $scope.isForgotPhoneMatched = false;
   $scope.isForgotUsernameMatched = false;
+  $scope.isOtpEnabled = false;
+  $scope.isValidationButtonDisabled = true;
 
-  $scope.forgotPasswordVaidation = function(isValid){
+  $scope.forgotPasswordValidation = function(isValid){
 
-    if($scope.forgotPasswordData.new_hash !== $scope.confirmHash){
+    if($scope.forgotPasswordData.new_hash !== $scope.forgotPasswordData.confirmHash){
       $scope.isForgotPasswdMatched = true;
       return false;
     };
 
     if(isValid){
       $http
-        .post('/forgotpassword', {'formObj' : $scope.forgotPasswordData})
+        .post('/forgotpasswordvalidation', {'formObj' : $scope.forgotPasswordData})
         .then(function(response) {
 
           if(!response.data.is_user_name_matched){
@@ -63,13 +65,29 @@ app.controller('forgotPasswordController', function($scope, $http, $state, $stat
             return false;
           };
 
+          //Enable otp fields
+          $scope.isValidationButtonDisabled = false;
+          $scope.isOtpEnabled = true;
+
           //Redirect to login page
-          $rootScope.$emit('alert', {msg:'Password changed successfully. Please login'});
-          $state.transitionTo('login');          
+          /*$rootScope.$emit('alert', {msg:'Password changed successfully. Please login'});
+          $state.transitionTo('login');  */        
       });
     };
 
   };
+
+  $scope.updatePassword = function(){
+
+    $http
+      .post('/updatepassword', {'formObj' : $scope.forgotPasswordData})
+      .then(function(response) {
+
+        //Redirect to login page
+        $rootScope.$emit('alert', {msg:'Password changed successfully. Please login'});
+        $state.transitionTo('login');          
+    });
+  }
 
   $scope.gotoLogin = function(){
     $state.transitionTo('login');
