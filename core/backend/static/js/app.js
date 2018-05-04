@@ -36,6 +36,8 @@ app.controller('forgotPasswordController', function($scope, $http, $state, $stat
 
   $scope.forgotPasswordData = {};
   $scope.isForgotPasswdMatched = false;
+  $scope.isForgotPhoneMatched = false;
+  $scope.isForgotUsernameMatched = false;
 
   $scope.forgotPasswordVaidation = function(isValid){
 
@@ -48,15 +50,22 @@ app.controller('forgotPasswordController', function($scope, $http, $state, $stat
       $http
         .post('/forgotpassword', {'formObj' : $scope.forgotPasswordData})
         .then(function(response) {
+
+          if(!response.data.is_user_name_matched){
+            $scope.isForgotUsernameMatched = true;
+            $scope.msg = response.msg;
+            return false;
+          };
+          
           if(!response.data.is_phone_no_matched){
             $scope.isForgotPhoneMatched = true;
             $scope.msg = response.msg;
             return false;
-          }else{
-            //Redirect to login page
-            $rootScope.$emit('alert', {msg:'Password changed successfully. Please login'});
-            $state.transitionTo('login');
-          }          
+          };
+
+          //Redirect to login page
+          $rootScope.$emit('alert', {msg:'Password changed successfully. Please login'});
+          $state.transitionTo('login');          
       });
     };
 

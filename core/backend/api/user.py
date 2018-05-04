@@ -151,8 +151,19 @@ def forgot_password(session, form_data):
     new_hash = encode(form_data['new_hash'])
 
     user_data = UserModel.fetch_user_data(session, mode='one', user_name=form_user_name)
-    if user_data and str(user_data.phone_no1) == form_phone_no:
+
+    if user_data and user_data.user_name != form_user_name:
+        _response_dict['is_user_name_matched'] = False
+        return _response_dict
+
+    if user_data and str(user_data.phone_no1) != form_phone_no:
+        _response_dict['is_phone_no_matched'] = False
+        _response_dict['is_user_name_matched'] = True
+        return _response_dict
+
+    if user_data:
         _response_dict['is_phone_no_matched'] = True
+        _response_dict['is_user_name_matched'] = True
         updated_user_details = UserModel.update_user_details(
             session, 
             where_condition={'user_name':form_user_name}, 
@@ -163,8 +174,6 @@ def forgot_password(session, form_data):
         )
 
         _response_dict.update({'data': updated_user_details})
-
-    else:
-        _response_dict['is_phone_no_matched'] = False
+        
         
     return _response_dict
