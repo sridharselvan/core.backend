@@ -27,7 +27,7 @@ app.controller('loginController', function($scope, $http, $state, $stateParams){
   $scope.forgotPassword = function(){
     $state.transitionTo('forgotPassword');
   };
-  
+
 }); //End: controller: LoginPageController
 
 
@@ -58,20 +58,19 @@ app.controller('forgotPasswordController', function($scope, $http, $state, $stat
             $scope.msg = response.msg;
             return false;
           };
-          
+
           if(!response.data.is_phone_no_matched){
             $scope.isForgotPhoneMatched = true;
             $scope.msg = response.msg;
             return false;
           };
 
+          $scope.forgotPasswordData.otp_idn = response.data.data.otp_idn;
+
           //Enable otp fields
           $scope.isValidationButtonDisabled = false;
           $scope.isOtpEnabled = true;
 
-          //Redirect to login page
-          /*$rootScope.$emit('alert', {msg:'Password changed successfully. Please login'});
-          $state.transitionTo('login');  */        
       });
     };
 
@@ -84,20 +83,20 @@ app.controller('forgotPasswordController', function($scope, $http, $state, $stat
       .then(function(response) {
 
         //Redirect to login page
-        $rootScope.$emit('alert', {msg:'Password changed successfully. Please login'});
-        $state.transitionTo('login');          
+        $rootScope.$emit('alert', {msg: response.data.msg});
+        $state.transitionTo('login');
     });
   }
 
   $scope.gotoLogin = function(){
     $state.transitionTo('login');
   }
-  
+
 }); //End: controller: ForgotPasswordController
 
 
 //Start: controller: SignUpPageController
-app.controller('signUpController', ['$scope', '$http', '$state', '$stateParams', '$rootScope', 
+app.controller('signUpController', ['$scope', '$http', '$state', '$stateParams', '$rootScope',
   function($scope, $http, $state, $stateParams, $rootScope){
 
   $scope.userDetails = {};
@@ -132,7 +131,7 @@ app.controller('signUpController', ['$scope', '$http', '$state', '$stateParams',
   $scope.signUpValidation = function(){
     $state.transitionTo('signUp');
   }
-  
+
 }]); //End: controller: SignUpPageController
 
 //Start: Alert Message
@@ -195,14 +194,14 @@ app.controller('menuController',['$scope', 'http', '$state', '$stateParams', '$t
   $rootScope.$on('alert', function (event, args) {
    $scope.alertMessage(args.msg);
   });
-  
+
 }]); //End: controller: LogoutController
 
 //Start: controller: LogoutController
 app.controller('logoutController', function($scope, http, $state, $stateParams){
 
   $scope.session_valid = $stateParams['session_valid'];
-  
+
 }); //End: controller: LogoutController
 
 
@@ -334,7 +333,7 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
       return $scope.tab === tabNum;
     };
 
-  $scope.types = ['Select One', 'OneTime', 'Daily', 'Weekly'];  
+  $scope.types = ['Select One', 'OneTime', 'Daily', 'Weekly'];
   $scope.schedulerData = {
     type:$scope.types[0],
     start_date: {
@@ -356,11 +355,11 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
     ],
     ValveDetails:[]
   };
-  
+
 
   /** Update recurs in scheduler data obj **/
   $scope.updateRecurs = function(){
-    
+
     //Resetting the error message flag
     $scope.frequencyMsg = false;
     $scope.weekDayMsg = false;
@@ -471,7 +470,7 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
       .then(function(response) {
         $scope.showSearchResult = true;
         $scope.scheduledJobDetails = response.data.data;
-    }); 
+    });
   };
 
   $scope.deactivateScheduledJob = function(jobDetailsIdn) {
@@ -480,7 +479,7 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
       .then(function(response) {
         $rootScope.$emit('alert', {msg:'Deactivated successfully'});
         $rootScope.$broadcast('eventName', {});
-    }); 
+    });
   };
 
   $scope.editScheduledJob = function(scheduledJob) {
@@ -518,7 +517,7 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
 app.controller("editScheduledController",['$scope', '$modalInstance', 'editData', 'http', '$state', '$rootScope', '$filter',
   function($scope, $modalInstance, editData, http, $state, $rootScope, $filter) {
 
-    var formData = editData, 
+    var formData = editData,
         start_date_time = formData.start_date.split(" "),
         start_date = start_date_time[0].split("-"),
         start_time = start_date_time[1].split(":"),
@@ -581,7 +580,7 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
 
       $scope.editFrequencyMsg = false;
       $scope.editWeekDayMsg = false;
-      
+
       if($scope.editFormData.type == 'Daily' || $scope.editFormData.type == 'Weekly'){
         $scope.editFrequencyMsg = $scope.bandChoosed($scope.editFormData.recurs)
       }
@@ -651,7 +650,7 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
         });
       }
 
-      _loadClientConfig(formData); 
+      _loadClientConfig(formData);
 
     $scope.cancel = function () {
         $modalInstance.close('yes');
@@ -662,7 +661,7 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
 
 //Start http
 
-app.factory('http', ['$http', '$q', '$state', 
+app.factory('http', ['$http', '$q', '$state',
   function($http, $q, $state) {
     return {
       get: function(url) {
@@ -733,7 +732,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
     url: '/forgot_password',
     templateUrl: '/forgot_password.html'
   }
-  
+
   $stateProvider.state(loginState);
   $stateProvider.state(signUpState);
   $stateProvider.state(logoutState);
@@ -793,7 +792,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
     },
     name: 'Scheduler'
   })
-  
+
 
   // Route to Home Page if any wrong url is given
   $urlRouterProvider.otherwise('/');
