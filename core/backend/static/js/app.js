@@ -72,6 +72,8 @@ app.controller('forgotPasswordController', function($scope, $http, $state, $stat
           $scope.isOtpEnabled = true;
 
       });
+    }else{
+      $scope.forgorpasswordform.$submitted = true;
     };
 
   };
