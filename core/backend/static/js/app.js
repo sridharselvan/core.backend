@@ -84,11 +84,14 @@ app.controller('forgotPasswordController', function($scope, $http, $state, $stat
       .post('/updatepassword', {'formObj' : $scope.forgotPasswordData})
       .then(function(response) {
 
+        if(!response.data.result){
+          $scope.forgotPasswordData.isOtpInvalid = true;
+          $scope.forgotPasswordData.otpErrorMsg = response.data.msg;
+          return false;
+        };
+
         //Redirect to login page
         $rootScope.$emit('alert', {msg: response.data.msg});
-        if(!response.data.result){
-          return false;
-        }
         $state.transitionTo('login');
     });
   }
@@ -127,7 +130,11 @@ app.controller('signUpController', ['$scope', '$http', '$state', '$stateParams',
             $scope.user_exists = true;
             $scope.user_exists_msg = response.data.msg;
             return false;
-          }
+          };
+          if(!response.data.result){
+            $scope.isPhoneNoExists = true;
+            return false;
+          };
           $rootScope.$emit('alert', {msg:response.data.msg});
           $state.transitionTo('login');
       });

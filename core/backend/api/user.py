@@ -104,7 +104,16 @@ def create_user(session, *args, **kwargs):
     _response_dict = {'result': False, 'data': dict(), 'alert_type': None, 'alert_what': None, 'msg': None}
 
     uname = form_data.get('user_name')
+    form_phone_no = form_data.get('phone_no1')
     is_user_exists = UserModel.user_exists(session, user_name=uname)
+    is_phoneno_exists = UserModel.fetch_one(session, phone_no1=form_phone_no)
+
+    if is_phoneno_exists:
+        _response_dict['result'] = False
+        _response_dict['is_phoneno_exists'] = True
+        _response_dict['msg'] = filled_code_message('CM0034')
+        return _response_dict
+
     if is_user_exists:
         _response_dict['alert_type'] = 'push_msg'
         _response_dict['alert_what'] = 'msg'
