@@ -86,6 +86,9 @@ app.controller('forgotPasswordController', function($scope, $http, $state, $stat
 
         //Redirect to login page
         $rootScope.$emit('alert', {msg: response.data.msg});
+        if(!response.data.result){
+          return false;
+        }
         $state.transitionTo('login');
     });
   }
