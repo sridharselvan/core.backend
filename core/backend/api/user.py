@@ -219,11 +219,11 @@ def update_password(session, form_data):
     )
 
     if not trans_otp_obj:
-        _response_dict.update({'result': False, 'msg': filled_code_message(CM0004)})
+        _response_dict.update({'result': False, 'msg': filled_code_message('CM0004')})
         return _response_dict
 
     if str(trans_otp_obj.otp_code).lower().strip() != str(form_otp_code).lower().strip():
-        _response_dict.update({'result': False, 'msg': filled_code_message(CM0005)})
+        _response_dict.update({'result': False, 'msg': filled_code_message('CM0005')})
         return _response_dict
 
     updated_user_details = UserModel.update_user_details(
@@ -234,5 +234,11 @@ def update_password(session, form_data):
         }
     )
 
-    _response_dict.update({'result': True, 'msg': filled_code_message(CM0020)})
+    TransOtpModel.delete(
+        session,
+        trans_otp_idn=form_otp_idn
+    )
+
+    _response_dict.update({'result': True, 'msg': filled_code_message('CM0020')})
+
     return _response_dict
