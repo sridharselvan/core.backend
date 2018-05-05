@@ -36,6 +36,7 @@ from core.backend.constants import (
 from core.backend.utils.core_utils import (
     get_unique_id, AutoSession, get_loggedin_user_id
 )
+from core.constants.code_message import filled_code_message
 # ----------- END: In-App Imports ---------- #
 
 
@@ -159,7 +160,7 @@ def update_client_config(form_data):
     _response_dict['result'] = True
     _response_dict['alert_type'] = 'push_msg'
     _response_dict['alert_what'] = 'msg'
-    _response_dict['msg'] = "Data added successfully" 
+    _response_dict['msg'] = filled_code_message("CM0006") 
 
     return _response_dict
 

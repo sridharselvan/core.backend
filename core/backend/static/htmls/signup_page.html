@@ -20,7 +20,7 @@
                             </span>
                             <span class="text-danger" 
                                   ng-show="user_exists">
-                                User already exists
+                                {{user_exists_msg}}
                             </span>
                             <span class="text-danger" 
                                   ng-show="signupform.user_id.$error.pattern">

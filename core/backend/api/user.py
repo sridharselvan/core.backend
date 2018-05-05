@@ -33,6 +33,7 @@ from core.mq import SimpleSMSPublisher
 from core.utils.environ import get_queue_details, get_general_configs
 
 from core.backend.utils.core_utils import encode, decode
+from core.constants.code_message import filled_code_message
 # ----------- END: In-App Imports ---------- #
 
 __all__ = [
@@ -48,13 +49,13 @@ def authenticate_user(session, *args, **kwargs):
     _response_dict = {'result': dict(), 'status': False, 'alert_type': None, 'alert_what': None, 'msg': None}
 
     if not uname:
-        _response_dict['msg'] = 'Invalid username/password'
+        _response_dict['msg'] = filled_code_message('CM0001')
         return json.dumps(_response_dict)
 
     user_data = UserModel.fetch_user_data(session, mode='one', user_name=uname)
 
     if not user_data:
-        _response_dict['msg'] = 'Invalid username/password'
+        _response_dict['msg'] = filled_code_message('CM0001')
         return _response_dict
 
     code_status_data = CodeStatusModel.fetch_status_idn(session, status='loggedin')
@@ -88,7 +89,7 @@ def authenticate_user(session, *args, **kwargs):
         }
         _response_dict['status'] = True
     else:
-        _response_dict['msg'] = 'Invalid username/password'
+        _response_dict['msg'] = filled_code_message('CM0001')
 
     return _response_dict
 
@@ -105,14 +106,14 @@ def create_user(session, *args, **kwargs):
         _response_dict['alert_type'] = 'push_msg'
         _response_dict['alert_what'] = 'msg'
         _response_dict['is_user_exists'] = is_user_exists
-        _response_dict['msg'] = "User Already exists"
+        _response_dict['msg'] = filled_code_message('CM0003')
         return json.dumps(_response_dict)
 
     _user = UserModel.create_new_user(session, **form_data)
 
     _response_dict['alert_type'] = 'push_msg'
     _response_dict['alert_what'] = 'msg'
-    _response_dict['msg'] = 'User {} successfully created'.format(_user.user_name)
+    _response_dict['msg'] = filled_code_message('CM0002', user_name=decode(_user.user_name))
 
     return _response_dict
 
@@ -144,6 +145,7 @@ def update_user_details(session, form_data):
         updates=_updates
     )
 
+    _response_dict['msg'] = filled_code_message('CM0007')
     _response_dict.update({'data': updated_user_details})
 
     return _response_dict
@@ -192,7 +194,7 @@ def forgot_password_validation(session, form_data):
     # Push sms notification
     SimpleSMSPublisher().publish(
         payload=dict(
-            message='Please use {} as one time password'.format(otp_code),
+            message=filled_code_message('CM0019', otp_code=otp_code),
             number=phone_number,
         )
     )
@@ -217,11 +219,11 @@ def update_password(session, form_data):
     )
 
     if not trans_otp_obj:
-        _response_dict.update({'result': False, 'msg': 'Error while verifying the OTP'})
+        _response_dict.update({'result': False, 'msg': filled_code_message(CM0004)})
         return _response_dict
 
     if str(trans_otp_obj.otp_code).lower().strip() != str(form_otp_code).lower().strip():
-        _response_dict.update({'result': False, 'msg': 'OTP does not match !'})
+        _response_dict.update({'result': False, 'msg': filled_code_message(CM0005)})
         return _response_dict
 
     updated_user_details = UserModel.update_user_details(
@@ -232,5 +234,5 @@ def update_password(session, form_data):
         }
     )
 
-    _response_dict.update({'result': True, 'msg': 'Password Successfully Changed'})
+    _response_dict.update({'result': True, 'msg': filled_code_message(CM0020)})
     return _response_dict

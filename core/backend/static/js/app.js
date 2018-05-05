@@ -72,6 +72,8 @@ app.controller('forgotPasswordController', function($scope, $http, $state, $stat
           $scope.isOtpEnabled = true;
 
       });
+    }else{
+      $scope.forgorpasswordform.$submitted = true;
     };
 
   };
@@ -120,9 +122,10 @@ app.controller('signUpController', ['$scope', '$http', '$state', '$stateParams',
         .then(function(response) {
           if(response.data.is_user_exists){
             $scope.user_exists = true;
+            $scope.user_exists_msg = response.data.msg;
             return false;
           }
-          $rootScope.$emit('alert', {msg:'User created successfully. Please login'});
+          $rootScope.$emit('alert', {msg:response.data.msg});
           $state.transitionTo('login');
       });
     }
@@ -247,7 +250,7 @@ app.controller("clientConfigController", function($scope, http, $state, $rootSco
           .then(function(response){
             $scope.isSaveDisabled = false;
             $scope.serverData = response.data;
-            $rootScope.$emit('alert', {msg:'Data saved successfully'});
+            $rootScope.$emit('alert', {msg:response.data.msg});
             _loadClientConfig();
         });
       }
@@ -303,7 +306,7 @@ app.controller("manageAccountController",['$scope', 'http', '$state', '$filter',
           .then(function(response) {
             $scope.isEditUserDisabled = false;
             //Emitting alert message
-            $rootScope.$emit('alert', {msg:'Data updated successfully'});
+            $rootScope.$emit('alert', {msg:response.data.msg});
         });
       }
     }
@@ -448,11 +451,11 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
           $scope.isScheduleDisable = false;
           var isInvalidDate = response.data.data.is_invalid_date;
           if(isInvalidDate){
-            alert("Invalid Date. Please select valid date");
+            alert(response.data.msg);
             return false;
           }
           //Emitting alert message
-          $rootScope.$emit('alert', {msg:'Data saved successfully'});
+          $rootScope.$emit('alert', {msg:response.data.msg});
           $scope.schedulerData.type = $scope.types[0];
           $state.go($state.current, {}, {reload: true});
       });
@@ -477,7 +480,7 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
     http
       .post('/deactivatescheduledjob', {'job_details_idn' : jobDetailsIdn})
       .then(function(response) {
-        $rootScope.$emit('alert', {msg:'Deactivated successfully'});
+        $rootScope.$emit('alert', {msg:response.data.msg});
         $rootScope.$broadcast('eventName', {});
     });
   };
@@ -596,9 +599,10 @@ app.controller("editScheduledController",['$scope', '$modalInstance', 'editData'
             $scope.isUpdateDisable = false;
             var isInvalidDate = response.data.data.is_invalid_date;
             if(isInvalidDate){
-              alert("Invalid Date. Please select valid date");
+              alert(response.data.msg);
               return false;
             };
+            $rootScope.$emit('alert', {msg:response.data.msg});
             $rootScope.$broadcast('eventName', {});
             $modalInstance.close('yes');
         });
