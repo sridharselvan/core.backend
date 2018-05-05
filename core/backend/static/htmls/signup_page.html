@@ -96,7 +96,7 @@
                     <label for="phone_no1" class="col-md-3 control-label">Primary Phone <span class="text-danger">*</span></label>
                     <div class="col-md-9">
                         <input type="text" class="form-control" name="phone_no1" ng-model="userDetails.phone_no1" placeholder="Phone 1"
-                            ng-class="{ 'has-error': (signupform.phone_no1.$touched && signupform.phone_no1.$error.required)}" ng-pattern="/^[0-9]{10}$/" required ng-change="isPhoneNoMatched=false">  
+                            ng-class="{ 'has-error': (signupform.phone_no1.$touched && signupform.phone_no1.$error.required) || isPhoneNoExists}" ng-pattern="/^[0-9]{10}$/" required ng-change="isPhoneNoExists=false">  
 
                         <div ng-show="signupform.$submitted || signupform.phone_no1.$touched">
                             <span class="text-danger" 
@@ -106,6 +106,10 @@
                             <span class="text-danger" 
                                   ng-show="signupform.phone_no1.$error.pattern">
                                     Please enter the valid phone number
+                            </span>
+                            <span class="text-danger" 
+                                  ng-show="isPhoneNoExists">
+                                    Phone number already exsits
                             </span>
                         </div>
 
