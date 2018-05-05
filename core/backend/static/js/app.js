@@ -30,6 +30,22 @@ app.controller('loginController', function($scope, $http, $state, $stateParams){
 
 }); //End: controller: LoginPageController
 
+//Start: controller: dashboardController
+app.controller('dashboardController', function($scope, http, $state, $stateParams){
+
+  $scope.dashboard = {};
+  _getDashboardValues = function(){
+    http
+      .get('/dashboard')
+      .then(function(response) {
+        $scope.dashboard.failedSms = response.data.data;
+    });
+  };
+
+  _getDashboardValues();
+
+}); //End: controller: dashboardController
+
 
 //Start: controller: ForgotPasswordController
 app.controller('forgotPasswordController', function($scope, $http, $state, $stateParams, $rootScope){

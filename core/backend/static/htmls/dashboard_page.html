@@ -1,6 +1,31 @@
-<div class="container-fluid">    
-    <h1>Dashboard</h1>
+<div class="container">
+	<div class="col-xs-12">
+    	<h2 class="text-center margin-bottom-25px">Dashboard</h2>
+  	</div>
 </div>
-
-
-
+<div class="container" ng-controller="dashboardController">
+  	<div class="row">
+	    <div class="col-md-6">
+	    	<div class="panel panel-primary">
+	    		<div class="panel-heading">RECENT FAILED SMS</div>
+	    		<div class="panel-body">
+				    <table class="table table-striped">
+					    <thead>
+					        <tr>
+					            <th>User</th>
+					            <th>Message</th>
+					            <th>Created Date</th>
+					        </tr>
+					    </thead>
+					    
+				        <tr ng-repeat="failedSms in dashboard.failedSms">
+				            <td>{{failedSms.user_idn}}</td>
+				            <td>{{failedSms.message}}</td>
+				            <td>{{failedSms.crt_dt}}</td>
+				        </tr>
+				    </table>
+				</div>
+			</div>
+	    </div>
+	</div>
+</div>
