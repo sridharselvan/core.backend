@@ -30,6 +30,9 @@ from core.backend.utils.core_utils import (
 )
 
 from core.mq import SimpleSMSPublisher
+
+from core.utils.utils import generate_otp
+
 from core.utils.environ import get_queue_details, get_general_configs
 
 from core.backend.utils.core_utils import encode, decode
@@ -156,8 +159,6 @@ def forgot_password_validation(session, form_data):
     form_user_name = encode(form_data['user_name'])
     form_phone_no = form_data['phone_no']
 
-    general_config = get_general_configs()
-
     user_data = UserModel.fetch_user_data(session, mode='one', user_name=form_user_name)
 
     if not user_data:
@@ -176,7 +177,8 @@ def forgot_password_validation(session, form_data):
     _response_dict['is_phone_no_matched'] = True
     _response_dict['is_user_name_matched'] = True
 
-    otp_code = ''.join([str(random.randint(0, 9)) for _ in range(general_config['otp_code_digits'])])
+    otp_code = generate_otp()
+
     code_status_data = CodeStatusModel.fetch_status_idn(session, status='pending')
 
     trans_otp_obj = TransOtpModel.insert(
@@ -236,7 +238,7 @@ def update_password(session, form_data):
 
     TransOtpModel.delete(
         session,
-        trans_otp_idn=form_otp_idn
+        where_condition={'trans_otp_idn': form_otp_idn}
     )
 
     _response_dict.update({'result': True, 'msg': filled_code_message('CM0020')})
