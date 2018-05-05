@@ -123,8 +123,7 @@ def create_user(session, *args, **kwargs):
 
     _user = UserModel.create_new_user(session, **form_data)
 
-    _response_dict['alert_type'] = 'push_msg'
-    _response_dict['alert_what'] = 'msg'
+    _response_dict['result'] = True
     _response_dict['msg'] = filled_code_message('CM0002', user_name=decode(_user.user_name))
 
     return _response_dict
