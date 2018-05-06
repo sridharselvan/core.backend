@@ -18,6 +18,7 @@
 # ----------- START: In-App Imports ---------- #
 from core.db.model import TransSmsModel
 from core.backend.utils.core_utils import decode
+from core.constants.code_message import filled_code_message
 # ----------- END: In-App Imports ---------- #
 
 __all__ = [
@@ -31,7 +32,7 @@ def dashboard(session):
 
     if not failed_sms_data:
         _response_dict['result'] = False
-        _response_dict['msg'] = 'No failed sms records found'
+        _response_dict['msg'] = filled_code_message('CM0034')
 
     if failed_sms_data:
         for idx, sms_data in enumerate(failed_sms_data):
