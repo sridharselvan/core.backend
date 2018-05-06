@@ -38,7 +38,10 @@ app.controller('dashboardController', function($scope, http, $state, $stateParam
     http
       .get('/dashboard')
       .then(function(response) {
-        $scope.dashboard.failedSms = response.data.data;
+          $scope.dashboard.failedSms = response.data.data;
+          if(!response.data.result){
+            $scope.dashboardErrorMsg = response.data.msg;
+          }
     });
   };
 
