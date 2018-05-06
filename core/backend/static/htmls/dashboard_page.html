@@ -9,17 +9,20 @@
 	    	<div class="panel panel-primary">
 	    		<div class="panel-heading">RECENT FAILED SMS</div>
 	    		<div class="panel-body">
+	    			{{dashboardErrorMsg}}
+	    		</div>
+	    		<div class="panel-body" ng-if="dashboard.failedSms.length > 0">
 				    <table class="table table-striped">
 					    <thead>
 					        <tr>
 					            <th>User</th>
 					            <th>Message</th>
-					            <th>Created Date</th>
+					            <th>Attempted on</th>
 					        </tr>
 					    </thead>
 					    
 				        <tr ng-repeat="failedSms in dashboard.failedSms">
-				            <td>{{failedSms.user_idn}}</td>
+				            <td>{{failedSms.user_name}}</td>
 				            <td>{{failedSms.message}}</td>
 				            <td>{{failedSms.crt_dt}}</td>
 				        </tr>
