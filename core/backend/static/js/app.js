@@ -343,6 +343,15 @@ app.controller("manageAccountController",['$scope', 'http', '$state', '$filter',
 }]);
 //End: controller:MangeAccountController
 
+//We already have a limitTo filter built-in to angular,
+  //let's make a startFrom filter
+  app.filter('startFrom', function() {
+      return function(input, start) {
+          start = +start; //parse to int
+          return input.slice(start);
+      }
+  });
+
 //Start: controller:schedulerController
 app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$window', '$modal', '$rootScope', '$timeout',
   function($scope, http, $state, $filter, $window, $modal, $rootScope, $timeout) {
@@ -495,6 +504,15 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
   $scope.searchScheduledData = {
     searchScheduleType : $scope.types[0]
   };
+
+  $scope.scheduledJobDetails = [];
+  $scope.currentPage = 0;
+  $scope.pageSize = 5;
+  $scope.data = [];
+  $scope.numberOfPages=function(){
+      return Math.ceil($scope.scheduledJobDetails.length/$scope.pageSize);
+  };
+
 
   $scope.SearchScheduledJob = function(){
     http
