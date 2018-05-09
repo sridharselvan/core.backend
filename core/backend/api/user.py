@@ -22,7 +22,8 @@ from sqlalchemy.exc import SQLAlchemyError
 
 # ----------- START: In-App Imports ---------- #
 from core.db.model import (
-    UserModel, UserSessionModel, CodeStatusModel, TransOtpModel
+    UserModel, UserSessionModel, CodeStatusModel, TransOtpModel,
+    ConfigUserSmsModel, CodeSmsEventsModel
 )
 from core.backend.utils.butils import decode_form_data
 from core.backend.utils.core_utils import (
@@ -122,6 +123,12 @@ def create_user(session, *args, **kwargs):
         return json.dumps(_response_dict)
 
     _user = UserModel.create_new_user(session, **form_data)
+
+    #
+    # user specific sms event configurations are being fed here.
+    _sms_events = CodeSmsEventsModel.fetch(session)
+    for sms_event in _sms_events:
+        ConfigUserSmsModel.insert(session, user_idn=_user.user_idn, code_sms_events_idn=sms_event.code_sms_events_idn)
 
     _response_dict['result'] = True
     _response_dict['msg'] = filled_code_message('CM0002', user_name=decode(_user.user_name))
