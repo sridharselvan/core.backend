@@ -513,6 +513,14 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
       return Math.ceil($scope.scheduledJobDetails.length/$scope.pageSize);
   };
 
+  $scope.decrPage = function(){
+    $scope.currentPage --;
+  };
+
+  $scope.incrPage = function(){
+    $scope.currentPage ++;
+  }
+
 
   $scope.SearchScheduledJob = function(){
     http
