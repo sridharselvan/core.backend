@@ -58,14 +58,14 @@
 			    <button
 			    	class="btn btn-info"
 			    	ng-disabled="currentPage == 0"
-			    	ng-click="currentPage=currentPage-1">
+					ng-click="decrPage()">
 			        <<
 			    </button>
 			    Page {{currentPage+1}} of {{numberOfPages()}}
 			    <button
 			    	class="btn btn-info"
 			    	ng-disabled="currentPage >= scheduledJobDetails.length/pageSize - 1"
-			    	ng-click="currentPage=currentPage+1">
+					ng-click="incrPage()">
 			        >>
 			    </button>
 			</div>
