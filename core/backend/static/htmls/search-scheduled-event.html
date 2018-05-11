@@ -1,4 +1,4 @@
-<form class="form-horizontal schedulerform" ng-submit="SearchScheduledJob()">
+<form class="form-horizontal schedulerform" ng-submit="SearchScheduledJob(true)">
 	<h3 class="text-center">Search Scheduled Job</h3>
 	<div class="form-group">
         <label class="col-sm-3 control-label">Scheduler Type</label>
@@ -56,6 +56,7 @@
 	        </div>
 	        <div class="col-xs-offset-4" ng-if="scheduledJobDetails.length > 5">
 			    <button
+                    type="button"
 			    	class="btn btn-info"
 			    	ng-disabled="currentPage == 0"
 					ng-click="decrPage()">
@@ -63,6 +64,7 @@
 			    </button>
 			    Page {{currentPage+1}} of {{numberOfPages()}}
 			    <button
+                    type="button"
 			    	class="btn btn-info"
 			    	ng-disabled="currentPage >= scheduledJobDetails.length/pageSize - 1"
 					ng-click="incrPage()">
