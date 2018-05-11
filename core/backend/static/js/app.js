@@ -522,12 +522,20 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
   }
 
 
-  $scope.SearchScheduledJob = function(){
+  $scope.SearchScheduledJob = function(btn_click=false){
+    if(btn_click){
+      $scope.currentPage = 0;
+    };
+
     http
       .post('/searchscheduledjob', $scope.searchScheduledData)
       .then(function(response) {
         $scope.showSearchResult = true;
         $scope.scheduledJobDetails = response.data.data;
+        var start = $scope.currentPage * $scope.pageSize;
+        if(start === $scope.scheduledJobDetails.length){
+          $scope.currentPage --;
+        };
     });
   };
 
@@ -535,6 +543,7 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
     http
       .post('/deactivatescheduledjob', {'job_details_idn' : jobDetailsIdn})
       .then(function(response) {
+
         $rootScope.$emit('alert', {msg:response.data.msg});
         $rootScope.$broadcast('eventName', {});
     });
