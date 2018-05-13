@@ -1,17 +1,34 @@
-<form class="form-horizontal schedulerform" ng-submit="SearchScheduledJob(true)">
-	<h3 class="text-center">Search Scheduled Job</h3>
+<form class="form-horizontal schedulerform" name="searchSchedulerForm" ng-submit="SearchScheduledJob(true, searchSchedulerForm.$valid)" novalidate>
+	<h3 class="text-center margin-bottom-25px">Search Scheduled Job</h3>
 	<div class="form-group">
-        <label class="col-sm-3 control-label">Scheduler Type</label>
-        <div class="col-sm-4">
-            <select class="form-control" 
-                ng-model="searchScheduledData.searchScheduleType" 
-                ng-options="type for type in types">
+        <label class="col-sm-3 control-label">Search Type</label>
+        <div class="col-sm-6">
+            <select class="form-control capitalize" 
+                ng-model="searchScheduledData.searchByField" 
+                ng-options="type for type in searchTypes"
+                ng-change="getSearchType(searchScheduledData.searchByField)">
             </select>
         </div>
-        <div class="col-sm-4">
-            <button type="submit" class="btn btn-success">Search</button>
+    </div>
+	<div class="form-group" ng-if="searchScheduledData.searchByField != 'select one'">
+        <label class="col-sm-3 control-label capitalize">{{searchScheduledData.searchByField}} name</label>
+        <div class="col-sm-6">
+            <select class="form-control capitalize" 
+            		ng-model="searchScheduledData.searchByValue" 
+            		name="search_name">
+            	<option value="" selected>All</option>
+                <option ng-repeat="name in names" value="{{name.id}}">{{name.value}}</option>
+            </select>
+
         </div>
     </div>
+
+    <div class="form-group" ng-if="searchScheduledData.searchByField != 'select one'">
+    	<div class="col-sm-offset-3 col-sm-8">
+        	<button type="submit" class="btn btn-success">Search</button>
+        </div>
+    </div>
+
     <div class="container" ng-show="showSearchResult">
 	    <div class="row">
 	    	<label class="col-md-3"></label>

@@ -191,4 +191,13 @@ def view_client_config():
 
     return _config
 
+def get_valve_details():
 
+    cparser = SafeConfigParser()
+    cparser.read(CLIENT_CONFIG_FILE)
+
+    _valve_data = list()
+    for each_valve in cparser.get('nodes', 'ids').split():
+        _valve_data.append(dict(cparser.items(each_valve)))
+
+    return _valve_data

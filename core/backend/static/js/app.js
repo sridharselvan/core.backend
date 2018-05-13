@@ -406,6 +406,8 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
     };
 
   $scope.types = ['Select One', 'OneTime', 'Daily', 'Weekly'];
+  $scope.searchTypes = ['select one', 'user', 'schedule', 'valve'];
+  $scope.searchType = $scope.searchTypes[0];
   $scope.schedulerData = {
     type:$scope.types[0],
     start_date: {
@@ -427,6 +429,14 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
     ],
     ValveDetails:[]
   };
+
+  $scope.getSearchType = function(searchType){
+    http
+      .post('/fetchschedulersearchtype', searchType)
+      .then(function(response) {
+        $scope.names = response.data.data;
+    });
+  }
 
 
   /** Update recurs in scheduler data obj **/
@@ -533,7 +543,8 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
 
   $scope.showSearchResult = false;
   $scope.searchScheduledData = {
-    searchScheduleType : $scope.types[0]
+    searchByField: $scope.searchType,
+    searchByValue: ''
   };
 
   $scope.scheduledJobDetails = [];
@@ -553,31 +564,37 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
   }
 
 
-  $scope.SearchScheduledJob = function(btn_click=false){
-    if(btn_click){
-      $scope.currentPage = 0;
-    };
+  $scope.SearchScheduledJob = function(btn_click=false, isValid=true){
 
-    http
-      .post('/searchscheduledjob', $scope.searchScheduledData)
-      .then(function(response) {
-        $scope.showSearchResult = true;
-        $scope.scheduledJobDetails = response.data.data;
-        var start = $scope.currentPage * $scope.pageSize;
-        if(start === $scope.scheduledJobDetails.length){
-          $scope.currentPage --;
-        };
-    });
+    if(isValid){
+      if(btn_click){
+        $scope.currentPage = 0;
+      };
+
+      http
+        .post('/searchscheduledjob', $scope.searchScheduledData)
+        .then(function(response) {
+          $scope.showSearchResult = true;
+          $scope.scheduledJobDetails = response.data.data;
+          var start = $scope.currentPage * $scope.pageSize;
+          if(start === $scope.scheduledJobDetails.length){
+            $scope.currentPage --;
+          };
+      });
+    }
   };
 
   $scope.deactivateScheduledJob = function(jobDetailsIdn) {
-    http
-      .post('/deactivatescheduledjob', {'job_details_idn' : jobDetailsIdn})
-      .then(function(response) {
 
-        $rootScope.$emit('alert', {msg:response.data.msg});
-        $rootScope.$broadcast('eventName', {});
-    });
+    if(confirm('Are you sure you want to delete this?')){
+      http
+        .post('/deactivatescheduledjob', {'job_details_idn' : jobDetailsIdn})
+        .then(function(response) {
+
+          $rootScope.$emit('alert', {msg:response.data.msg});
+          $rootScope.$broadcast('eventName', {});
+      });
+    }
   };
 
   $scope.editScheduledJob = function(scheduledJob) {
