@@ -38,6 +38,8 @@ from core.utils.environ import get_queue_details, get_general_configs
 
 from core.backend.utils.core_utils import encode, decode
 from core.constants.code_message import filled_code_message
+
+from core.constants import CONSTANT_EVENT_ALWAYS_SEND_SMS
 # ----------- END: In-App Imports ---------- #
 
 __all__ = [
@@ -210,6 +212,8 @@ def forgot_password_validation(session, form_data):
     #
     # Push sms notification
     SimpleSMSPublisher().publish(
+        sms_event=CONSTANT_EVENT_ALWAYS_SEND_SMS,
+        user_idn=user_data.user_idn,
         payload=dict(
             message=filled_code_message('CM0019', otp_code=otp_code),
             number=phone_number,
