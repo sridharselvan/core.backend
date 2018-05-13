@@ -243,7 +243,7 @@ def update_password(session, form_data):
         _response_dict.update({'result': False, 'msg': filled_code_message('CM0004')})
         return _response_dict
 
-    if str(trans_otp_obj.otp_code).lower().strip() != str(form_otp_code).lower().strip():
+    if str(trans_otp_obj['otp_code']).lower().strip() != str(form_otp_code).lower().strip():
         _response_dict.update({'result': False, 'msg': filled_code_message('CM0005')})
         return _response_dict
 
