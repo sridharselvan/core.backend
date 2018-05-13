@@ -12,6 +12,7 @@
   padding-left: .6em;
   border-radius: 10rem;
 }
+.capitalize{text-transform:capitalize;}
 
 /************************ Dashboard **********************************************/
 .custab:hover{ box-shadow: 3px 3px 0px transparent; transition: 0.5s;}
