@@ -240,15 +240,46 @@ app.controller('logoutController', function($scope, http, $state, $stateParams){
 //Start: controller:clientConfigController
 app.controller("clientConfigController", function($scope, http, $state, $rootScope, $window) {
 
+    $scope.tab = 1;
+    $scope.showSuccessMsg = false;
+
+    $scope.setTab = function(newTab){
+      $scope.tab = newTab;
+      if(newTab == 1){
+        angular.element('#newScheduler').addClass("active");
+        angular.element('#searchScheduler').removeClass("active");
+      } else {
+        angular.element('#newScheduler').removeClass("active");
+        angular.element('#searchScheduler').addClass("active");
+      }
+    };
+
+    $scope.isSet = function(tabNum){
+      return $scope.tab === tabNum;
+    };
+
     /** Runs during page load.*/
     _loadClientConfig = function(){
       http.get("/viewclientconfig")
         .then(function(response){
           $scope.serverData = response.data;
       });
+
+      http.get("/getsmsconfig")
+        .then(function(response){
+          $scope.smsConfigData = response.data.data;
+      });
     }
 
     _loadClientConfig();
+
+    //To change the sms configuration
+    $scope.updateSmsConfig = function(smsData){
+      http.post("/updatesmsconfig", smsData)
+        .then(function(response){
+
+      });
+    }
 
     //Check valve names
     $scope.checkEnabledValves = function(enabled, node){

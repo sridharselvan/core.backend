@@ -1,0 +1,24 @@
+<div class="container">
+	<div class="col-xs-12">
+	  <h3 class="text-center margin-bottom-25px">SMS Configuration</h3>
+	</div>
+
+	<div class="row">
+
+		<div class="form-group col-sm-3" ng-repeat="smsData in smsConfigData">
+			<div class="btn-group">
+
+			    <label class="btn btn-default">
+			    	<input type="checkbox" 
+		        		   ng-model="smsData.is_active"
+		        		   ng-true-value="1" 
+		        		   ng-false-value="0"
+		        		   ng-change="updateSmsConfig(smsData)">
+		        	<span class="capitalize">{{smsData.event_name}}</span>
+			   </label>
+
+			</div>
+		</div>
+
+	</div>
+</div>
