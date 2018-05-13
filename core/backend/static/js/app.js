@@ -571,13 +571,16 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
   };
 
   $scope.deactivateScheduledJob = function(jobDetailsIdn) {
-    http
-      .post('/deactivatescheduledjob', {'job_details_idn' : jobDetailsIdn})
-      .then(function(response) {
 
-        $rootScope.$emit('alert', {msg:response.data.msg});
-        $rootScope.$broadcast('eventName', {});
-    });
+    if(confirm('Are you sure you want to delete this?')){
+      http
+        .post('/deactivatescheduledjob', {'job_details_idn' : jobDetailsIdn})
+        .then(function(response) {
+
+          $rootScope.$emit('alert', {msg:response.data.msg});
+          $rootScope.$broadcast('eventName', {});
+      });
+    }
   };
 
   $scope.editScheduledJob = function(scheduledJob) {
