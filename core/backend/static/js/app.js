@@ -34,6 +34,22 @@ app.controller('loginController', function($scope, $http, $state, $stateParams){
 app.controller('dashboardController', function($scope, http, $state, $stateParams){
 
   $scope.dashboard = {};
+  $scope.currentPage = 0;
+  $scope.pageSize = 5;
+  $scope.data = [];
+  $scope.numberOfPages=function(){
+      return Math.ceil($scope.dashboard.failedSms.length/$scope.pageSize);
+  };
+
+  $scope.decrPage = function(){
+    $scope.currentPage --;
+  };
+
+  $scope.incrPage = function(){
+    $scope.currentPage ++;
+  };
+
+
   _getDashboardValues = function(){
     http
       .get('/dashboard')
@@ -41,7 +57,12 @@ app.controller('dashboardController', function($scope, http, $state, $stateParam
           $scope.dashboard.failedSms = response.data.data;
           if(!response.data.result){
             $scope.dashboardErrorMsg = response.data.msg;
-          }
+          };
+
+          var start = $scope.currentPage * $scope.pageSize;
+          if(start === $scope.dashboard.failedSms.length){
+            $scope.currentPage --;
+          };
     });
   };
 

@@ -8,7 +8,7 @@
 	    <div class="col-md-6">
 	    	<div class="panel panel-primary">
 	    		<div class="panel-heading">RECENT FAILED SMS</div>
-	    		<div class="panel-body">
+	    		<div class="panel-body" ng-if="dashboard.failedSms.length == 0">
 	    			{{dashboardErrorMsg}}
 	    		</div>
 	    		<div class="panel-body" ng-if="dashboard.failedSms.length > 0">
@@ -21,12 +21,29 @@
 					        </tr>
 					    </thead>
 					    
-				        <tr ng-repeat="failedSms in dashboard.failedSms">
+				        <tr ng-repeat="failedSms in dashboard.failedSms | startFrom:currentPage*pageSize | limitTo:pageSize">
 				            <td>{{failedSms.user_name}}</td>
 				            <td>{{failedSms.message}}</td>
 				            <td>{{failedSms.crt_dt}}</td>
 				        </tr>
 				    </table>
+				    <div class="col-xs-offset-5" ng-if="dashboard.failedSms.length > 5">
+					    <button
+		                    type="button"
+					    	class="btn btn-info"
+					    	ng-disabled="currentPage == 0"
+							ng-click="decrPage()">
+					        <<
+					    </button>
+					    Page {{currentPage+1}} of {{numberOfPages()}}
+					    <button
+		                    type="button"
+					    	class="btn btn-info"
+					    	ng-disabled="currentPage >= dashboard.failedSms.length/pageSize - 1"
+							ng-click="incrPage()">
+					        >>
+					    </button>
+					</div>
 				</div>
 			</div>
 	    </div>
