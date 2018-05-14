@@ -42,3 +42,19 @@ def dashboard(session):
         _response_dict['data'] = failed_sms_data
 
     return _response_dict
+
+def delete_failed_sms(session, form_data):
+    _response_dict = {'result': True, 'data': dict(), 'alert_type': None, 'alert_what': None, 'msg': None}
+
+    _trans_sms_idn = form_data['trans_sms_idn']
+
+    deleted_sms_data = TransSmsModel.delete(
+        session,
+        where_condition = {'trans_sms_idn': _trans_sms_idn}
+    )
+
+    if deleted_sms_data:
+        _response_dict['result'] = True
+        _response_dict['data'] = deleted_sms_data
+
+    return _response_dict

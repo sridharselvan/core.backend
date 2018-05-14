@@ -68,6 +68,14 @@ app.controller('dashboardController', function($scope, http, $state, $stateParam
 
   _getDashboardValues();
 
+  $scope.deleteRecentFailedSms = function(failedSms){
+    http
+      .post('/deletefailedsms', failedSms)
+      .then(function(response) {
+          _getDashboardValues();
+    });
+  };
+
 }); //End: controller: dashboardController
 
 

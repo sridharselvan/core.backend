@@ -18,16 +18,23 @@
 					            <th>User</th>
 					            <th>Message</th>
 					            <th>Attempted on</th>
+					            <th>Action</th>
 					        </tr>
 					    </thead>
 					    
 				        <tr ng-repeat="failedSms in dashboard.failedSms | startFrom:currentPage*pageSize | limitTo:pageSize">
 				            <td>{{failedSms.user_name}}</td>
-				            <td>{{failedSms.message}}</td>
+				            <td style="word-break: break-all">{{failedSms.message}}</td>
 				            <td>{{failedSms.crt_dt}}</td>
+				            <td>
+								<button type="button" class="btn btn-default"
+									ng-click="deleteRecentFailedSms(failedSms)">
+									<i class="glyphicon glyphicon-trash"></i>
+								</button>
+							</td>
 				        </tr>
 				    </table>
-				    <div class="col-xs-offset-5" ng-if="dashboard.failedSms.length > 5">
+				    <div class="col-xs-offset-4 col-sm-offset-7" ng-if="dashboard.failedSms.length > 5">
 					    <button
 		                    type="button"
 					    	class="btn btn-info"
