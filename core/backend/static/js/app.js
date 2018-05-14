@@ -571,6 +571,10 @@ app.controller("schedulerController",['$scope', 'http', '$state', '$filter', '$w
         $scope.currentPage = 0;
       };
 
+      if(!$scope.searchScheduledData.searchByValue){
+        $scope.searchScheduledData.searchByValue = '';
+      };
+
       http
         .post('/searchscheduledjob', $scope.searchScheduledData)
         .then(function(response) {
